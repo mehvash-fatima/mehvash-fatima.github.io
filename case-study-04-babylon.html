@@ -1320,6 +1320,18 @@
 
     .cs-slide-gallery .cs-slide-figure { flex-basis: calc(50% - 8px); }
 
+    /* Gallery thumbs are barely 100px wide at this size, where a full-size
+       glyph covers a quarter of the artwork. */
+    .cs-slide-gallery .zoom-wrap-hint {
+      width: 18px;
+      height: 18px;
+      right: 6px;
+      bottom: 6px;
+      border-radius: 3px;
+    }
+
+    .cs-slide-gallery .zoom-wrap-hint svg { width: 10px; height: 10px; }
+
     .persona-map { display: none; }
     .persona-list { display: block; }
 
@@ -1386,6 +1398,67 @@
       clip-path: inset(50%);
       white-space: nowrap;
     }
+  }
+
+  /* ── ZOOM AFFORDANCE ──
+     .zoom-wrap is added by site.js around every image the lightbox handles, so
+     the cursor, the hover response and the corner glyph only exist once the
+     lightbox is actually wired. Same bargain the nav dropdown makes: never
+     advertise a control that cannot open. The glyph is always visible rather
+     than hover-only, because hover says nothing on a touch screen. */
+  .zoom-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    line-height: 0;
+  }
+
+  /* These two contexts size their image to the full column, so the wrapper has
+     to stop shrink-wrapping and fill it too. */
+  .cs-slide-stack .zoom-wrap,
+  .cs-slide-annot .zoom-wrap {
+    display: block;
+    width: 100%;
+  }
+
+  .zoom-wrap img {
+    cursor: zoom-in;
+    transition: opacity 0.15s ease;
+  }
+
+  .zoom-wrap:hover img { opacity: 0.92; }
+
+  .zoom-wrap-hint {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: rgba(251,250,248,0.92);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    /* The image is the control; this must never swallow the tap. */
+    pointer-events: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .zoom-wrap:hover .zoom-wrap-hint {
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  .zoom-wrap-hint svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   /* ── SKIP LINK ──

@@ -102,6 +102,26 @@ if (lightboxOverlay && lightboxImg && lightboxCaption && lightboxClose) {
       img.setAttribute('aria-label', label ? `View larger: ${label}` : 'View larger image');
     }
 
+    // Wrap the image so it can carry a visible zoom affordance. A cursor alone
+    // says nothing on a touch screen, where most of these get read, so the
+    // corner glyph is always on rather than hover-only. Built here for the
+    // same reason as the attributes above: if this script never runs, no
+    // affordance appears and nothing has been promised.
+    if (!img.parentElement.classList.contains('zoom-wrap')) {
+      const wrap = document.createElement('span');
+      wrap.className = 'zoom-wrap';
+      img.replaceWith(wrap);
+      wrap.appendChild(img);
+
+      const hint = document.createElement('span');
+      hint.className = 'zoom-wrap-hint';
+      // Decorative: the image beside it already carries the accessible name.
+      hint.setAttribute('aria-hidden', 'true');
+      hint.innerHTML = '<svg viewBox="0 0 24 24" focusable="false">'
+        + '<path d="M9.5 3.5h-6v6M3.5 3.5l7 7M14.5 20.5h6v-6M20.5 20.5l-7-7"/></svg>';
+      wrap.appendChild(hint);
+    }
+
     const open = () => {
       const figure = img.closest('.cs-figure-col') || img.closest('.cs-slide-figure') || img.closest('.cs-figure') || img.closest('.sidebar-img-real') || img.closest('.about-photo-card');
       const captionEl = figure ? figure.querySelector('.cs-figure-caption, .sidebar-img-real-caption, .about-photo-caption, figcaption') : null;
