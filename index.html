@@ -218,7 +218,10 @@
      column is sized in ch-free absolutes because the polaroid is a fixed piece
      of art, while the copy column takes the remaining space. */
   .hero {
-    padding: 160px 60px 100px;
+    /* Held in a variable because the wash below bleeds past the copy column
+       and has to know how much gutter is left to bleed into. */
+    --hero-pad: 60px;
+    padding: 160px var(--hero-pad) 100px;
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
@@ -261,7 +264,16 @@
        a fixed -32px would force a horizontal scrollbar on a phone. */
     left: calc(-1 * min(32px, 4vw));
     top: -42px;
-    width: min(799px, 112%);
+    /* The left bleed is bounded above; the right one has to be too. 112% of the
+       copy column overhangs the right by more gutter than --hero-pad has to
+       give once the phone padding drops to 28px, which pushed a ~15px
+       horizontal scrollbar between roughly 520 and 620px wide.
+       The third term is the widest this can be with its right edge still
+       landing inside the page: the column, plus the gutter beside it, plus
+       whatever the left offset already pulled back. Measured against 100% of
+       the column rather than 100vw on purpose — vw counts the scrollbar
+       gutter, which would make the cap too generous by ~15px on desktop. */
+    width: min(799px, 112%, calc(100% + var(--hero-pad) + min(32px, 4vw)));
     height: clamp(250px, 33vw, 349px);
     background: var(--wash);
     clip-path: polygon(1.06% 6.45%, 100% 0%, 84.93% 79.55%, 0% 100%);
@@ -1112,7 +1124,10 @@
      On a phone the desktop gap between the hero and the project list is over
      190px of empty screen, which reads as the end of the page. */
   @media (max-width: 620px) {
-    .hero { padding: 116px 28px 40px; }
+    .hero {
+      --hero-pad: 28px;
+      padding: 116px var(--hero-pad) 40px;
+    }
     .hero-contact { margin-top: 28px; }
 
     /* The polaroid is a desktop flourish. On a phone it lands under the hero
