@@ -998,6 +998,12 @@
     padding: 0 60px 72px;
   }
 
+  /* Guard for the temporary `hidden` on this section. The UA rule behind
+     [hidden] is display:none at the lowest possible specificity, so any
+     display declaration added to .process-section later would silently
+     un-hide it. Harmless once the attribute is removed. */
+  .process-section[hidden] { display: none; }
+
   .process-section h2 { margin-bottom: 28px; }
 
   .process-intro {
@@ -1277,7 +1283,10 @@
 </div>
 
 <!-- PROCESS -->
-<section class="process-section" aria-labelledby="process-heading">
+<!-- Temporarily hidden at every width while this section is reworked. To bring
+     it back, delete the `hidden` attribute below — nothing else is stubbed out,
+     and the matching guard rule in the stylesheet is inert once it is gone. -->
+<section class="process-section" aria-labelledby="process-heading" hidden>
   <p class="process-label">Process</p>
   <h2 id="process-heading">Process is Messy</h2>
   <p class="process-intro">
