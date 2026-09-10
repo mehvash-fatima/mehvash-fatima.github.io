@@ -1108,6 +1108,13 @@
   @media (max-width: 620px) {
     .hero { padding: 116px 28px 40px; }
     .hero-contact { margin-top: 28px; }
+
+    /* The polaroid is a desktop flourish. On a phone it lands under the hero
+       copy and pushes the project list further below the fold, so it goes.
+       display:none rather than a visual-only hide: the photo carries no
+       information the page needs, and hiding it from sighted users while
+       leaving it in the accessibility tree would just be a mismatch. */
+    .about-photo-card { display: none; }
     .toc-section { padding: 32px 28px 56px; }
     .toc-label { margin-bottom: 24px; }
     .process-section { padding: 0 28px 48px; }
@@ -1254,8 +1261,16 @@
 
  <figure class="about-photo-card">
    <div class="about-photo-frame">
-     <img src="assets/joshua-tree.jpg" width="675" height="900" loading="lazy" decoding="async"
-          alt="Mehvash standing on a boulder on a desert trail in Joshua Tree National Park, wearing a long dark coat and cap, with Joshua trees and scrub behind her.">
+     <picture>
+       <!-- The card is display:none below 620px, but a bare <img> is fetched
+            there regardless — 242KB of photo a phone downloads and never
+            renders. Pointing that range at an empty 1x1 keeps the bytes off
+            the wire. The real image, its dimensions and its alt text are
+            untouched for every viewport that actually shows the card. -->
+       <source media="(max-width: 620px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+       <img src="assets/joshua-tree.jpg" width="675" height="900" loading="lazy" decoding="async"
+            alt="Mehvash standing on a boulder on a desert trail in Joshua Tree National Park, wearing a long dark coat and cap, with Joshua trees and scrub behind her.">
+     </picture>
    </div>
    <figcaption class="about-photo-caption">Hiking at Joshua Tree. 100% recommend!</figcaption>
  </figure>
