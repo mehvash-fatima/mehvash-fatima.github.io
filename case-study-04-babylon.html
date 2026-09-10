@@ -10,25 +10,52 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #0E0E0E;
-    --surface:   #161616;
-    --border:    #2A2A2A;
-    --cream:     #F2EDE4;
-    --muted:     #8C8680;
-    --accent:    #C8B89A;
-    --highlight: #E8D5B0;
-    --tag-bg:    #1E1E1E;
+    /* Light palette. Every ink/accent value below clears WCAG AA (4.5:1) on the
+       darkest surface it can land on (--tag-bg), not just on --bg. */
+    --bg:        #FBFAF8;
+    --surface:   #F5F1EA;
+    --border:    #E3DCCE;
+    --card:      #FFFFFF;
+    --ink:       #3A3A3A;
+    --muted:     #5C554F;
+    --accent:    #7D6428;
+    --highlight: #5E4A1C;
+    --tag-bg:    #F0EAE0;
+    /* Ghosted numerals. Light enough to stay background texture, dark
+       enough to pass: --numeral 4.69:1 for 11px text, --numeral-display
+       3.40:1 which clears large-text AA at 72px. Previously both used
+       --border, which sat at 1.31:1. */
+    --numeral:   #767068;
+    --numeral-display: #8E8780;
     --final-tag: #A9C9A4;
+    /* "The Details" carousel. --ink-strong is the near-black the slide
+       headings use; --frame is the picture-frame border around slide
+       screenshots, --frame-dash the annotation boxes drawn around the two
+       policy-builder crops. The diagram pair drive the Dorothy persona map. */
+    --ink-strong:   #161616;
+    --frame:        #F2EDE4;
+    --frame-dash:   #CBBEA3;
+    --diagram-ink:  #444444;
+    --diagram-ring: #87191A;
+    /* Angular "torn paper" fills. --wash backs the hero headline; the
+       numbered three back the process principles. */
+    --wash:      #E8D5B0;
+    --wash-1:    #C8B89A;
+    --wash-2:    #E8D5B0;
+    --wash-3:    #C8A870;
     --serif:     'Playfair Display', Georgia, serif;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
   }
 
-  html { scroll-behavior: smooth; }
+  /* Honour the OS "reduce motion" setting: opt in rather than opt out. */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
 
   body {
     background: var(--bg);
-    color: var(--cream);
+    color: var(--ink);
     font-family: var(--sans);
     font-weight: 300;
     line-height: 1.7;
@@ -40,7 +67,7 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(14,14,14,0.92);
+    background: rgba(251,250,248,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 0 60px;
@@ -76,7 +103,7 @@
     transition: color 0.2s;
   }
 
-  .nav-links > a:hover { color: var(--cream); }
+  .nav-links > a:hover { color: var(--ink); }
 
   /* ── NAV DROPDOWN ── */
   .nav-dropdown {
@@ -101,7 +128,7 @@
 
   .nav-dropdown-trigger:hover,
   .nav-dropdown.open .nav-dropdown-trigger {
-    color: var(--cream);
+    color: var(--ink);
   }
 
   .nav-dropdown-trigger svg {
@@ -127,7 +154,7 @@
     visibility: hidden;
     transform: translateY(-6px);
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 16px 40px rgba(60,50,35,0.14);
   }
 
   .nav-dropdown.open .nav-dropdown-menu {
@@ -183,7 +210,7 @@
     display: block;
     font-family: var(--sans);
     font-size: 13px;
-    color: var(--cream);
+    color: var(--ink);
     line-height: 1.4;
   }
 
@@ -202,11 +229,13 @@
     margin: 0 auto;
   }
 
+  /* --highlight rather than --accent: this sits on the tan wash, where
+     --accent falls to 3.91:1. */
   .hero-eyebrow {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.15em;
-    color: var(--accent);
+    color: var(--highlight);
     text-transform: uppercase;
     margin-bottom: 28px;
   }
@@ -217,7 +246,7 @@
     font-weight: 400;
     line-height: 1.08;
     letter-spacing: -0.02em;
-    color: var(--cream);
+    color: var(--ink);
     margin-bottom: 32px;
   }
 
@@ -234,7 +263,7 @@
     margin-bottom: 48px;
   }
 
-  .hero-summary strong { color: var(--cream); font-weight: 400; }
+  .hero-summary strong { color: var(--ink); font-weight: 400; }
 
   .hero-meta {
     display: flex;
@@ -257,7 +286,7 @@
 
   .meta-value {
     font-size: 14px;
-    color: var(--cream);
+    color: var(--ink);
   }
 
   @media (max-width: 860px) {
@@ -308,7 +337,7 @@
   .toc-num {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--border);
+    color: var(--numeral);
     min-width: 28px;
     padding-top: 4px;
     transition: color 0.2s;
@@ -319,7 +348,7 @@
   .toc-item-title {
     font-family: var(--serif);
     font-size: 18px;
-    color: var(--cream);
+    color: var(--ink);
     transition: color 0.2s;
     display: block;
     margin-bottom: 4px;
@@ -382,7 +411,7 @@
   .cs-number {
     font-family: var(--serif);
     font-size: 72px;
-    color: var(--border);
+    color: var(--numeral-display);
     line-height: 1;
     padding-top: 4px;
     font-weight: 400;
@@ -404,7 +433,7 @@
     font-size: clamp(28px, 4vw, 48px);
     font-weight: 400;
     line-height: 1.15;
-    color: var(--cream);
+    color: var(--ink);
     margin-bottom: 16px;
   }
 
@@ -450,6 +479,7 @@
   .cs-section-label {
     font-family: var(--mono);
     font-size: 10px;
+    font-weight: 400;
     letter-spacing: 0.14em;
     color: var(--accent);
     text-transform: uppercase;
@@ -469,14 +499,14 @@
   .cs-section p {
     font-size: 15.5px;
     line-height: 1.8;
-    color: #C8C2B8;
+    color: var(--muted);
     margin-bottom: 16px;
   }
 
   .cs-section p:last-child { margin-bottom: 0; }
 
   .cs-section strong {
-    color: var(--cream);
+    color: var(--ink);
     font-weight: 500;
   }
 
@@ -602,7 +632,7 @@
 
   .sidebar-value {
     font-size: 14px;
-    color: var(--cream);
+    color: var(--ink);
     line-height: 1.6;
   }
 
@@ -630,8 +660,8 @@
 
   .role-pill {
     display: inline-block;
-    background: rgba(200, 184, 154, 0.08);
-    border: 1px solid rgba(200, 184, 154, 0.2);
+    background: rgba(125,100,40,0.07);
+    border: 1px solid rgba(125,100,40,0.28);
     color: var(--accent);
     font-family: var(--mono);
     font-size: 11px;
@@ -708,7 +738,7 @@
     position: fixed;
     top: 20px;
     right: 28px;
-    color: var(--cream);
+    color: #F2EDE4;
     font-family: var(--sans);
     font-size: 15px;
     letter-spacing: 0.05em;
@@ -730,7 +760,7 @@
     left: 0;
     right: 0;
     text-align: center;
-    color: var(--muted);
+    color: #A9A29B;
     font-family: var(--sans);
     font-size: 13px;
     padding: 0 60px;
@@ -781,7 +811,7 @@
     display: block;
     border-radius: 5px;
     border: 1px solid var(--border);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+    box-shadow: 0 18px 44px rgba(60,50,35,0.13);
   }
 
   .cs-figure.two-up-real {
@@ -843,10 +873,10 @@
   }
 
   .about-photo-card {
-    background: var(--cream);
+    background: var(--card);
     border-radius: 3px;
     padding: 14px 14px 48px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    box-shadow: 0 18px 44px rgba(60,50,35,0.18);
     transform: rotate(2deg);
     margin-top: 8px;
   }
@@ -870,22 +900,555 @@
     font-family: var(--serif);
     font-style: italic;
     font-size: 14px;
-    color: #3A3A3A;
+    color: var(--ink);
     text-align: center;
     margin-top: 16px;
   }
+
+  /* ── "THE DETAILS" CAROUSEL ──
+     Six slides in a horizontal scroll-snap track. The buttons and the ←/→ keys
+     are an enhancement layered on by site.js; with the script gone the track is
+     still a scrollable, swipeable row and every slide remains reachable. */
+  .cs-carousel {
+    margin-top: 80px;
+  }
+
+  /* Same rule as .cs-section-label, at the larger size the design uses for a
+     standalone section heading rather than one nested in the prose column. */
+  .cs-section-label.is-large {
+    font-size: 16px;
+    letter-spacing: 0.09em;
+    margin-bottom: 18px;
+  }
+
+  .cs-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Vertical padding only, to clear the card's drop shadow. Horizontal
+       padding would be a trap: flex-basis:100% resolves against the content
+       box, so side padding makes every slide narrower than the scrollport and
+       the neighbouring cards show through at both edges. The gap does that job
+       instead — it sits between slides rather than inside the scrollport, so it
+       parks the neighbours' shadows out of sight without shrinking anything.
+       The script derives its step from the slide pitch, so this stays in sync. */
+    padding: 8px 0;
+    gap: 16px;
+  }
+
+  /* The scrollbar is the only affordance until the script arrives, so it is
+     hidden and replaced by the buttons only once they actually work. Same
+     bargain the nav dropdown makes: never advertise a control that is dead. */
+  .cs-carousel.is-enhanced .cs-carousel-track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .cs-carousel.is-enhanced .cs-carousel-track::-webkit-scrollbar { display: none; }
+
+  .cs-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 281px;
+    min-height: 453px;
+    background: var(--card);
+    border-radius: 15px;
+    box-shadow: 0 2px 5.6px rgba(70,70,70,0.16);
+  }
+
+  /* Left half: the artwork. */
+  .cs-slide-assets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 28px 24px;
+    background: var(--bg);
+    border-radius: 10px 0 0 10px;
+  }
+
+  /* Right half: the label and the prose. */
+  .cs-slide-overlay {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 32px 26px 32px 28px;
+    background: var(--surface);
+    border-left: 1px dashed var(--border);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .cs-slide-overlay h3 {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ink-strong);
+  }
+
+  /* 13px rather than the comp's 12px: DM Sans at 300 is genuinely hard to read
+     that small next to the page's 15.5px body copy. */
+  .cs-slide-overlay p,
+  .cs-slide-overlay li {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .cs-slide-overlay p + p { margin-top: 14px; }
+
+  .cs-slide-overlay strong { color: var(--ink); font-weight: 500; }
+
+  .cs-slide-overlay ul {
+    margin-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Slide 1 carries no artwork, so the overlay spans the whole card. */
+  .cs-slide.is-text-only { grid-template-columns: 1fr; }
+
+  .cs-slide.is-text-only .cs-slide-overlay {
+    justify-content: center;
+    border-left: none;
+    border-radius: 10px;
+    padding: 40px 36px;
+  }
+
+  .cs-slide.is-text-only .cs-slide-overlay > * { max-width: 542px; }
+
+  .cs-slide-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    /* Explicit width, not just max-width, so children with no intrinsic size
+       have a resolved parent to measure their own width against. */
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cs-slide-figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 5px solid var(--frame);
+    border-radius: 5px;
+    background: var(--card);
+  }
+
+  .cs-slide-figure figcaption {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    text-align: center;
+    max-width: 480px;
+  }
+
+  /* Slide 4 sets one tall screen against two stacked storyboards, split by a
+     rule. The rule becomes horizontal once the pair stacks. */
+  .cs-slide-collage {
+    display: grid;
+    grid-template-columns: minmax(0, 0.58fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .cs-slide-collage > * + * {
+    border-left: 1px solid var(--border);
+    padding-left: 28px;
+  }
+
+  .cs-slide-collage .cs-slide-figure { gap: 10px; }
+
+  /* Two artworks of comparable weight side by side; the default collage is
+     weighted for one tall screen against a stack of two. */
+  .cs-slide-collage.is-even { grid-template-columns: 1fr 1fr; }
+
+  /* A set of small screens shown together — one per product. Flex rather than
+     grid so a partial last row centres instead of hanging left. */
+  .cs-slide-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .cs-slide-gallery .cs-slide-figure {
+    width: auto;
+    /* Two up rather than three: the overlay beside this panel runs long when a
+       slide covers several products, and three-up leaves the screens stranded
+       in the middle of a tall panel. */
+    flex: 0 1 calc(50% - 8px);
+    gap: 8px;
+  }
+
+  .cs-slide-gallery figcaption {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cs-slide-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .cs-slide-stack img { width: 100%; }
+
+  /* Slide 5: the crops are annotated rather than framed, so the dashed box
+     replaces the picture-frame border. */
+  .cs-slide-annot {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px dashed var(--frame-dash);
+  }
+
+  .cs-slide-annot img {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+  }
+
+  /* Slide 6 pins the FINAL tag above its screenshot, reusing .cs-figure-tag. */
+  .cs-slide-figure.is-tagged { align-items: flex-start; width: 100%; }
+
+  .cs-slide-figure.is-tagged .cs-figure-tag { margin-bottom: 0; }
+
+  .cs-slide-figure.is-tagged img {
+    box-shadow: 0 5px 7px rgba(0,0,0,0.1);
+  }
+
+  /* ── SLIDE 3: DOROTHY PERSONA MAP ──
+     Drawn as SVG rather than exported flat so the role labels stay real text.
+     Below 700px the map is swapped for the plain list, which reads better than
+     a diagram scaled past legibility. */
+  .persona-map {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+  }
+
+  .persona-map text {
+    font-family: var(--mono);
+    font-size: 15.5px;
+    letter-spacing: 2.17px;
+    fill: var(--ink-strong);
+  }
+
+  .persona-map .is-name { font-weight: 500; }
+
+  .persona-map line {
+    stroke: var(--diagram-ink);
+    stroke-width: 1;
+    stroke-linecap: round;
+  }
+
+  .persona-list { display: none; }
+
+  .persona-list img {
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    border: 4px solid var(--diagram-ring);
+    object-fit: cover;
+    /* The source art is a face on a maroon square; this frames the white
+       roundel inside it rather than the whole plate. */
+    object-position: 50% 38%;
+    display: block;
+    margin: 0 auto 18px;
+  }
+
+  .persona-list ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .persona-list li {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-strong);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 5px 10px;
+  }
+
+  .persona-list .is-name {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-strong);
+    margin-bottom: 14px;
+  }
+
+  /* ── SWIPE HINT (mobile) ──
+     Sits directly under the heading rather than after the track: slides differ
+     in height there, so anything below the track can end up far from the card
+     it belongs to. Decorative only — the track already announces itself as a
+     scrollable group, so this is aria-hidden. */
+  .cs-carousel-hint { display: none; }
+
+  .cs-carousel-hint svg {
+    width: 24px;
+    height: 8px;
+    overflow: visible;
+  }
+
+  .cs-carousel-hint path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Retires itself once the reader has swiped: the hint has done its job and
+     should stop nagging. */
+  .cs-carousel.has-swiped .cs-carousel-hint {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  @keyframes swipeNudge {
+    0%, 55%, 100% { transform: translateX(0);   opacity: 0.5; }
+    28%           { transform: translateX(6px); opacity: 1; }
+  }
+
+  /* ── CAROUSEL NAV ──
+     --muted rather than the comp's #8C8680, which measures 3.45:1 on --bg and
+     so fails AA for the 11px counter. */
+  .cs-carousel-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+  }
+
+  .cs-carousel.is-enhanced .cs-carousel-nav { display: flex; }
+
+  .cs-carousel-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 4px;
+    font-family: var(--mono);
+    font-size: 28px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    transition: color 0.2s, opacity 0.2s;
+  }
+
+  .cs-carousel-btn:hover:not(:disabled) { color: var(--accent); }
+
+  .cs-carousel-btn:disabled {
+    opacity: 0.32;
+    cursor: default;
+  }
+
+  .cs-carousel-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.11em;
+    color: var(--muted);
+  }
+
+  @media (max-width: 1000px) {
+    .cs-slide { grid-template-columns: minmax(0, 1fr) 260px; }
+  }
+
+  @media (max-width: 760px) {
+    .cs-carousel { margin-top: 56px; }
+
+    /* The two halves stack, so the dashed seam moves to the top edge and the
+       corner radii follow. */
+    .cs-slide {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    /* Side by side, every slide shares the tallest slide's height and that reads
+       as deliberate. Stacked, it does not: the tallest slide is ~1200px, and
+       forcing the short ones to match pads them with hundreds of pixels of
+       nothing — around the artwork if the rows stretch evenly, below the prose
+       if they do not. So on narrow screens each slide keeps its own height. */
+    .cs-carousel-track { align-items: flex-start; }
+
+    .cs-slide-assets {
+      border-radius: 10px 10px 0 0;
+      padding: 20px;
+    }
+
+    .cs-slide-overlay {
+      border-left: none;
+      border-top: 1px dashed var(--border);
+      border-radius: 0 0 10px 10px;
+      padding: 26px 22px 30px;
+    }
+
+    .cs-slide.is-text-only .cs-slide-overlay { padding: 30px 22px; }
+
+    .cs-slide-collage,
+    .cs-slide-collage.is-even {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .cs-slide-gallery .cs-slide-figure { flex-basis: calc(50% - 8px); }
+
+    .persona-map { display: none; }
+    .persona-list { display: block; }
+
+    /* Stacked, the tall Azure capture alone runs ~510px and makes slide 4 half
+       again as tall as any other — which the whole track then has to reserve.
+       Capping it costs nothing readable at this width; the detail was already
+       only legible in the lightbox. */
+    .cs-slide-collage img {
+      max-height: 320px;
+      width: auto;
+    }
+
+    .cs-slide-collage > * + * {
+      border-left: none;
+      border-top: 1px solid var(--border);
+      padding-left: 0;
+      padding-top: 22px;
+    }
+
+    /* With each slide at its own height the track would otherwise reserve the
+       tallest one's — 583px of dead space under the shortest. The script sets
+       the height to the slide(s) in view instead; this clips the taller ones
+       parked off to the side. Without the script the track keeps its natural
+       height and simply behaves as it did before. */
+    .cs-carousel.is-enhanced .cs-carousel-track { overflow-y: hidden; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .cs-carousel.is-enhanced .cs-carousel-track {
+        transition: height 0.3s ease;
+      }
+    }
+
+    .cs-carousel-hint {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: -4px 0 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .cs-carousel-hint svg { animation: swipeNudge 2s ease-in-out infinite; }
+    }
+
+    /* Swiping replaces the buttons here, so they go. The counter stays in the
+       accessibility tree, though — it is the live region that announces
+       position, and losing it would leave a screen reader with no feedback
+       after a swipe. */
+    .cs-carousel-nav { padding: 0; }
+
+    .cs-carousel-btn { display: none; }
+
+    .cs-carousel.is-enhanced .cs-carousel-count {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  /* ── SKIP LINK ──
+     Parked off-screen until focused, so a keyboard user can jump the fixed nav
+     and its four-item dropdown instead of tabbing through them on every page. */
+  .skip-link {
+    position: absolute;
+    left: 12px;
+    top: -64px;
+    z-index: 200;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 3px;
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus { top: 12px; }
+
+  /* Focus ring for every interactive element. :focus-visible rather than
+     :focus so a mouse click does not leave a ring sitting behind. */
+  /* --highlight, not --accent: the ring has to stay visible where it can land
+     on the tan wash, and --accent only reaches 3.91:1 there. */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 3px;
+  }
+
+  /* The lightbox keeps a dark overlay in the light theme, so the page accent is
+     too dark to read as a ring against it. */
+  #lightbox-overlay :focus-visible {
+    outline: 2px solid #F2EDE4;
+    outline-offset: 3px;
+  }
+
+  /* Focus target for the skip link; the ring would frame the whole page. */
+  #main:focus { outline: none; }
+
+  /* Zoomable images are real controls, so they take focus and show it. */
+  .cs-figure img,
+  .sidebar-img-real img,
+  .about-photo-frame img { cursor: zoom-in; }
+
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- LIGHTBOX -->
-<div id="lightbox-overlay">
+<div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
   <button id="lightbox-close" type="button">Close ✕</button>
   <img id="lightbox-img" src="" alt="">
   <p id="lightbox-caption"></p>
 </div>
 
-<nav>
+<nav aria-label="Main">
   <a href="index.html" class="nav-name">Mehvash Fatima</a>
   <div class="nav-links">
     <div class="nav-dropdown">
@@ -927,6 +1490,8 @@
   </div>
 </nav>
 
+<main id="main" tabindex="-1">
+
 <div style="max-width:1100px; margin:0 auto; padding:32px 60px 0;">
   <a href="index.html" style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none;">&larr; All Projects</a>
 </div>
@@ -937,7 +1502,7 @@
     <div class="cs-number">04</div>
     <div class="cs-header-content">
       <p class="cs-eyebrow">2019 – 2021 · Azure Purview</p>
-      <h2 class="cs-title">Project Babylon —<br>Azure Purview Launch</h2>
+      <h1 class="cs-title">Project Babylon —<br>Azure Purview Launch</h1>
       <p class="cs-subtitle">Azure Purview · Data Governance & Policy · Launch Dec 2020</p>
       <div class="cs-tags">
         <span class="tag">Lead Design (Policy UX)</span>
@@ -968,10 +1533,6 @@
         <p class="sidebar-label">Design type</p>
         <p class="sidebar-value">Zero-to-one · Scenario-driven · Platform strategy</p>
       </div>
-<div class="sidebar-block">
-        <p class="sidebar-label">Team</p>
-        <p class="sidebar-value">Small founding design team<br>Principal PM<br>Product management</p>
-      </div>
         </div>
       </details>
     </div>
@@ -984,89 +1545,11 @@
     <div class="cs-main">
 
       <div class="cs-section">
-        <p class="cs-section-label">The Problem</p>
-        <p>As Azure Purview matured, cataloging alone stopped being enough. Users could finally find and understand their data estate — but they still had no easy way to act on what they found. The design challenge shifted from helping people <em>see</em> their data to helping them <em>govern</em> it, without requiring them to become data governance specialists to do so.</p>
-        <p>No single Microsoft product could yet answer questions like "Is our data use compliant with GDPR?", "Who accessed sensitive data and what happened?", or "How do we prevent improper data sharing?" — and no established UX pattern existed for a platform that combined cataloging with active policy enforcement. Project Babylon was the answer.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">My Role</p>
-        <div class="role-pill">Lead Designer — Policy Management UX</div>
-        <p>I joined the core Babylon UX team as part of a small founding design group. I took lead ownership of the <strong>policy management and compliance monitoring scenarios</strong> — the part of Purview that would help organisations define, enforce, and investigate data governance policies. I co-authored the High-Level Scenario deck that became the team's guiding design artifact, and delivered the interactive prototypes that shaped the product roadmap presented at launch.</p>
-        <p>Babylon wasn't a single deliverable but an umbrella effort spanning several years and multiple parallel workstreams — including the privacy and consent management module that would later launch as Microsoft Priva.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Origin</p>
-        <p><strong>Research/input.</strong> The team started with "Jobs to Be Done" narratives across three core personas — Data Officer, Data Engineer, Security Officer — rather than designing features in isolation. Across our broader customer research, one finding held regardless of company size: data governance teams were chronically underfunded, and it was common for one person to be covering multiple roles at once.</p>
-        <p><strong>Insight.</strong> The people responsible for writing these policies weren't untrained in data governance broadly — many held titles like Data Officer and understood their organisation's data well. But they weren't legal specialists: holding responsibility for GDPR or CCPA compliance is different from being trained in GDPR or CCPA itself. That gap — real governance ownership without regulatory expertise — is what made simplicity and comprehensibility non-negotiable. A data officer needed to be able to write a policy correctly, and see plainly what it would actually do, without needing a law degree to do either.</p>
-        <p><strong>Decision.</strong> Rather than exposing the underlying technical config directly, I designed a guided policy builder that reads like a sentence — but is composed from structured, guided selections, not free text. "Take this <strong>Effect</strong> for this <strong>Action</strong> on these <strong>Data Resources</strong> to these <strong>Subjects</strong>" — every word a discrete, constrained choice, so a policy could be authored and understood at a glance without requiring engineering or legal training to get right.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag">Process</span>
-        <img src="assets/90cfff5d06ca.jpg" alt="Original Jobs to Be Done journey map showing Dorothy (Data Officer), Roger (Data Engineer), and James (Security Officer) personas moving through the policy lifecycle" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">The original Jobs to Be Done journey — Dorothy creates a policy, Roger's attempt to share protected data is blocked by it, James investigates the resulting alert. This single narrative arc across three personas shaped every screen that followed.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Design Process — Content Design as the Core Discipline</p>
-        <p>The broader focus throughout was precise, high-scrutiny content design: every label and word in the policy builder had to carry exact technical meaning while staying readable to someone who wasn't a specialist. One clear example of that bar in practice — the fields now labeled "Data Resources" and "Subjects" went through several rounds of renaming after user testing. Wording that read as perfectly clear during design turned out to confuse real users, partly because the industry's own governance terminology was shifting at the time. Getting to language people actually recognised took multiple passes, and it set the standard of scrutiny applied to every other label in the builder.</p>
-      </div>
-
-      <div class="cs-figure two-up-real">
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/400ebd573e76.jpg" alt="Early low-fidelity mockup of a GDPR policy template, showing a fill-in-the-blank sentence structure: Create policy DataPrivacy As Deny Read On Highly Confidential To non-admin users" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">An early template mockup — the sentence-as-config pattern in its first form, built around a single GDPR template rather than a general-purpose builder.</p>
-        </div>
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag final">Final</span>
-          <img src="assets/cdc27b5cded2.png" alt="Shipped policy builder in Azure Purview showing the Take this Effect for this Action on these Data Resources to these Subjects sentence structure" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">The shipped, general-purpose Policy Builder — the same sentence-based mechanism, generalised from one fixed template into a flexible statement anyone could compose.</p>
-        </div>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag final">Final</span>
-        <img src="assets/1b0c6f97ca93.png" alt="Shipped policy builder populated with a real policy statement denying read access to test data, sales data, and marketing data for certain subjects" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">The builder in use — four policy statements composed from the same guided structure, each still readable as a plain sentence.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Designing the Policy Lifecycle</p>
-        <p><strong>Automatic enforcement.</strong> The storyboard showed what happens when a Data Engineer attempts to share protected data externally via Azure Data Share — the policy intercepts the action and blocks it with a clear explanation of which policy applied and why. Designing this enforcement moment — what it looks and feels like when a policy actually does its job — was new UX territory with no existing pattern to borrow from.</p>
-        <p><strong>Detection and investigation.</strong> If data outside a policy's scope is shared unexpectedly, a Security Officer receives an alert. I designed the Activity Feed and Alert Detail view to be contextual, not just informational — showing which dataset, which user, which policy was relevant, and what actions were available, with a full activity log and recommended next steps.</p>
-      </div>
-
-      <div class="cs-figure two-up-real">
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/57881d880f1b.jpg" alt="Mockup of Azure Data Share showing three datasets blocked from being added due to a data policy enforced in Babylon" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">Enforcement, storyboarded — a data engineer's share attempt blocked in-line, with a link to see exactly which policy caused it.</p>
-        </div>
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/4e4af475135f.jpg" alt="Mockup of Babylon Protection Guardian showing a suspicious data-sharing activity flagged for a security officer to investigate" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">Detection, storyboarded — the loop closing: a blocked share attempt still surfaces as a flagged event for a security officer to review.</p>
-        </div>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Shaping the Product Roadmap</p>
-        <p>The scenarios I designed illuminated the importance of data policies at a time when Purview's initial scope was focused primarily on scanning and cataloging. Microsoft's public launch messaging at Purview's December 2020 preview echoed the scenario almost verbatim, naming governance policies as the natural next step — "as simple as setting a policy in Purview."</p>
-        <p>By the time Purview reached general availability, it included data classification and labelling, alert integration with Microsoft's security stack, and data risk insights for security officers — all directly tracing back to the design directions established in 2019–2020.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Outcome</p>
-        <p>Azure Purview launched in public preview in December 2020, and was received as a meaningful usability improvement over its predecessor. The compliance and policy narrative established in Babylon became the foundation Purview grew on — eventually evolving into the broader Microsoft Purview suite that now underpins the company's entire data security portfolio.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag final">Final</span>
-        <img src="assets/460c5ce9c309.png" alt="Shipped policy detail view showing a published data retention policy, its version history, and its owner" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">A completed policy in its detail view — plain-language statements, ownership, and full edit history, so accountability for a powerful action stays traceable.</p>
+        <h2 class="cs-section-label">TL;DR</h2>
+        <p>As Purview's cataloging matured, <strong>the challenge shifted from helping users see their data to helping them govern it</strong>, with no existing pattern for combining cataloging with active policy enforcement.</p>
+        <p>As part of a small founding design team, I led policy management and compliance UX. <strong>Research showed policy owners understood their data but weren't legal specialists, making clarity essential</strong>. Based on this research, it became clear that the design needed to be <strong>simple experience that wasn't burdened by unnecessary technicality</strong>.</p>
+        <p>I designed a guided policy builder structured like a readable sentence, built from constrained choices rather than free text to ensure correctly formatted and easily understood policy statements. Labels went through multiple rounds of user-tested renaming to get language right.</p>
+        <p>Customers received this feature well, <strong>resulting in an estimated 23% product engagement increase</strong>; it was a long awaited feature and customers appreciated the user-forward design choices.</p>
       </div>
 
     </div>
@@ -1087,21 +1570,161 @@
         <p class="sidebar-label">Design type</p>
         <p class="sidebar-value">Zero-to-one · Scenario-driven · Platform strategy</p>
       </div>
-      <div class="sidebar-block">
-        <p class="sidebar-label">Team</p>
-        <p class="sidebar-value">Small founding design team<br>Principal PM<br>Product management</p>
-      </div>
-      <div class="sidebar-block sidebar-img-real">
-        <img src="assets/cdc27b5cded2.png" alt="Shipped policy builder" loading="lazy" decoding="async">
-        <p class="sidebar-img-real-caption">Screens shown reflect the design as shipped under my ownership (2019–2021). The product has continued to evolve since.</p>
-      </div>
     </div>
       </details>
     </div>
-
-
-    
   </div>
+
+  <section class="cs-carousel" aria-roledescription="carousel" aria-label="The Details">
+    <h2 class="cs-section-label is-large">The Details</h2>
+
+    <p class="cs-carousel-hint" aria-hidden="true">
+      Swipe
+      <svg viewBox="0 0 24 8" focusable="false"><path d="M0.5 4h19M16 1l3.5 3-3.5 3"/></svg>
+    </p>
+
+    <div class="cs-carousel-track" id="cs-carousel-track" tabindex="0" role="group" aria-label="The Details slides, scrollable">
+
+      <!-- 1 / 6 -->
+      <div class="cs-slide is-text-only" role="group" aria-roledescription="slide" aria-label="1 of 6: The Problem">
+        <div class="cs-slide-overlay">
+          <h3>The Problem</h3>
+          <div>
+            <p>As Azure Purview matured, cataloging alone stopped being enough. Users could finally find and understand their data estate — but they still had no easy way to act on what they found. The design <strong>challenge shifted from helping people see their data to helping them govern it</strong>, without requiring them to become data governance specialists to do so.</p>
+            <p>No single Microsoft product could yet answer questions like &ldquo;<strong>Is our data use compliant with GDPR?</strong>&rdquo;, &ldquo;<strong>Who accessed sensitive data and what happened</strong>?&rdquo;, or &ldquo;<strong>How do we prevent improper data sharing</strong>?&rdquo; — and no established UX pattern existed for a platform that combined cataloging with active policy enforcement. Project Babylon was the answer.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 / 6 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="2 of 6: Research">
+        <div class="cs-slide-assets">
+          <figure class="cs-slide-figure">
+            <img src="assets/8ec7a8813721.png" alt="Journey diagram titled &quot;Policy creation&quot;, tracing Gloria the DBA, Dorothy the Data Officer, Roger the Data Engineer and Ann the Data Analyst through connecting a server to Azure, cataloguing it, adding GDPR and HBI policies, and reviewing lineage and reports" loading="lazy" decoding="async">
+            <figcaption>One of many such transit diagrams, mapping Dorothy&rsquo;s requirements/ painpoints and how they fit in the greater Purview context.</figcaption>
+          </figure>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Research</h3>
+          <div>
+            <p>The team started with a user deep dive with customers to understand key &ldquo;Jobs to Be Done&rdquo; narratives for our persona across Purview. Throughout our broader customer research, it quickly became clear these three pain points are the ones we absolutely need to solve for.</p>
+            <ul>
+              <li>Data catalog <strong>governance is an overwhelming effort</strong></li>
+              <li>Policy creation is high impact, with <strong>potentially big consequences</strong></li>
+              <li>Our persona is already doing a lot; <strong>often 1 or a just a handful of people responsible.</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 / 6 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="3 of 6: Insight">
+        <div class="cs-slide-assets">
+          <figure class="cs-slide-figure">
+            <svg class="persona-map" viewBox="0 0 699 400" role="img" aria-labelledby="persona-map-title persona-map-desc">
+              <title id="persona-map-title">The roles Dorothy covers</title>
+              <desc id="persona-map-desc">Dorothy, a Data Officer, sits at the centre of a map connecting her to four further roles she also covers: Security Officer, Privacy Admin, Security Admin, and a second Security Officer.</desc>
+              <defs>
+                <clipPath id="persona-clip"><circle cx="359" cy="155" r="49.6"/></clipPath>
+              </defs>
+              <line x1="303" y1="127" x2="192" y2="97"/>
+              <line x1="409" y1="128" x2="503" y2="80"/>
+              <line x1="310" y1="196" x2="179" y2="299"/>
+              <line x1="422" y1="203" x2="548" y2="297"/>
+              <image href="assets/ff1ab9eae828.png" x="291.4" y="76.1" width="131.4" height="144.7" clip-path="url(#persona-clip)"/>
+              <circle cx="359" cy="155" r="47.6" fill="none" stroke="var(--diagram-ring)" stroke-width="4"/>
+              <text x="136" y="103" text-anchor="middle">SECURITY</text>
+              <text x="136" y="131" text-anchor="middle">OFFICER</text>
+              <text x="585" y="80" text-anchor="middle">PRIVACY ADMIN</text>
+              <text x="178" y="329" text-anchor="middle">SECURITY ADMIN</text>
+              <text x="558" y="321" text-anchor="middle">SECURITY</text>
+              <text x="558" y="349" text-anchor="middle">OFFICER</text>
+              <text x="359" y="234" text-anchor="middle" class="is-name">DOROTHY</text>
+              <text x="359" y="262" text-anchor="middle">DATA OFFICER</text>
+            </svg>
+            <div class="persona-list">
+              <img src="assets/ff1ab9eae828.png" alt="" loading="lazy" decoding="async">
+              <p class="is-name">Dorothy — Data Officer</p>
+              <ul>
+                <li>Security Officer</li>
+                <li>Privacy Admin</li>
+                <li>Security Admin</li>
+                <li>Security Officer</li>
+              </ul>
+            </div>
+            <figcaption>Dorothy wears a lot of hats. She&rsquo;s exhausted.</figcaption>
+          </figure>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Insight</h3>
+          <p>Our key persona the Data Officers were well versed in data; but they weren't legal specialists. <strong>Holding responsibility for GDPR or CCPA compliance is different from being trained in GDPR or CCPA itself.</strong> That gap — real governance ownership without regulatory expertise — is what <strong>made simplicity and comprehensibility non-negotiable.</strong> A data officer needed to be able to <strong>write a policy correctly, and see plainly what it would actually do,</strong> without needing a law degree to do either.</p>
+        </div>
+      </div>
+
+      <!-- 4 / 6 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="4 of 6: Decisions">
+        <div class="cs-slide-assets">
+          <div class="cs-slide-collage">
+            <figure class="cs-slide-figure">
+              <img src="assets/770b3aaa9374.png" alt="Azure's existing Policy definition form, where the policy rule is authored as raw JSON in a code editor beneath the name and category fields" loading="lazy" decoding="async">
+              <figcaption>An example of the technical focused policy building UX in Azure</figcaption>
+            </figure>
+            <figure class="cs-slide-figure">
+              <div class="cs-slide-stack">
+                <img src="assets/e455c1840048.png" alt="Storyboard frame: Dorothy the Data Officer asks how to ensure data is GDPR compliant, and opens Babylon's Policy Manager to the GDPR policy group" loading="lazy" decoding="async">
+                <img src="assets/f42ecbdbd541.png" alt="Storyboard frame: the GDPR policy group screen, where a template reads &quot;Create policy DataPrivacy As Deny Read On Highly_Confidential To non-admin_users&quot;" loading="lazy" decoding="async">
+              </div>
+              <figcaption>Early storyboards/wireframes</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Decisions</h3>
+          <p>Rather than exposing the underlying technical config directly, I designed <strong>a guided policy builder that reads like a sentence</strong> — but is composed from structured, guided selections, not free text. &ldquo;<u>Take this <strong>Effect</strong> for this <strong>Action</strong> on these <strong>Data Resources</strong> to these <strong>Subjects</strong></u>&rdquo; — every word a discrete, constrained choice, so a <strong>policy could be authored and understood at a glance without requiring engineering or legal training to get right.</strong></p>
+        </div>
+      </div>
+
+      <!-- 5 / 6 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="5 of 6: Outcome">
+        <div class="cs-slide-assets">
+          <div class="cs-slide-annot">
+            <img src="assets/c960fcd9cd2d.png" alt="The policy builder with an empty statement — &quot;Take this Effect for this Action on these Data Resources to these Subjects&quot; — each field a coloured dropdown" loading="lazy" decoding="async">
+          </div>
+          <div class="cs-slide-annot">
+            <img src="assets/afee9d4f8162.png" alt="The same builder filled in — &quot;Deny Read on data belonging to Finance to all except Core Finance Team&quot;" loading="lazy" decoding="async">
+          </div>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Outcome</h3>
+          <div>
+            <p>The broader focus throughout was precise, high-scrutiny content design: <strong>every label and word in the policy builder had to carry exact technical meaning while staying readable to someone who wasn't a specialist.</strong> One clear example of that bar in practice — the fields now labeled &ldquo;Data Resources&rdquo; and &ldquo;Subjects&rdquo; went through several rounds of renaming after user testing.</p>
+            <p>Wording that read as <strong>perfectly clear during design turned out to confuse real users,</strong> partly because the <strong>industry's own governance terminology was shifting at the time.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 / 6 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="6 of 6: Impact">
+        <div class="cs-slide-assets">
+          <figure class="cs-slide-figure is-tagged">
+            <span class="cs-figure-tag final">Final</span>
+            <img src="assets/882cfd9f09c1.png" alt="Shipped New policy screen in Azure Purview, with the policy builder sentence and a Tips panel showing an example policy statement" loading="lazy" decoding="async">
+          </figure>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Impact</h3>
+          <p>The compliance and policy narrative I designed was <strong>very well received, resulting in a significant product engagement increase, estimated around 23%</strong> (based on memory of internal telemetry metrics); <strong>it was the feature customers were waiting for</strong>. It eventually became the foundation Purview compliance functionality grew on — eventually evolving into the broader Microsoft Purview suite that now underpins the company's entire data security portfolio.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cs-carousel-nav">
+      <button class="cs-carousel-btn" type="button" data-carousel-dir="prev" aria-controls="cs-carousel-track" aria-label="Previous slide"><span aria-hidden="true">&larr;</span></button>
+      <p class="cs-carousel-count" data-carousel-count aria-live="polite" aria-atomic="true">1 / 6</p>
+      <button class="cs-carousel-btn" type="button" data-carousel-dir="next" aria-controls="cs-carousel-track" aria-label="Next slide"><span aria-hidden="true">&rarr;</span></button>
+    </div>
+  </section>
 </div>
 
 <div style="max-width:1100px; margin:0 auto; padding:56px 60px 0; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); margin-top:40px; padding-top:40px;">
@@ -1110,6 +1733,8 @@
 </div>
 
 <!-- FOOTER -->
+</main>
+
 <footer>
   <p>Mehvash Fatima 2026</p>
   <p><a href="mailto:f.mehvash@gmail.com">f.mehvash@gmail.com</a> · <a href="https://www.linkedin.com/in/mehvash-fatima/">linkedin.com/in/mehvash-fatima</a></p>

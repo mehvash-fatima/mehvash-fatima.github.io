@@ -10,25 +10,49 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #0E0E0E;
-    --surface:   #161616;
-    --border:    #2A2A2A;
-    --cream:     #F2EDE4;
-    --muted:     #8C8680;
-    --accent:    #C8B89A;
-    --highlight: #E8D5B0;
-    --tag-bg:    #1E1E1E;
+    /* Light palette. Every ink/accent value below clears WCAG AA (4.5:1) on the
+       darkest surface it can land on (--tag-bg), not just on --bg. */
+    --bg:        #FBFAF8;
+    --surface:   #F5F1EA;
+    --border:    #E3DCCE;
+    --card:      #FFFFFF;
+    --ink:       #3A3A3A;
+    --muted:     #5C554F;
+    --accent:    #7D6428;
+    --highlight: #5E4A1C;
+    --tag-bg:    #F0EAE0;
+    /* Ghosted numerals. Light enough to stay background texture, dark
+       enough to pass: --numeral 4.69:1 for 11px text, --numeral-display
+       3.40:1 which clears large-text AA at 72px. Previously both used
+       --border, which sat at 1.31:1. */
+    --numeral:   #767068;
+    --numeral-display: #8E8780;
     --final-tag: #A9C9A4;
+    /* "The Details" carousel. --ink-strong is the near-black the slide
+       headings use; --frame is the picture-frame border around slide
+       screenshots, --frame-dash the dashed annotation boxes. */
+    --ink-strong:   #161616;
+    --frame:        #F2EDE4;
+    --frame-dash:   #CBBEA3;
+    /* Angular "torn paper" fills. --wash backs the hero headline; the
+       numbered three back the process principles. */
+    --wash:      #E8D5B0;
+    --wash-1:    #C8B89A;
+    --wash-2:    #E8D5B0;
+    --wash-3:    #C8A870;
     --serif:     'Playfair Display', Georgia, serif;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
   }
 
-  html { scroll-behavior: smooth; }
+  /* Honour the OS "reduce motion" setting: opt in rather than opt out. */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
 
   body {
     background: var(--bg);
-    color: var(--cream);
+    color: var(--ink);
     font-family: var(--sans);
     font-weight: 300;
     line-height: 1.7;
@@ -40,7 +64,7 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(14,14,14,0.92);
+    background: rgba(251,250,248,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     padding: 0 60px;
@@ -76,7 +100,7 @@
     transition: color 0.2s;
   }
 
-  .nav-links > a:hover { color: var(--cream); }
+  .nav-links > a:hover { color: var(--ink); }
 
   /* ── NAV DROPDOWN ── */
   .nav-dropdown {
@@ -101,7 +125,7 @@
 
   .nav-dropdown-trigger:hover,
   .nav-dropdown.open .nav-dropdown-trigger {
-    color: var(--cream);
+    color: var(--ink);
   }
 
   .nav-dropdown-trigger svg {
@@ -127,7 +151,7 @@
     visibility: hidden;
     transform: translateY(-6px);
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 16px 40px rgba(60,50,35,0.14);
   }
 
   .nav-dropdown.open .nav-dropdown-menu {
@@ -183,7 +207,7 @@
     display: block;
     font-family: var(--sans);
     font-size: 13px;
-    color: var(--cream);
+    color: var(--ink);
     line-height: 1.4;
   }
 
@@ -202,11 +226,13 @@
     margin: 0 auto;
   }
 
+  /* --highlight rather than --accent: this sits on the tan wash, where
+     --accent falls to 3.91:1. */
   .hero-eyebrow {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.15em;
-    color: var(--accent);
+    color: var(--highlight);
     text-transform: uppercase;
     margin-bottom: 28px;
   }
@@ -217,7 +243,7 @@
     font-weight: 400;
     line-height: 1.08;
     letter-spacing: -0.02em;
-    color: var(--cream);
+    color: var(--ink);
     margin-bottom: 32px;
   }
 
@@ -234,7 +260,7 @@
     margin-bottom: 48px;
   }
 
-  .hero-summary strong { color: var(--cream); font-weight: 400; }
+  .hero-summary strong { color: var(--ink); font-weight: 400; }
 
   .hero-meta {
     display: flex;
@@ -257,7 +283,7 @@
 
   .meta-value {
     font-size: 14px;
-    color: var(--cream);
+    color: var(--ink);
   }
 
   @media (max-width: 860px) {
@@ -308,7 +334,7 @@
   .toc-num {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--border);
+    color: var(--numeral);
     min-width: 28px;
     padding-top: 4px;
     transition: color 0.2s;
@@ -319,7 +345,7 @@
   .toc-item-title {
     font-family: var(--serif);
     font-size: 18px;
-    color: var(--cream);
+    color: var(--ink);
     transition: color 0.2s;
     display: block;
     margin-bottom: 4px;
@@ -382,7 +408,7 @@
   .cs-number {
     font-family: var(--serif);
     font-size: 72px;
-    color: var(--border);
+    color: var(--numeral-display);
     line-height: 1;
     padding-top: 4px;
     font-weight: 400;
@@ -404,7 +430,7 @@
     font-size: clamp(28px, 4vw, 48px);
     font-weight: 400;
     line-height: 1.15;
-    color: var(--cream);
+    color: var(--ink);
     margin-bottom: 16px;
   }
 
@@ -450,6 +476,7 @@
   .cs-section-label {
     font-family: var(--mono);
     font-size: 10px;
+    font-weight: 400;
     letter-spacing: 0.14em;
     color: var(--accent);
     text-transform: uppercase;
@@ -469,14 +496,14 @@
   .cs-section p {
     font-size: 15.5px;
     line-height: 1.8;
-    color: #C8C2B8;
+    color: var(--muted);
     margin-bottom: 16px;
   }
 
   .cs-section p:last-child { margin-bottom: 0; }
 
   .cs-section strong {
-    color: var(--cream);
+    color: var(--ink);
     font-weight: 500;
   }
 
@@ -602,7 +629,7 @@
 
   .sidebar-value {
     font-size: 14px;
-    color: var(--cream);
+    color: var(--ink);
     line-height: 1.6;
   }
 
@@ -630,8 +657,8 @@
 
   .role-pill {
     display: inline-block;
-    background: rgba(200, 184, 154, 0.08);
-    border: 1px solid rgba(200, 184, 154, 0.2);
+    background: rgba(125,100,40,0.07);
+    border: 1px solid rgba(125,100,40,0.28);
     color: var(--accent);
     font-family: var(--mono);
     font-size: 11px;
@@ -708,7 +735,7 @@
     position: fixed;
     top: 20px;
     right: 28px;
-    color: var(--cream);
+    color: #F2EDE4;
     font-family: var(--sans);
     font-size: 15px;
     letter-spacing: 0.05em;
@@ -730,7 +757,7 @@
     left: 0;
     right: 0;
     text-align: center;
-    color: var(--muted);
+    color: #A9A29B;
     font-family: var(--sans);
     font-size: 13px;
     padding: 0 60px;
@@ -781,7 +808,7 @@
     display: block;
     border-radius: 5px;
     border: 1px solid var(--border);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+    box-shadow: 0 18px 44px rgba(60,50,35,0.13);
   }
 
   .cs-figure.two-up-real {
@@ -843,10 +870,10 @@
   }
 
   .about-photo-card {
-    background: var(--cream);
+    background: var(--card);
     border-radius: 3px;
     padding: 14px 14px 48px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    box-shadow: 0 18px 44px rgba(60,50,35,0.18);
     transform: rotate(2deg);
     margin-top: 8px;
   }
@@ -870,22 +897,480 @@
     font-family: var(--serif);
     font-style: italic;
     font-size: 14px;
-    color: #3A3A3A;
+    color: var(--ink);
     text-align: center;
     margin-top: 16px;
   }
+
+  /* ── "THE DETAILS" CAROUSEL ──
+     Six slides in a horizontal scroll-snap track. The buttons and the ←/→ keys
+     are an enhancement layered on by site.js; with the script gone the track is
+     still a scrollable, swipeable row and every slide remains reachable. */
+  .cs-carousel {
+    margin-top: 80px;
+  }
+
+  /* Same rule as .cs-section-label, at the larger size the design uses for a
+     standalone section heading rather than one nested in the prose column. */
+  .cs-section-label.is-large {
+    font-size: 16px;
+    letter-spacing: 0.09em;
+    margin-bottom: 18px;
+  }
+
+  .cs-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Vertical padding only, to clear the card's drop shadow. Horizontal
+       padding would be a trap: flex-basis:100% resolves against the content
+       box, so side padding makes every slide narrower than the scrollport and
+       the neighbouring cards show through at both edges. The gap does that job
+       instead — it sits between slides rather than inside the scrollport, so it
+       parks the neighbours' shadows out of sight without shrinking anything.
+       The script derives its step from the slide pitch, so this stays in sync. */
+    padding: 8px 0;
+    gap: 16px;
+  }
+
+  /* The scrollbar is the only affordance until the script arrives, so it is
+     hidden and replaced by the buttons only once they actually work. Same
+     bargain the nav dropdown makes: never advertise a control that is dead. */
+  .cs-carousel.is-enhanced .cs-carousel-track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .cs-carousel.is-enhanced .cs-carousel-track::-webkit-scrollbar { display: none; }
+
+  .cs-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 281px;
+    min-height: 453px;
+    background: var(--card);
+    border-radius: 15px;
+    box-shadow: 0 2px 5.6px rgba(70,70,70,0.16);
+  }
+
+  /* Left half: the artwork. */
+  .cs-slide-assets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 28px 24px;
+    background: var(--bg);
+    border-radius: 10px 0 0 10px;
+  }
+
+  /* Right half: the label and the prose. */
+  .cs-slide-overlay {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 32px 26px 32px 28px;
+    background: var(--surface);
+    border-left: 1px dashed var(--border);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .cs-slide-overlay h3 {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ink-strong);
+  }
+
+  /* 13px rather than the comp's 12px: DM Sans at 300 is genuinely hard to read
+     that small next to the page's 15.5px body copy. */
+  .cs-slide-overlay p,
+  .cs-slide-overlay li {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .cs-slide-overlay p + p { margin-top: 14px; }
+
+  .cs-slide-overlay strong { color: var(--ink); font-weight: 500; }
+
+  .cs-slide-overlay ul {
+    margin-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Slide 1 carries no artwork, so the overlay spans the whole card. */
+  .cs-slide.is-text-only { grid-template-columns: 1fr; }
+
+  .cs-slide.is-text-only .cs-slide-overlay {
+    justify-content: center;
+    border-left: none;
+    border-radius: 10px;
+    padding: 40px 36px;
+  }
+
+  .cs-slide.is-text-only .cs-slide-overlay > * { max-width: 542px; }
+
+  .cs-slide-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    /* Explicit width, not just max-width, so children with no intrinsic size
+       have a resolved parent to measure their own width against. */
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cs-slide-figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 5px solid var(--frame);
+    border-radius: 5px;
+    background: var(--card);
+  }
+
+  .cs-slide-figure figcaption {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    text-align: center;
+    max-width: 480px;
+  }
+
+  /* Slide 4 sets one tall screen against two stacked storyboards, split by a
+     rule. The rule becomes horizontal once the pair stacks. */
+  .cs-slide-collage {
+    display: grid;
+    grid-template-columns: minmax(0, 0.58fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .cs-slide-collage > * + * {
+    border-left: 1px solid var(--border);
+    padding-left: 28px;
+  }
+
+  .cs-slide-collage .cs-slide-figure { gap: 10px; }
+
+  /* Two artworks of comparable weight side by side; the default collage is
+     weighted for one tall screen against a stack of two. */
+  .cs-slide-collage.is-even { grid-template-columns: 1fr 1fr; }
+
+  /* A set of small screens shown together — one per product. Flex rather than
+     grid so a partial last row centres instead of hanging left. */
+  .cs-slide-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .cs-slide-gallery .cs-slide-figure {
+    width: auto;
+    /* Two up rather than three: the overlay beside this panel runs long when a
+       slide covers several products, and three-up leaves the screens stranded
+       in the middle of a tall panel. */
+    flex: 0 1 calc(50% - 8px);
+    gap: 8px;
+  }
+
+  .cs-slide-gallery figcaption {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cs-slide-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .cs-slide-stack img { width: 100%; }
+
+  /* Slide 5: the crops are annotated rather than framed, so the dashed box
+     replaces the picture-frame border. */
+  .cs-slide-annot {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px dashed var(--frame-dash);
+  }
+
+  .cs-slide-annot img {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+  }
+
+  /* Slide 6 pins the FINAL tag above its screenshot, reusing .cs-figure-tag. */
+  .cs-slide-figure.is-tagged { align-items: flex-start; width: 100%; }
+
+  .cs-slide-figure.is-tagged .cs-figure-tag { margin-bottom: 0; }
+
+  .cs-slide-figure.is-tagged img {
+    box-shadow: 0 5px 7px rgba(0,0,0,0.1);
+  }
+
+  /* ── SWIPE HINT (mobile) ──
+     Sits directly under the heading rather than after the track: slides differ
+     in height there, so anything below the track can end up far from the card
+     it belongs to. Decorative only — the track already announces itself as a
+     scrollable group, so this is aria-hidden. */
+  .cs-carousel-hint { display: none; }
+
+  .cs-carousel-hint svg {
+    width: 24px;
+    height: 8px;
+    overflow: visible;
+  }
+
+  .cs-carousel-hint path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Retires itself once the reader has swiped: the hint has done its job and
+     should stop nagging. */
+  .cs-carousel.has-swiped .cs-carousel-hint {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  @keyframes swipeNudge {
+    0%, 55%, 100% { transform: translateX(0);   opacity: 0.5; }
+    28%           { transform: translateX(6px); opacity: 1; }
+  }
+
+  /* ── CAROUSEL NAV ──
+     --muted rather than the comp's #8C8680, which measures 3.45:1 on --bg and
+     so fails AA for the 11px counter. */
+  .cs-carousel-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+  }
+
+  .cs-carousel.is-enhanced .cs-carousel-nav { display: flex; }
+
+  .cs-carousel-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 4px;
+    font-family: var(--mono);
+    font-size: 28px;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    transition: color 0.2s, opacity 0.2s;
+  }
+
+  .cs-carousel-btn:hover:not(:disabled) { color: var(--accent); }
+
+  .cs-carousel-btn:disabled {
+    opacity: 0.32;
+    cursor: default;
+  }
+
+  .cs-carousel-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.11em;
+    color: var(--muted);
+  }
+
+  @media (max-width: 1000px) {
+    .cs-slide { grid-template-columns: minmax(0, 1fr) 260px; }
+  }
+
+  @media (max-width: 760px) {
+    .cs-carousel { margin-top: 56px; }
+
+    /* The two halves stack, so the dashed seam moves to the top edge and the
+       corner radii follow. */
+    .cs-slide {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    /* Side by side, every slide shares the tallest slide's height and that reads
+       as deliberate. Stacked, it does not: the tallest slide is ~1200px, and
+       forcing the short ones to match pads them with hundreds of pixels of
+       nothing — around the artwork if the rows stretch evenly, below the prose
+       if they do not. So on narrow screens each slide keeps its own height. */
+    .cs-carousel-track { align-items: flex-start; }
+
+    .cs-slide-assets {
+      border-radius: 10px 10px 0 0;
+      padding: 20px;
+    }
+
+    .cs-slide-overlay {
+      border-left: none;
+      border-top: 1px dashed var(--border);
+      border-radius: 0 0 10px 10px;
+      padding: 26px 22px 30px;
+    }
+
+    .cs-slide.is-text-only .cs-slide-overlay { padding: 30px 22px; }
+
+    .cs-slide-collage,
+    .cs-slide-collage.is-even {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .cs-slide-gallery .cs-slide-figure { flex-basis: calc(50% - 8px); }
+
+    /* Stacked, the tall Azure capture alone runs ~510px and makes slide 4 half
+       again as tall as any other — which the whole track then has to reserve.
+       Capping it costs nothing readable at this width; the detail was already
+       only legible in the lightbox. */
+    .cs-slide-collage img {
+      max-height: 320px;
+      width: auto;
+    }
+
+    .cs-slide-collage > * + * {
+      border-left: none;
+      border-top: 1px solid var(--border);
+      padding-left: 0;
+      padding-top: 22px;
+    }
+
+    /* With each slide at its own height the track would otherwise reserve the
+       tallest one's — 583px of dead space under the shortest. The script sets
+       the height to the slide(s) in view instead; this clips the taller ones
+       parked off to the side. Without the script the track keeps its natural
+       height and simply behaves as it did before. */
+    .cs-carousel.is-enhanced .cs-carousel-track { overflow-y: hidden; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .cs-carousel.is-enhanced .cs-carousel-track {
+        transition: height 0.3s ease;
+      }
+    }
+
+    .cs-carousel-hint {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: -4px 0 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .cs-carousel-hint svg { animation: swipeNudge 2s ease-in-out infinite; }
+    }
+
+    /* Swiping replaces the buttons here, so they go. The counter stays in the
+       accessibility tree, though — it is the live region that announces
+       position, and losing it would leave a screen reader with no feedback
+       after a swipe. */
+    .cs-carousel-nav { padding: 0; }
+
+    .cs-carousel-btn { display: none; }
+
+    .cs-carousel.is-enhanced .cs-carousel-count {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  /* ── SKIP LINK ──
+     Parked off-screen until focused, so a keyboard user can jump the fixed nav
+     and its four-item dropdown instead of tabbing through them on every page. */
+  .skip-link {
+    position: absolute;
+    left: 12px;
+    top: -64px;
+    z-index: 200;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 3px;
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus { top: 12px; }
+
+  /* Focus ring for every interactive element. :focus-visible rather than
+     :focus so a mouse click does not leave a ring sitting behind. */
+  /* --highlight, not --accent: the ring has to stay visible where it can land
+     on the tan wash, and --accent only reaches 3.91:1 there. */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 3px;
+  }
+
+  /* The lightbox keeps a dark overlay in the light theme, so the page accent is
+     too dark to read as a ring against it. */
+  #lightbox-overlay :focus-visible {
+    outline: 2px solid #F2EDE4;
+    outline-offset: 3px;
+  }
+
+  /* Focus target for the skip link; the ring would frame the whole page. */
+  #main:focus { outline: none; }
+
+  /* Zoomable images are real controls, so they take focus and show it. */
+  .cs-figure img,
+  .sidebar-img-real img,
+  .about-photo-frame img { cursor: zoom-in; }
+
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- LIGHTBOX -->
-<div id="lightbox-overlay">
+<div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
   <button id="lightbox-close" type="button">Close ✕</button>
   <img id="lightbox-img" src="" alt="">
   <p id="lightbox-caption"></p>
 </div>
 
-<nav>
+<nav aria-label="Main">
   <a href="index.html" class="nav-name">Mehvash Fatima</a>
   <div class="nav-links">
     <div class="nav-dropdown">
@@ -927,6 +1412,8 @@
   </div>
 </nav>
 
+<main id="main" tabindex="-1">
+
 <div style="max-width:1100px; margin:0 auto; padding:32px 60px 0;">
   <a href="index.html" style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none;">&larr; All Projects</a>
 </div>
@@ -937,7 +1424,7 @@
     <div class="cs-number">02</div>
     <div class="cs-header-content">
       <p class="cs-eyebrow">2023 – 2024 · Microsoft Priva</p>
-      <h2 class="cs-title">AI-Powered Privacy<br>Manager (Copilot)</h2>
+      <h1 class="cs-title">AI-Powered Privacy<br>Manager (Copilot)</h1>
       <p class="cs-subtitle">Microsoft Priva · Security Copilot · IAPP Global Summit 2024</p>
       <div class="cs-tags">
         <span class="tag">Interaction Lead</span>
@@ -976,6 +1463,10 @@
         <p class="sidebar-label">Collaborators</p>
         <p class="sidebar-value">Co-design partnership<br>Principal PM<br>Senior leadership review</p>
       </div>
+<div class="sidebar-block">
+        <p class="sidebar-label">Note</p>
+        <p class="sidebar-value" style="font-size:12px; color: var(--muted);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
+      </div>
         </div>
       </details>
     </div>
@@ -988,114 +1479,11 @@
     <div class="cs-main">
 
       <div class="cs-section">
-        <p class="cs-section-label">The Problem</p>
-        <p>Microsoft Priva is a suite of five privacy products — subject rights requests, consent management, privacy risk management, assessments, and tracker scanning — that together cover an organisation's privacy compliance workflow (see the Priva case study for the full picture). Privacy officers working across that suite faced a consistent challenge: the tools existed, but navigating across five distinct products to answer a single compliance question was slow and cognitively demanding. Understanding consent requirements across jurisdictions, initiating a data subject request, and reviewing risk patterns required expert knowledge of where everything lived.</p>
-        <p>With generative AI maturing rapidly inside Microsoft, the question became: <strong>what does it look like when an AI assistant orchestrates privacy operations — not just answers questions?</strong></p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">My Role</p>
-        <div class="role-pill">Interaction Design Lead</div>
-        <p>I co-designed this project with another interaction designer. My specific ownership was the <strong>core interaction model</strong> — the rules governing how the AI surfaces suggestions, how users maintain control over AI-generated content, and how the assistant transitions fluidly between conversational responses and native product UI. I also led the Figma prototype that was used in the live IAPP demo and drove the iteration sessions with senior leadership in the lead-up to the conference.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Design Explorations</p>
-        <p>Underlying every pattern explored here were two constraints. First, AI suggestions needed to be attributable, editable, and interruptible, or privacy officers wouldn't trust the system with real compliance decisions. Second, a principle we held to throughout: <strong>don't recreate UI inside Copilot itself — leverage the product's existing UI, and don't make users re-learn flows they already know.</strong> Neither got its own separate design track; both shaped how the patterns below actually work.</p>
-        <p><strong>Smart wizard automation.</strong> Multi-step wizards — like creating a consent model — were a prime target for AI compression. Rather than the user filling 11+ fields manually, Copilot could surface a relevant next step directly inside a conversation — answering a regulatory question and then proposing "Create a consent model for my website in California" as a suggested action — or the user could ask for it directly. Either path opened a wizard pre-populated with Copilot's suggestions, each one editable and clearly labeled as a suggestion rather than a locked answer, down to the layout step, where Copilot's recommended option came with its reasoning shown inline (e.g. "Supports CA 'Do Not Sell' requirement"). A task that previously took manual research and form-filling was reduced to a review-and-confirm.</p>
-        <p><strong>Magic Spotlight.</strong> The vision was to let a user click into any artifact they had a question about — not just a chart — and ask Copilot directly. That vision shipped largely as designed: once a user's Privacy Manager home populates with their history and relevant info, a Copilot icon sits directly on each card — Tracker Scanning, Subject Rights Requests, Privacy Risk Assessment — surfacing a contextual answer without leaving the page. One direction we explored further, an inline expansion that turned a card into a small embedded chat panel, was ultimately not shipped: accessibility and technical feasibility concerns ruled it out in favor of the simpler icon-triggered pattern that did ship.</p>
-      </div>
-
-      <div class="cs-figure two-up-real">
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/1ba05154f4cd.jpg" alt="Early sketch exploring a Copilot-assisted flow for learning about privacy laws and creating a data inventory, with open questions annotated in pink" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">An early sketch of the same underlying pattern — Copilot answering a regulatory question, then walking the user toward a concrete next action. The pink annotations are open questions the team was still working through at the time, not settled answers.</p>
-        </div>
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag final">Final</span>
-          <img src="assets/a12d5a5cb23f.png" alt="Shipped consent model wizard with 11 fields pre-populated by Copilot, each editable and labeled as a Copilot suggestion" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">The shipped result — the same underlying idea, now a working wizard with 11 Copilot-suggested fields, each editable before the user saves.</p>
-        </div>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag">Process</span>
-        <img src="assets/a0a846db8ff1.jpg" alt="Handwritten notes stating the design principle: don't re-create UI in Copilot itself, instead leverage existing UI, and don't make users re-learn existing flows" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">The stated principle, in its original handwriting — reused existing product UI rather than reinventing it inside the chat surface, so Copilot extended familiar flows instead of replacing them.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag">Process</span>
-        <img src="assets/33b1140ba894.jpg" alt="Wide bird's-eye view of the Figma exploration board showing dozens of dated iterations across multiple days" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">A bird's-eye view of the exploration board — dated, dense, and iterated on daily. Most of what's on this board didn't ship; that volume of discarded work is part of how the final patterns got settled.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag">Process</span>
-        <img src="assets/27c1fa5b5ec4.jpg" alt="Early sketches exploring Magic Spotlight applied broadly to SRR tasks and tracker scan results, not just charts" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">An early sketch of Magic Spotlight's scope — applied here to SRR tasks and tracker scan results, not just charts. This broad application is close to what actually shipped.</p>
-      </div>
-
-      <div class="cs-figure two-up-real">
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/3c7fa14e0d95.png" alt="Alternate Privacy Manager home layout, Priva-branded, with a large search bar, compliance issue cards, and an expandable recent-conversations panel showing a status stepper" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">One alternate direction for the home experience — a conversation-history-first layout, with an expandable status stepper for tracking a multi-step AI-assisted task.</p>
-        </div>
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag">Process</span>
-          <img src="assets/e7d0a816d35f.png" alt="Alternate Privacy Manager home layout, Purview-branded, with a sidebar of system-generated views and an expandable AI summary panel with a chart" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">A second alternate direction, from before the Priva rebrand — a sidebar of system-generated views alongside an inline AI summary panel.</p>
-        </div>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag final">Final</span>
-        <img src="assets/4e6a0a31a1c8.png" alt="Shipped Privacy Manager home screen populated with the user's history, showing compliance-issue cards each with a small Copilot icon in the corner" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">The shipped Magic Spotlight pattern — once a user's Privacy Manager home fills in with their history, a Copilot icon sits directly on each card (Tracker, Subject Rights Requests, Privacy Risk Assessment), not just on charts.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag">Process</span>
-        <img src="assets/e8b8380104e4.png" alt="Exploration of an inline chat expansion, showing a compliance card expanding into an embedded chat panel with a donut chart and follow-up prompt suggestions" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">A deeper interaction explored and not shipped — expanding a card directly into an embedded chat panel. Set aside for accessibility and technical feasibility reasons in favor of the simpler icon-triggered pattern above.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag final">Final</span>
-        <img src="assets/4d07c321e36b.png" alt="Shipped Privacy Manager Copilot entry screen with a prompt bar and four suggested-prompt cards" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">The entry point — an open prompt plus suggested starting points, so the assistant is useful whether a user knows exactly what they need or not.</p>
-      </div>
-
-      <div class="cs-figure">
-        <span class="cs-figure-tag final">Final</span>
-        <img src="assets/2618e5f1597f.png" alt="Shipped Copilot response to a California privacy law question, with three numbered sourced citations and a suggested action card for Priva Consent Management" loading="lazy" decoding="async">
-        <p class="cs-figure-caption">Attribution in practice — every regulatory claim traces to a numbered source, and the response ends in a concrete suggested action rather than just information.</p>
-      </div>
-
-      <div class="cs-figure two-up-real">
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag final">Final</span>
-          <img src="assets/8360b96fc630.png" alt="Shipped wizard layout selection step with a Copilot-recommended option and stated reasoning: supports CA Do Not Sell requirement" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">Copilot's recommendation shown with its reasoning attached, not just a pre-selected default — the "why" stays visible at the point of decision.</p>
-        </div>
-        <div class="cs-figure-col">
-          <span class="cs-figure-tag final">Final</span>
-          <img src="assets/b13428ea3fd5.png" alt="Shipped confirmation state showing a consent model draft created by Copilot, with an Open button returning to native Consent Management UI" loading="lazy" decoding="async">
-          <p class="cs-figure-caption">The handoff back to native product UI — Copilot's job ends at a review-ready draft, not a black-box action taken on the user's behalf.</p>
-        </div>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">IAPP Global Summit 2024</p>
-        <p>The prototype was demoed live at the <strong>IAPP Global Summit on April 3, 2024</strong> — one of the most prestigious privacy industry conferences globally. The demo followed a live scenario: a company expanding to new markets, using Privacy Manager Copilot to navigate consent compliance in California. The system answered regulatory questions with sourced citations, generated a draft consent model in seconds, surfaced overdue DSRs, and auto-drafted a follow-up email to task owners.</p>
-        <p>Response from privacy professionals in the audience was strongly positive — generative AI applied specifically to privacy compliance was still uncommon to see live at that point, and the demo landed as a credible, production-ready vision rather than a research concept. Multiple customers signalled intent to adopt when the features reached general availability.</p>
-      </div>
-
-      <div class="cs-section">
-        <p class="cs-section-label">Outcome</p>
-        <p>The Privacy Manager Copilot prototype became an internal blueprint: engineering teams began aligning AI infrastructure (LLMs connected to privacy knowledge bases) to eventually realise the designed experience. Interaction patterns from this project — particularly the trust model and the smart wizard flow — closely resemble what shipped later in Microsoft's broader Security Copilot roadmap. By late 2025, Security Copilot features for Purview were announced, several echoing what was prototyped here.</p>
+        <h2 class="cs-section-label">TL;DR</h2>
+        <p>Privacy officers working across Microsoft Priva's five products faced a consistent challenge: the tools existed, but <strong>navigating across five distinct products to answer a single compliance question was slow and cognitively demanding</strong>. With generative AI maturing rapidly inside Microsoft, the question became what it looks like when an AI assistant <em>orchestrates</em> privacy operations — not just answers questions.</p>
+        <p>I co-designed this with another interaction designer. My ownership was <strong>the core interaction model</strong> — how the AI surfaces suggestions, how users keep control over AI-generated content, and how the assistant moves between conversational responses and native product UI.</p>
+        <p>Two constraints shaped everything: <strong>AI suggestions had to be attributable, editable, and interruptible</strong>, and we would not recreate product UI inside Copilot. A task that previously took manual research and form-filling was <strong>reduced to a review-and-confirm</strong>.</p>
+        <p>The prototype was <strong>demoed live at the IAPP Global Summit in April 2024</strong> and became an internal blueprint — interaction patterns from it closely resemble what shipped later in Microsoft's Security Copilot roadmap.</p>
       </div>
 
     </div>
@@ -1124,17 +1512,139 @@
         <p class="sidebar-label">Collaborators</p>
         <p class="sidebar-value">Co-design partnership<br>Principal PM<br>Senior leadership review</p>
       </div>
-      <div class="sidebar-block sidebar-img-real">
-        <img src="assets/4d07c321e36b.png" alt="Shipped Privacy Manager Copilot entry screen" loading="lazy" decoding="async">
-        <p class="sidebar-img-real-caption">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
+      <div class="sidebar-block">
+        <p class="sidebar-label">Note</p>
+        <p class="sidebar-value" style="font-size:12px; color: var(--muted);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
       </div>
     </div>
       </details>
     </div>
-
-
-    
   </div>
+
+  <section class="cs-carousel" aria-roledescription="carousel" aria-label="The Details">
+    <h2 class="cs-section-label is-large">The Details</h2>
+
+    <p class="cs-carousel-hint" aria-hidden="true">
+      Swipe
+      <svg viewBox="0 0 24 8" focusable="false"><path d="M0.5 4h19M16 1l3.5 3-3.5 3"/></svg>
+    </p>
+
+    <div class="cs-carousel-track" id="cs-carousel-track" tabindex="0" role="group" aria-label="The Details slides, scrollable">
+
+      <!-- 1 / 5 -->
+      <div class="cs-slide is-text-only" role="group" aria-roledescription="slide" aria-label="1 of 5: The Problem">
+        <div class="cs-slide-overlay">
+          <h3>The Problem</h3>
+          <div>
+            <p>Microsoft Priva is a suite of five privacy products — subject rights requests, consent management, privacy risk management, assessments, and tracker scanning — that together cover an organisation's privacy compliance workflow. Privacy officers working across that suite faced a consistent challenge: <strong>the tools existed, but navigating across five distinct products to answer a single compliance question was slow and cognitively demanding.</strong></p>
+            <p>Understanding consent requirements across jurisdictions, initiating a data subject request, and reviewing risk patterns required expert knowledge of where everything lived. With generative AI maturing rapidly inside Microsoft, the question became: <strong>what does it look like when an AI assistant orchestrates privacy operations — not just answers questions?</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 / 5 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="2 of 5: Research">
+        <div class="cs-slide-assets">
+          <figure class="cs-slide-figure">
+            <img src="assets/33b1140ba894.jpg" alt="Wide bird's-eye view of the Figma exploration board showing dozens of dated iterations across multiple days" loading="lazy" decoding="async">
+            <figcaption>A bird's-eye view of the exploration board — dated, dense, and iterated on daily.</figcaption>
+          </figure>
+          <div class="cs-slide-collage is-even">
+            <figure class="cs-slide-figure">
+              <img src="assets/3c7fa14e0d95.png" alt="Alternate Privacy Manager home layout, Priva-branded, with a large search bar, compliance issue cards, and an expandable recent-conversations panel showing a status stepper" loading="lazy" decoding="async">
+              <figcaption>One direction tested and set aside — conversation-history-first, with a status stepper for multi-step AI-assisted tasks.</figcaption>
+            </figure>
+            <figure class="cs-slide-figure">
+              <img src="assets/e7d0a816d35f.png" alt="Alternate Privacy Manager home layout, Purview-branded, with a sidebar of system-generated views and an expandable AI summary panel with a chart" loading="lazy" decoding="async">
+              <figcaption>Another, from before the Priva rebrand — a sidebar of system-generated views with an inline AI summary panel.</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Research</h3>
+          <div>
+            <p>An AI-forward privacy solution was <strong>unheard of at the time</strong> — there was no reference implementation to borrow from, so the interaction model had to be derived from scratch and tested continuously. My ownership was <strong>that core interaction model</strong>: how the AI surfaces suggestions, how users keep control over AI-generated content, and how the assistant moves between conversation and native product UI.</p>
+            <p>We ran <strong>RITE studies</strong> — rapid iterative testing and evaluation, revising the prototype between sessions rather than waiting for a full round to finish — alongside <strong>regular internal UX and product team reviews.</strong> Each pass narrowed which patterns privacy officers actually trusted with a real compliance decision.</p>
+            <p>The board shows the volume that took: dated, dense, iterated on daily. <strong>Most of what's on it didn't ship</strong> — that discarded work is how the final patterns got settled.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 / 5 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="3 of 5: Insight and Decisions">
+        <div class="cs-slide-assets">
+          <div class="cs-slide-collage is-even">
+            <figure class="cs-slide-figure">
+              <img src="assets/1ba05154f4cd.jpg" alt="Early sketch exploring a Copilot-assisted flow for learning about privacy laws and creating a data inventory, with open questions annotated in pink" loading="lazy" decoding="async">
+              <figcaption>Copilot answering a regulatory question, then walking the user toward a concrete next action. Pink annotations are open questions, not settled answers.</figcaption>
+            </figure>
+            <figure class="cs-slide-figure">
+              <img src="assets/27c1fa5b5ec4.jpg" alt="Early sketches exploring Magic Spotlight applied broadly to SRR tasks and tracker scan results, not just charts" loading="lazy" decoding="async">
+              <figcaption>Magic Spotlight's scope — applied to SRR tasks and tracker scan results, not just charts. Close to what actually shipped.</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Insight &amp; Decisions</h3>
+          <div>
+            <p>Underlying every pattern were two constraints: <strong>AI suggestions needed to be attributable, editable, and interruptible</strong>, or privacy officers wouldn't trust the system with real compliance decisions — and <strong>don't recreate UI inside Copilot itself</strong>, leverage the product's existing UI rather than making users re-learn flows they already know.</p>
+            <p><strong>Smart wizard automation.</strong> Rather than filling 11+ fields manually, the user got a wizard <strong>pre-populated with Copilot's suggestions, each one editable and clearly labeled as a suggestion</strong> rather than a locked answer.</p>
+            <p><strong>Magic Spotlight.</strong> The vision was to let a user click into any artifact they had a question about — not just a chart — and ask Copilot directly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 / 5 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="4 of 5: Outcome">
+        <div class="cs-slide-assets">
+          <div class="cs-slide-collage is-even">
+            <figure class="cs-slide-figure is-tagged">
+              <span class="cs-figure-tag final">Final</span>
+              <img src="assets/a12d5a5cb23f.png" alt="Shipped consent model wizard with 11 fields pre-populated by Copilot, each editable and labeled as a Copilot suggestion" loading="lazy" decoding="async">
+              <figcaption>11 Copilot-suggested fields, each editable before the user saves.</figcaption>
+            </figure>
+            <figure class="cs-slide-figure is-tagged">
+              <span class="cs-figure-tag final">Final</span>
+              <img src="assets/4e6a0a31a1c8.png" alt="Shipped Privacy Manager home screen populated with the user's history, showing compliance-issue cards each with a small Copilot icon in the corner" loading="lazy" decoding="async">
+              <figcaption>A Copilot icon on each card — Tracker, Subject Rights Requests, Privacy Risk Assessment — not just on charts.</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Outcome</h3>
+          <div>
+            <p>A task that previously took manual research and form-filling was <strong>reduced to a review-and-confirm.</strong> The Magic Spotlight vision shipped largely as designed — once a user's home populates with their history, a Copilot icon surfaces a contextual answer <strong>without leaving the page.</strong></p>
+            <p>One direction we explored further, an inline expansion that turned a card into a small embedded chat panel, was <strong>ultimately not shipped</strong>: accessibility and technical feasibility concerns ruled it out in favor of the simpler icon-triggered pattern.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 / 5 -->
+      <div class="cs-slide" role="group" aria-roledescription="slide" aria-label="5 of 5: Impact">
+        <div class="cs-slide-assets">
+          <figure class="cs-slide-figure is-tagged">
+            <span class="cs-figure-tag final">Final</span>
+            <img src="assets/2618e5f1597f.png" alt="Shipped Copilot response to a California privacy law question, with three numbered sourced citations and a suggested action card for Priva Consent Management" loading="lazy" decoding="async">
+            <figcaption>Attribution in practice — every regulatory claim traces to a numbered source, and the response ends in a concrete suggested action rather than just information.</figcaption>
+          </figure>
+        </div>
+        <div class="cs-slide-overlay">
+          <h3>Impact</h3>
+          <div>
+            <p>The prototype was demoed live at the <strong>IAPP Global Summit on April 3, 2024</strong>. Response from privacy professionals was strongly positive — generative AI applied specifically to privacy compliance was still uncommon to see live at that point, and <strong>the demo landed as a credible, production-ready vision rather than a research concept.</strong></p>
+            <p>It became an internal blueprint: interaction patterns from this project — particularly the trust model and the smart wizard flow — <strong>closely resemble what shipped later in Microsoft's broader Security Copilot roadmap.</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cs-carousel-nav">
+      <button class="cs-carousel-btn" type="button" data-carousel-dir="prev" aria-controls="cs-carousel-track" aria-label="Previous slide"><span aria-hidden="true">&larr;</span></button>
+      <p class="cs-carousel-count" data-carousel-count aria-live="polite" aria-atomic="true">1 / 5</p>
+      <button class="cs-carousel-btn" type="button" data-carousel-dir="next" aria-controls="cs-carousel-track" aria-label="Next slide"><span aria-hidden="true">&rarr;</span></button>
+    </div>
+  </section>
 </div>
 
 <div style="max-width:1100px; margin:0 auto; padding:56px 60px 0; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); margin-top:40px; padding-top:40px;">
@@ -1143,6 +1653,8 @@
 </div>
 
 <!-- FOOTER -->
+</main>
+
 <footer>
   <p>Mehvash Fatima 2026</p>
   <p><a href="mailto:f.mehvash@gmail.com">f.mehvash@gmail.com</a> · <a href="https://www.linkedin.com/in/mehvash-fatima/">linkedin.com/in/mehvash-fatima</a></p>
