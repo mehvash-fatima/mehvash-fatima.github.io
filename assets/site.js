@@ -236,9 +236,13 @@ if (carouselTrack && carouselSlides.length) {
   };
 
   let current = -1;
+  // While a programmatic glide is in flight, it already knows where it is
+  // going; readings taken off scrollLeft mid-animation would flip the counter
+  // to the slide being passed and then back, announcing a position the reader
+  // never lands on.
+  let settleBy = 0;
 
-  const render = () => {
-    const index = indexNow();
+  const applyIndex = (index) => {
     if (index === current) return;
     current = index;
 
@@ -260,12 +264,100 @@ if (carouselTrack && carouselSlides.length) {
     });
   };
 
-  const goTo = (index) => {
-    carouselTrack.scrollTo({
-      left: Math.min(Math.max(index, 0), total - 1) * step,
-      behavior: reduceMotion.matches ? 'auto' : 'smooth'
-    });
+  // Derives the index from the track's actual position. Used for gestures and
+  // native scrolling, where nothing else knows where the reader has got to.
+  const render = () => {
+    if (Date.now() < settleBy) return;
+    applyIndex(indexNow());
   };
+
+  const goTo = (index) => {
+    const clamped = Math.min(Math.max(index, 0), total - 1);
+    const smooth = !reduceMotion.matches;
+    // Claim the readout for the length of the glide, then update it straight
+    // away: a smooth scroll reports its old position for as long as it is
+    // animating, and on some engines a programmatic scroll fires no scroll
+    // event at all — either way the counter must not wait for one.
+    settleBy = smooth ? Date.now() + 600 : 0;
+    carouselTrack.scrollTo({
+      left: clamped * step,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+    applyIndex(clamped);
+  };
+
+  // ── SWIPE: one gesture, one slide ──
+  // scroll-snap-stop is the CSS answer to "don't fly past a card", but WebKit
+  // does not honour it, so on iOS a hard flick still crosses several slides.
+  // Rather than fight the platform's inertia, take the horizontal gesture over
+  // outright: `touch-action: pan-y pinch-zoom` (set in CSS alongside
+  // .is-enhanced) stops the browser panning this track natively, so there is no
+  // momentum to cancel — we move it ourselves and land on exactly one step.
+  // Vertical drags are left entirely alone so the page still scrolls, and
+  // pinch-zoom is preserved.
+  let swipeX = 0, swipeY = 0, swipeFrom = 0, swipeAxis = null, swiping = false;
+  let snapRestore = null;
+
+  // Snapping has to be off mid-drag: with it on, each scrollLeft write gets
+  // pulled to the nearest card and the slide fights the finger.
+  const suspendSnap = () => { carouselTrack.style.scrollSnapType = 'none'; };
+  const resumeSnap = () => {
+    clearTimeout(snapRestore);
+    // Wait for the programmatic glide to finish, or snapping grabs the track
+    // mid-flight and lands it on whichever card is nearest right now.
+    snapRestore = setTimeout(() => { carouselTrack.style.scrollSnapType = ''; }, 480);
+  };
+
+  carouselTrack.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+    swipeFrom = carouselTrack.scrollLeft;
+    swipeAxis = null;
+    swiping = true;
+  }, { passive: true });
+
+  carouselTrack.addEventListener('touchmove', (e) => {
+    if (!swiping || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - swipeX;
+    const dy = e.touches[0].clientY - swipeY;
+
+    if (swipeAxis === null) {
+      // Not enough travel yet to say which way this gesture is going.
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      swipeAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (swipeAxis === 'x') suspendSnap();
+    }
+    if (swipeAxis !== 'x') return;
+
+    // Follow the finger 1:1 within the track's own bounds.
+    const max = (total - 1) * step;
+    carouselTrack.scrollLeft = Math.min(Math.max(swipeFrom - dx, 0), max);
+  }, { passive: true });
+
+  const endSwipe = (e) => {
+    if (!swiping) return;
+    swiping = false;
+    if (swipeAxis !== 'x') { swipeAxis = null; return; }
+
+    const touch = e.changedTouches && e.changedTouches[0];
+    const dx = touch ? touch.clientX - swipeX : 0;
+    // A short flick should still count; anything less is treated as a misfire
+    // and springs back to where it started.
+    const threshold = Math.min(56, step * 0.15);
+    const from = step ? Math.round(swipeFrom / step) : 0;
+
+    let target = from;
+    if (dx <= -threshold) target = from + 1;
+    else if (dx >= threshold) target = from - 1;
+
+    goTo(target);
+    resumeSnap();
+    swipeAxis = null;
+  };
+
+  carouselTrack.addEventListener('touchend', endSwipe, { passive: true });
+  carouselTrack.addEventListener('touchcancel', endSwipe, { passive: true });
 
   buttons.forEach(button => {
     button.addEventListener('click', () => {
@@ -293,8 +385,8 @@ if (carouselTrack && carouselSlides.length) {
   // the index actually moved, so it is cheap enough to run inline — and the
   // readout cannot go stale if requestAnimationFrame is throttled.
   carouselTrack.addEventListener('scroll', () => {
-    render();
-    syncHeight();
+    render();      // gated while a programmatic glide owns the readout
+    syncHeight();  // never gated: the track must resize as slides come into view
   });
 
   // Slide pitch and heights both track the viewport, so everything cached here

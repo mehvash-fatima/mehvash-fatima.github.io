@@ -1364,6 +1364,16 @@
        height and simply behaves as it did before. */
     .cs-carousel.is-enhanced .cs-carousel-track { overflow-y: hidden; }
 
+    /* Hands horizontal gestures to the script, which advances exactly one
+       slide per swipe. Without this the browser pans the track itself, and
+       its inertia carries past several cards — scroll-snap-stop is supposed
+       to prevent that but WebKit ignores it. pan-y keeps the page scrolling
+       vertically and pinch-zoom keeps images zoomable. Scoped to
+       .is-enhanced so that with no script the native swipe still works. */
+    .cs-carousel.is-enhanced .cs-carousel-track {
+      touch-action: pan-y pinch-zoom;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
       .cs-carousel.is-enhanced .cs-carousel-track {
         transition: height 0.3s ease;
