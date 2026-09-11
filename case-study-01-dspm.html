@@ -1564,10 +1564,11 @@
 
       <div class="cs-section">
         <h2 class="cs-section-label">TL;DR</h2>
-        <p>By 2024, AI agents — Copilot instances, third-party bots, automated pipelines — were proliferating faster than security teams could track them. Purview had a strong data governance foundation, but <strong>AI agents were a genuinely new kind of object</strong>: not quite a user, not quite an application.</p>
-        <p>I collaborated with another designer on a proposal to bring Purview into the AI governance space, focusing on <strong>the Agent Details experience</strong> — an agent's scope of access, who and what it interacts with, and a full step-by-step trail of its recent flagged interactions.</p>
-        <p><strong>Purview already had the right signals; the gap wasn't data collection, it was presentation.</strong> Rather than stop at inventory-level visibility, we proposed going down to the individual steps an agent took inside a flagged interaction — so there'd be no guesswork when investigating an incident.</p>
-        <p><strong>DSPM for AI was announced at Microsoft Ignite 2025</strong>, positioning Purview to govern AI agents alongside traditional data assets.</p>
+        <p><strong>By 2024, Purview already had a lot of the signal it needed to police AI agents</strong> — Copilot instances, third-party bots, automated pipelines were touching sensitive data across the enterprise, and the underlying governance data was largely already being captured. <strong>What didn't exist yet was a way to turn that signal into real agent accountability</strong>.</p>
+        <p>I worked closely with another designer and our PMs to propose that governance experience, <strong>building directly off raw customer findings rather than a synthesized brief</strong>. Our first version was ambitious: full activity logs and audit trails, tracing every flagged interaction down to the individual step.</p>
+        <p>That direction landed well, but wasn't feasible to build at that scope. We pivoted — scoping down to detailed agent logs that flag the interactions actually worth a security admin's attention, paired with an in-depth Agent Details experience covering access, owner, connected tools, and risk.</p>
+        <p>The hardest part of the project wasn't the original idea, it was <strong>cutting real, valuable scope down to something buildable without losing what made it worth pursuing in the first place</strong>.</p>
+        <p>DSPM for AI shipped at Microsoft Ignite 2025, carrying that scoped-down direction forward.</p>
       </div>
 
     </div>
@@ -1616,8 +1617,7 @@
         <div class="cs-slide-overlay">
           <h3>The Problem</h3>
           <div>
-            <p>By 2024, enterprise data security had fundamentally changed. AI agents — Copilot instances, third-party bots, automated pipelines — were proliferating faster than security teams could track them. Purview already had a strong data governance foundation, but <strong>AI agents were a genuinely new kind of object</strong>: not quite a user, not quite an application, capable of touching sensitive data across dozens of systems in ways no existing entity type accounted for.</p>
-            <p>When something went wrong — an agent oversharing a sensitive file, an agent quietly exfiltrating data through a connected tool — security teams had almost no way to reconstruct what actually happened. <strong>The tool had a visibility problem and an accountability problem at once.</strong></p>
+            <p>By 2024, AI agents — Copilot instances, third-party bots, automated pipelines — were spreading through enterprise systems faster than security teams could track them. <strong>Purview's data governance foundation was already strong</strong>, and much of the raw signal needed to govern these agents was already being captured. <strong>What was missing was a way to turn that signal into accountability</strong>: when an agent overshared a file or quietly pulled data through a connected tool, security teams had almost no way to reconstruct what actually happened.</p>
           </div>
         </div>
       </div>
@@ -1633,9 +1633,7 @@
         <div class="cs-slide-overlay">
           <h3>Research</h3>
           <div>
-            <p>We started from a basic premise: <strong>make Purview's existing data understandable in the AI context</strong>, and give security teams real visibility into which agents and AI tools were actually in use across their org. But AI agent security was an emerging problem with no established playbook — <strong>the case for it had to be built, not assumed.</strong></p>
-            <p>We drew on customer feedback from Purview's existing products, pairing what security teams were already struggling with against <strong>a large body of secondary research</strong> into how AI agents were being adopted and where they created exposure. <strong>Customer feedback sessions</strong> ran alongside that, checking whether the risks surfacing in research matched what teams were hitting in production.</p>
-            <p>Our PMs brought us in early, while they were still compiling those pain points, so we were <strong>converting raw findings into ideas and explorations from the start.</strong> That combined picture is what justified <strong>dedicated tooling for AI security and governance</strong> rather than an extension of what already existed.</p>
+            <p>Our PMs brought us in early, <strong>working directly off raw customer findings rather than a finished brief</strong> — pain points were still being compiled as we started converting them into concepts. We paired that with <strong>secondary research into how AI agents were actually being adopted across enterprises</strong>, and ran it against <strong>live customer feedback sessions to check the risks</strong> we were designing for matched what teams were actually hitting in production. <strong>Close, early collaboration between PMs and design is what let us move from raw findings to a real proposal quickly.</strong></p>
           </div>
         </div>
       </div>
@@ -1645,8 +1643,7 @@
         <div class="cs-slide-overlay">
           <h3>Insight</h3>
           <div>
-            <p>Purview already had a lot of the right signals in place — the relevant data was mostly already being captured. It just wasn't being served effectively for a security admin trying to reason about an agent's behaviour. <strong>The gap wasn't data collection, it was presentation.</strong></p>
-            <p>Conflating configuration with behaviour was an early source of confusion, so we deliberately separated <strong>&ldquo;Build view&rdquo;</strong> — how an agent is configured, its knowledge sources, tools and connected agents — from <strong>&ldquo;Runtime&rdquo;</strong>, what the agent actually did during a specific interaction.</p>
+            <p><strong>Purview already had most of the underlying data.</strong> The opportunity was building real governance tooling around it — <strong>full activity logs and audit trails,</strong> so nothing about an agent's behavior needed to be reconstructed after the fact. We proposed that version first: <strong>comprehensive, and built to hold up under real security scrutiny</strong>.</p>
           </div>
         </div>
       </div>
@@ -1662,8 +1659,9 @@
         <div class="cs-slide-overlay">
           <h3>Decisions</h3>
           <div>
-            <p>Rather than stop at inventory-level visibility — which agents exist, what's their risk score — we proposed <strong>going down to the most granular level</strong>: the individual steps an agent took inside a specific flagged interaction. The goal I was designing toward was <strong>full accountability for every agent, and no guesswork when investigating a security incident.</strong></p>
-            <p>We also settled on <strong>alerts being specific to an agent</strong> rather than grouped generically by alert type, so an admin investigating one agent could see everything relevant to it in one place.</p>
+            <p><strong>That full activity-log-and-audit-trail proposal landed well — but wasn't feasible to build</strong> at that scope in the time we had. Rather than shelve the ambition, we scoped it down: instead of an exhaustive log of everything an agent did, we <strong>designed detailed agent logs that specifically flag the interactions worth a security admin's attention</strong>, paired with an <strong>in-depth Agent Details experience covering access scope, owner, connected tools, and risk.</strong></p>
+            <p><strong>That scoping decision was the hardest part of the project.</strong> It meant deciding, feature by feature, what could be cut without cutting the thing that made the idea worth building — and then <strong>redesigning around that smaller footprint so it still felt like the best possible version of the experience, not a compromise.</strong></p>
+            <p>We kept alerts scoped to a specific agent rather than grouped generically by alert type, <strong>so an admin investigating one agent could see everything relevant to it in one place</strong> — consistent with the smaller, agent-centered shape the project ended up taking.</p>
           </div>
         </div>
       </div>
@@ -1679,7 +1677,9 @@
         </div>
         <div class="cs-slide-overlay">
           <h3>Outcome</h3>
-          <p>Every agent gets a dedicated page: its status, access scope, owner, and the knowledge sources and tools it's connected to, alongside a risk level and a sensitive-activity trend over time. The intent was that <strong>a security admin could land here and immediately understand whether this specific agent needed attention</strong>, without cross-referencing three other tools first.</p>
+          <div>
+            <p>What shipped is the scoped-down version: <strong>every agent gets a dedicated page</strong> — status, access scope, owner, connected knowledge sources and tools, risk level, and a sensitive-activity trend over time — <strong>plus a detailed log that flags which specific interactions need a security admin's attention</strong>, short of the full exhaustive audit trail we'd originally proposed. It's a smaller footprint than our first pitch, <strong>but our usability studies proved that seconds are enough for security admins</strong> to clearly answer their question of &ldquo;does this agent need attention right now&rdquo; <strong>without cross-referencing three other tools.</strong></p>
+          </div>
         </div>
       </div>
 
@@ -1688,8 +1688,7 @@
         <div class="cs-slide-overlay">
           <h3>Impact</h3>
           <div>
-            <p><strong>DSPM for AI was announced at Microsoft Ignite 2025</strong>, positioning Purview to govern AI agents alongside traditional data assets.</p>
-            <p>Much of what's next in this space is still in progress and not yet public, but <strong>the direction set by this proposal — agent-level accountability, down to the individual step of a flagged interaction — carried through into what shipped.</strong></p>
+            <p>DSPM for AI was announced at <strong>Microsoft Ignite 2025, positioning Purview to govern AI agents alongside traditional data assets</strong>. The scoped-down direction — detailed, flagged agent logs and a full Agent Details experience — carried through into what shipped, even though the more ambitious original proposal didn't make it into this round.</p>
           </div>
         </div>
       </div>
