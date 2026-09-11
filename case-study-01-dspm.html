@@ -947,6 +947,12 @@
     flex: 0 0 100%;
     min-width: 0;
     scroll-snap-align: start;
+    /* One gesture, one slide. Without this a fling is allowed to travel over
+       intermediate snap points and settle wherever its momentum runs out,
+       which reads as a single long horizontal scroll that happens to land on
+       a slide. `always` forbids passing a snap position, so a swipe advances
+       exactly one card however hard it is thrown. */
+    scroll-snap-stop: always;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 281px;
     min-height: 453px;
