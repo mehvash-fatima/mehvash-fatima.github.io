@@ -14,8 +14,11 @@
 
 - No runtime dependencies, no dev dependencies, no `package.json`, no build step.
 - ES modules only. The prototype page is served over HTTP, never `file://`.
-- Tests run with `node --test assets/prototype/`. Node v24.21.0 is installed at
-  `~/.local/bin/node` and is already on PATH — do not install anything.
+- Tests run with **`node --test`** from the repository root. Node v24.21.0 is
+  installed at `~/.local/bin/node` and is already on PATH — do not install
+  anything. Note: the directory form (`node --test` followed by a directory
+  path) silently runs ZERO tests on Node 24 and reports a spurious failure —
+  never use it. Pass no path at all.
 - Breakpoint between scaled canvas and mobile reflow: **768px**.
 - Design canvas is **1920x1080**; scaling above the breakpoint is a CSS transform.
 - Idle auto-reset fires after **90 seconds** of no interaction, paused while the tab is hidden.
@@ -189,7 +192,7 @@ test('applyBeat does not mutate the state it is given', () => {
 - [ ] **Step 2: Run the tests and watch them fail**
 
 ```bash
-node --test assets/prototype/
+node --test
 ```
 
 Expected: failure, `Cannot find module .../engine.js`.
@@ -258,7 +261,7 @@ export function stateAt(scenario, content, beatIndex) {
 - [ ] **Step 4: Run the tests and watch them pass**
 
 ```bash
-node --test assets/prototype/
+node --test
 ```
 
 Expected: 8 passing.
@@ -539,7 +542,7 @@ test('every scenario folds from first beat to last without throwing', () => {
 - [ ] **Step 2: Run the tests**
 
 ```bash
-node --test assets/prototype/
+node --test
 ```
 
 Expected: all pass. If the spotlight-in-view test fails, the fix is in `scenarios.js` or `HOTSPOTS` — not in the test.
@@ -771,7 +774,7 @@ Append to `SCENARIOS` with `id: 'srr'`, `product: 'Subject Rights Requests'`. If
 - [ ] **Step 3: Run the tests**
 
 ```bash
-node --test assets/prototype/
+node --test
 ```
 
 Expected: pass. The validator will name any spotlight that does not exist in its view.
@@ -922,12 +925,12 @@ Walk one full scenario in Safari, in Chrome, and on a real phone. Record anythin
 
 - [ ] **Step 6: Update the README**
 
-Add `prototype-copilot.html` and `assets/prototype/` to the structure listing. Document two things: that this page uses ES modules and therefore must be served over HTTP rather than opened via `file://`, and that the tests run with `node --test assets/prototype/`.
+Add `prototype-copilot.html` and `assets/prototype/` to the structure listing. Document two things: that this page uses ES modules and therefore must be served over HTTP rather than opened via `file://`, and that the tests run with `node --test` from the repository root.
 
 - [ ] **Step 7: Run the full test suite one last time**
 
 ```bash
-node --test assets/prototype/
+node --test
 ```
 
 Expected: all pass.
