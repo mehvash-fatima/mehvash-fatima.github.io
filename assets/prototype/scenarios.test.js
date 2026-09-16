@@ -134,26 +134,46 @@ test('every set value that looks like a content key resolves in CONTENT', () => 
   }
 });
 
-test('every type.into target exists in TYPING_TARGETS for the view that beat runs in', () => {
-  // Unlike a spotlight (always clicked in the beat's starting view), a typed
-  // target can legitimately belong to either the view the beat starts in
-  // (e.g. beat 0 types into #prompt-bar while still on "home", before the
-  // beat's own `set` moves to "answer") or the view the beat's `set` moves
-  // into (e.g. beat 1 types into #copilot-chat-input, which only exists once
-  // that beat's `set` opens "dialog"). So a target must be valid in one of
-  // the two — not hardcoded to whichever end of the transition it happens to
-  // be, since scenarios.js data uses both.
+test('every type clause has a valid `when`', () => {
+  // `when` is presentational sequencing data for a later task's renderer
+  // (engine.js never reads it — see engine.js's `applyBeat`, which only
+  // touches `then.type.text`). Without this guard, a beat that omits `when`
+  // would silently fall back to whatever a renderer's implementation
+  // defaults to — the same class of silent failure the `when`-aware check
+  // below exists to remove.
+  for (const scenario of SCENARIOS) {
+    for (const [index, beat] of scenario.beats.entries()) {
+      if (!beat.then || !beat.then.type) continue;
+      assert.ok(
+        beat.then.type.when === 'before' || beat.then.type.when === 'after',
+        `${scenario.id} beat ${index} has a type clause with no (or invalid) 'when'; expected 'before' or 'after', got ${JSON.stringify(beat.then.type.when)}`
+      );
+    }
+  }
+});
+
+test('every type.into target exists in TYPING_TARGETS for the view its `when` names', () => {
+  // A typed target can legitimately belong to either the view the beat
+  // starts in (`when: 'before'`, e.g. beat 0 types into #prompt-bar while
+  // still on "home", before the beat's own `set` moves to "answer") or the
+  // view the beat's `set` moves into (`when: 'after'`, e.g. beat 1 types
+  // into #copilot-chat-input, which only exists once that beat's `set`
+  // opens "dialog"). Checking "either side" (without `when`) is a real gap:
+  // a wrong target that happens to be valid on the side the typing does NOT
+  // belong to would pass undetected. `when` removes the ambiguity — exactly
+  // one view is authoritative per beat, and only that one is checked.
   for (const scenario of SCENARIOS) {
     let state = initialState(scenario);
     for (const [index, beat] of scenario.beats.entries()) {
       const nextState = applyBeat(state, beat, CONTENT);
       if (beat.then && beat.then.type) {
         const target = beat.then.type.into;
-        const before = TYPING_TARGETS[state.view] || [];
-        const after = TYPING_TARGETS[nextState.view] || [];
+        const when = beat.then.type.when;
+        const view = when === 'after' ? nextState.view : state.view;
+        const available = TYPING_TARGETS[view] || [];
         assert.ok(
-          before.includes(target) || after.includes(target),
-          `${scenario.id} beat ${index} types into ${target}, which is not a typing target in view "${state.view}" (before) or "${nextState.view}" (after)`
+          available.includes(target),
+          `${scenario.id} beat ${index} types into ${target} (when: '${when}'), which is not a typing target in view "${view}"`
         );
       }
       state = nextState;

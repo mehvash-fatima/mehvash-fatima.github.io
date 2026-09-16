@@ -205,7 +205,7 @@ export const SCENARIOS = [
         spotlight: '#prompt-bar',
         await: 'click',
         then: {
-          type: { into: '#prompt-bar', text: 'What are the California privacy consent laws for websites' },
+          type: { into: '#prompt-bar', text: 'What are the California privacy consent laws for websites', when: 'before' },
           thinking: 1200,
           push: { chat: 'answer-ccpa' },
           set: { view: 'answer', actionCard: 'action-card-pending' }
@@ -219,7 +219,7 @@ export const SCENARIOS = [
         spotlight: '#generate-draft-button',
         await: 'click',
         then: {
-          type: { into: '#copilot-chat-input', text: 'Create a consent model for my website in California' },
+          type: { into: '#copilot-chat-input', text: 'Create a consent model for my website in California', when: 'after' },
           push: { chat: 'wizard-suggestions-summary' },
           set: { view: 'dialog' },
           populate: { wizard: 'wizard-basic-details' }
