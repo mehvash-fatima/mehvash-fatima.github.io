@@ -13,6 +13,14 @@ export const CONTENT = {
   // scenario (Frame 9 shows the same page/text, verified identical).
   'answer-ccpa': {
     text: 'California has stringent privacy laws for websites, primarily governed by the California Consumer Privacy Act (CCPA). The CCPA grants California consumers rights such as the Right to Know, Right to Delete, Right to Opt-Out of Sale, Right to Correct, Right to Limit, and Right to Non-Discrimination regarding their personal information collected by businesses.\n\n. Key points about the CCPA include:\n- Businesses must post their privacy policy on their websites, usually found at the bottom of webpages.\n- Personal information includes data that identifies or relates to an individual or household.\n- The CCPA applies to for-profit businesses meeting specific criteria like revenue thresholds or dealing with a significant amount of personal information\n\nAdditionally, the California Online Privacy Protection Act (CalOPPA) requires commercial websites to have a privacy notice policy available to visitors. Companies not complying with these laws may face financial penalties enforced by the California Privacy Protection Agency. The California Privacy Rights Act (CPRA), passed in 2020, expands on the CCPA by introducing new provisions and defining a category of "sensitive personal information". These laws aim to protect consumer privacy rights and regulate how businesses handle personal information in California.',
+    // Frame 3 bolds three act names inside the body copy. Stored as phrases
+    // rather than in-string markers or character offsets so `text` above stays
+    // byte-identical to the design's verbatim copy and remains safe to edit.
+    emphasis: [
+      'California Consumer Privacy Act (CCPA)',
+      'California Online Privacy Protection Act (CalOPPA)',
+      'California Privacy Rights Act (CPRA)'
+    ],
     citations: ['California Consumer Privacy Act', 'Privacy Law Guide - California ', 'Compliance Essentials'],
     sectionHeading: 'Current data collection impact',
     promptRow: 'How do these laws impact data collection practices on our website?',

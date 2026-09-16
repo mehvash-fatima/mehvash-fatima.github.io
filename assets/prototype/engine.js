@@ -42,11 +42,10 @@ export function applyBeat(state, beat, content) {
     Object.assign(next, then.set);
   }
   if (then.populate && then.populate.wizard) {
+    // structuredClone first, so the spread below copies detached data and the
+    // wizard can never alias the CONTENT entry it came from.
     const source = structuredClone(lookup(content, then.populate.wizard));
-    next.wizard = {
-      title: source.title,
-      fields: source.fields.map(field => ({ ...field, source: 'ai' }))
-    };
+    next.wizard = { ...source, fields: source.fields.map(field => ({ ...field, source: 'ai' })) };
   }
   return next;
 }

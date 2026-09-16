@@ -63,6 +63,20 @@
   --pp-spot-glow:     rgba(125, 100, 40, 0.18);
   --pp-spot-ink:      #ffffff;
 
+  /* --- Washes and overlays --------------------------------------
+     The two ends of the Copilot gradient as opaque stops (the progress
+     bar), the decorative "Bento" wash behind the home suggestion cards,
+     and the two neutral overlays.                                    */
+  --pp-ai-from:       rgb(58, 192, 223);
+  --pp-ai-to:         rgb(114, 121, 248);
+  --pp-bento-rose:    rgba(233, 176, 200, 0.45);
+  --pp-bento-indigo:  rgba(168, 176, 238, 0.42);
+  --pp-bento-amber:   rgba(240, 196, 140, 0.4);
+  --pp-bento-fade:    rgba(233, 176, 200, 0);
+  --pp-on-header-bg:  rgba(255, 255, 255, 0.18);
+  --pp-on-header-stroke: rgba(255, 255, 255, 0.5);
+  --pp-scrim:         rgba(0, 0, 0, 0.32);
+
   /* --- Radii ----------------------------------------------------- */
   --pp-radius-xs:     2px;
   --pp-radius-sm:     4px;   /* buttons, inputs — the Figma's button radius */
@@ -103,6 +117,7 @@
   --pp-shadow-dialog: 0 32px 64px rgba(0, 0, 0, 0.22), 0 0 8px rgba(0, 0, 0, 0.18);
 
   /* --- Canvas geometry ------------------------------------------- */
+  --pp-hero-top:      145px;  /* hero-to-page-card gap = 18.7% of canvas height */
   --pp-chrome-tabs:   44px;
   --pp-chrome-bar:    36px;
   --pp-suite-h:       48px;
@@ -409,8 +424,8 @@
 }
 
 .pp-pill-preview {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: var(--pp-on-header-bg);
+  border: 1px solid var(--pp-on-header-stroke);
   color: inherit;
 }
 
@@ -559,7 +574,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--pp-space-9) var(--pp-space-6) var(--pp-space-6);
+  padding: var(--pp-hero-top) var(--pp-space-6) var(--pp-space-6);
 }
 
 .pp-hero-title {
@@ -618,9 +633,9 @@
   padding: var(--pp-space-7);
   border-radius: var(--pp-radius-xl);
   background:
-    radial-gradient(70% 90% at 8% 14%, rgba(233, 176, 200, 0.45) 0%, rgba(233, 176, 200, 0) 68%),
-    radial-gradient(70% 90% at 94% 10%, rgba(168, 176, 238, 0.42) 0%, rgba(168, 176, 238, 0) 68%),
-    radial-gradient(80% 100% at 46% 110%, rgba(240, 196, 140, 0.4) 0%, rgba(240, 196, 140, 0) 70%),
+    radial-gradient(70% 90% at 8% 14%, var(--pp-bento-rose) 0%, var(--pp-bento-fade) 68%),
+    radial-gradient(70% 90% at 94% 10%, var(--pp-bento-indigo) 0%, var(--pp-bento-fade) 68%),
+    radial-gradient(80% 100% at 46% 110%, var(--pp-bento-amber) 0%, var(--pp-bento-fade) 70%),
     var(--pp-surface-alt);
 }
 
@@ -703,7 +718,7 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) 400px;
+  grid-template-columns: 300px minmax(0, 1fr) 317px;
   gap: var(--pp-space-7);
   padding: var(--pp-space-6);
   overflow: hidden;
@@ -845,8 +860,8 @@
   align-items: flex-start;
   gap: var(--pp-space-3);
   padding: var(--pp-space-5);
-  background: var(--pp-brand-bg);
-  border: 1px solid var(--pp-brand-stroke);
+  background-color: var(--pp-surface);
+  background-image: var(--pp-ai);
   border-radius: var(--pp-radius-lg);
 }
 
@@ -887,6 +902,17 @@
   font-weight: var(--pp-weight-semibold);
 }
 
+.pp-solution-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: var(--pp-space-1);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-accent);
+  color: var(--pp-surface);
+}
+
 /* --- Answer footer ------------------------------------------------ */
 
 .pp-answer-footer {
@@ -923,7 +949,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.32);
+  background: var(--pp-scrim);
 }
 
 .pp-dialog {
@@ -1654,7 +1680,7 @@
   inset: 0;
   width: 40%;
   border-radius: var(--pp-radius-pill);
-  background: linear-gradient(90deg, rgba(58, 192, 223, 1) 0%, rgba(114, 121, 248, 1) 100%);
+  background: linear-gradient(90deg, var(--pp-ai-from) 0%, var(--pp-ai-to) 100%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1739,3 +1765,5 @@
 .pp-bubble-text { color: var(--pp-ink); }
 
 .pp-cookie-manage { display: inline-flex; align-items: center; }
+
+.pp-strong { font-weight: var(--pp-weight-semibold); }

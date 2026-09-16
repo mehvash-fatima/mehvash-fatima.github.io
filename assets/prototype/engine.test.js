@@ -4,7 +4,10 @@ import { initialState, applyBeat, stateAt } from './engine.js';
 
 const content = {
   'answer-demo': { text: 'Here is what California requires.' },
-  'wizard-demo': { title: 'New consent model', fields: [{ id: 'name', label: 'Name', value: 'CCPA baseline' }] }
+  'wizard-demo': {
+    title: 'New consent model', step: 2, totalSteps: 5, heading: 'Basic details',
+    fields: [{ id: 'name', label: 'Name', value: 'CCPA baseline' }]
+  }
 };
 
 const scenario = {
@@ -44,6 +47,24 @@ test('a populate beat marks every field as AI-sourced', () => {
   const s = stateAt(scenario, content, 1);
   assert.equal(s.view, 'wizard');
   assert.equal(s.wizard.fields[0].source, 'ai');
+});
+
+test('a populate beat preserves non-field metadata from the content entry', () => {
+  const s = stateAt(scenario, content, 1);
+  // The renderer needs the step chrome; narrowing to { title, fields } would
+  // strip it and force the shell to reconstruct it.
+  assert.equal(s.wizard.title, 'New consent model');
+  assert.equal(s.wizard.step, 2);
+  assert.equal(s.wizard.totalSteps, 5);
+  assert.equal(s.wizard.heading, 'Basic details');
+});
+
+test('a populate beat deep-copies nested content to prevent aliasing', () => {
+  const s = stateAt(scenario, content, 1);
+  s.wizard.fields[0].value = 'mutated';
+  s.wizard.heading = 'mutated';
+  assert.equal(content['wizard-demo'].fields[0].value, 'CCPA baseline');
+  assert.equal(content['wizard-demo'].heading, 'Basic details');
 });
 
 test('an unknown content key fails loudly', () => {

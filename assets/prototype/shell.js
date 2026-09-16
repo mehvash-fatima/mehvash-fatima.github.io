@@ -9,24 +9,38 @@
  * timers, no document queries, no reads of anything outside `state` and the
  * module-level CONTENT/copy constants. Interactivity belongs to mount.js.
  *
- * CONTENT is imported because two pieces of state are presentational content
- * keys rather than content: `state.actionCard` ('action-card-pending' /
- * 'action-card-completed'), and the wizard's step chrome, which
- * engine.populate() drops when it narrows a content entry down to
- * { title, fields } — see wizardChrome() below.
+ * CONTENT is imported for one reason only: `state.actionCard` is a
+ * presentational content key ('action-card-pending' / 'action-card-completed')
+ * rather than content, so the card's copy has to be looked up here.
  */
 import { CONTENT } from './scenarios.js';
 
+/**
+ * Click targets, by view. Every id here is rendered as a real
+ * <button type="button"> — that invariant is assertable precisely because
+ * typing targets live in their own map below.
+ */
 export const HOTSPOTS = {
   home:   ['#prompt-bar'],
   answer: ['#generate-draft-button'],
-  dialog: ['#copilot-chat-input', '#wizard-next', '#wizard-save-close']
+  dialog: ['#wizard-next', '#wizard-save-close']
 };
 
-// The one place a hotspot id is turned into a string. Renderers use these.
+/**
+ * Typing targets, by view: elements a beat's `then.type.into` writes into.
+ * These are editable controls, not buttons. `#prompt-bar` appears in both
+ * maps because beat 1 both arms it and types into it.
+ */
+export const TYPING_TARGETS = {
+  home:   ['#prompt-bar'],
+  dialog: ['#copilot-chat-input']
+};
+
+// The one place an id is turned into a string. Renderers read from these.
 const [PROMPT_BAR] = HOTSPOTS.home;
 const [GENERATE_DRAFT] = HOTSPOTS.answer;
-const [CHAT_INPUT, WIZARD_NEXT, WIZARD_SAVE_CLOSE] = HOTSPOTS.dialog;
+const [WIZARD_NEXT, WIZARD_SAVE_CLOSE] = HOTSPOTS.dialog;
+const [CHAT_INPUT] = TYPING_TARGETS.dialog;
 
 /* ------------------------------------------------------------------ *
  * Chrome copy. Verbatim from docs/superpowers/notes/figma-scenario-1.md
@@ -109,7 +123,8 @@ const GLYPHS = {
   shield:      { d: 'M8 1.8 13 3.6v4.1c0 3.2-2.1 5.4-5 6.5-2.9-1.1-5-3.3-5-6.5V3.6z' },
   grid:        { d: 'M3 3h2v2H3zM7 3h2v2H7zM11 3h2v2h-2zM3 7h2v2H3zM7 7h2v2H7zM11 7h2v2h-2zM3 11h2v2H3zM7 11h2v2H7zM11 11h2v2h-2z', fill: true },
   bell:        { d: 'M4.5 11V7a3.5 3.5 0 0 1 7 0v4M3 11h10M6.6 13.2a1.6 1.6 0 0 0 2.8 0' },
-  gear:        { d: 'M8 5.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8M8 1.9v1.5M8 12.6v1.5M14.1 8h-1.5M3.4 8H1.9M12.3 3.7l-1.1 1.1M4.8 11.2l-1.1 1.1M12.3 12.3l-1.1-1.1M4.8 4.8 3.7 3.7' },
+  gear:        { fill: true, rule: 'evenodd', d: 'M9.02 1.5a.6.6 0 0 1 .58.45l.28 1.13c.33.12.63.3.91.5l1.12-.34a.6.6 0 0 1 .69.28l1.02 1.76a.6.6 0 0 1-.11.73l-.85.8c.03.18.04.36.04.55s-.01.37-.04.55l.85.8a.6.6 0 0 1 .11.73l-1.02 1.76a.6.6 0 0 1-.69.28l-1.12-.34c-.28.2-.58.38-.91.5l-.28 1.13a.6.6 0 0 1-.58.45H6.98a.6.6 0 0 1-.58-.45l-.28-1.13a4.3 4.3 0 0 1-.91-.5l-1.12.34a.6.6 0 0 1-.69-.28L2.38 9.44a.6.6 0 0 1 .11-.73l.85-.8A4.4 4.4 0 0 1 3.3 8c0-.19.01-.37.04-.55l-.85-.8a.6.6 0 0 1-.11-.73L3.4 4.16a.6.6 0 0 1 .69-.28l1.12.34c.28-.2.58-.38.91-.5l.28-1.13a.6.6 0 0 1 .58-.45zM8 6.1a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8z' },
+  link:        { d: 'M6.6 9.4 9.4 6.6M6.9 4.4 8.5 2.8a2.6 2.6 0 0 1 3.7 3.7l-1.6 1.6M9.1 11.6l-1.6 1.6a2.6 2.6 0 0 1-3.7-3.7l1.6-1.6' },
   help:        { d: 'M8 1.6a6.4 6.4 0 1 0 0 12.8A6.4 6.4 0 0 0 8 1.6M6.4 6.3a1.6 1.6 0 1 1 2.2 1.5c-.4.2-.6.5-.6.9v.4M8 11.6v.1' },
   megaphone:   { d: 'M3 6.5h2.5L11 3.5v9L5.5 9.5H3zM13 6v4' },
   person:      { d: 'M8 8.4a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4M3.2 13.4a4.8 4.8 0 0 1 9.6 0' },
@@ -132,6 +147,7 @@ function glyph(name, size = 16) {
   path.setAttribute('d', spec ? spec.d : '');
   if (spec && spec.fill) {
     path.setAttribute('fill', 'currentColor');
+    if (spec.rule) path.setAttribute('fill-rule', spec.rule);
   } else {
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', 'currentColor');
@@ -178,8 +194,42 @@ function iconButton(name, ariaLabel, className = 'pp-icon-button', size = 16) {
   return button;
 }
 
+/**
+ * Appends `line` to `node`, wrapping any occurrence of an `emphasis` phrase in
+ * a <strong>. The phrases are matched against the copy, never embedded in it,
+ * so the characters rendered are exactly the characters stored — nothing is
+ * added, removed, or re-punctuated.
+ */
+function appendEmphasised(node, line, phrases) {
+  if (!phrases || !phrases.length) {
+    node.append(document.createTextNode(line));
+    return node;
+  }
+  let rest = line;
+  while (rest) {
+    let at = -1;
+    let hit = '';
+    for (const phrase of phrases) {
+      if (!phrase) continue;
+      const index = rest.indexOf(phrase);
+      if (index !== -1 && (at === -1 || index < at || (index === at && phrase.length > hit.length))) {
+        at = index;
+        hit = phrase;
+      }
+    }
+    if (at === -1) {
+      node.append(document.createTextNode(rest));
+      return node;
+    }
+    if (at > 0) node.append(document.createTextNode(rest.slice(0, at)));
+    node.append(el('strong', 'pp-strong', hit));
+    rest = rest.slice(at + hit.length);
+  }
+  return node;
+}
+
 /** Splits "\n"-separated content text into paragraphs and bullet lists. */
-function renderRichText(container, text) {
+function renderRichText(container, text, emphasis) {
   const lines = String(text || '').split('\n');
   let list = null;
   for (const raw of lines) {
@@ -187,11 +237,11 @@ function renderRichText(container, text) {
     if (!line) { list = null; continue; }
     if (line.startsWith('- ')) {
       if (!list) { list = el('ul', 'pp-bullets'); container.append(list); }
-      list.append(el('li', null, line.slice(2)));
+      list.append(appendEmphasised(el('li'), line.slice(2), emphasis));
       continue;
     }
     list = null;
-    container.append(el('p', 'pp-paragraph', line));
+    container.append(appendEmphasised(el('p', 'pp-paragraph'), line, emphasis));
   }
   return container;
 }
@@ -288,13 +338,23 @@ function renderSuiteHeader() {
     ['bell', 'Notifications'],
     ['gear', 'Settings'],
     ['help', 'Help'],
-    ['person', 'Feedback']
+    ['link', 'Give feedback']
   ]) {
     right.append(iconButton(name, label, 'pp-suite-icon', 18));
   }
   right.append(el('span', 'pp-avatar'));
   header.append(right);
   return header;
+}
+
+/**
+ * The Priva solution mark: a filled brand-blue rounded square with a white
+ * glyph, as the Figma draws it. CSS + glyph, no exported image.
+ */
+function solutionBadge(size = 18) {
+  const badge = el('span', 'pp-solution-badge');
+  badge.append(glyph('shield', size));
+  return badge;
 }
 
 function copilotMark(size = 'md') {
@@ -428,7 +488,7 @@ function renderAnswerMessage(message) {
   }
 
   const body = el('div', 'pp-answer-body');
-  renderRichText(body, message.text);
+  renderRichText(body, message.text, message.emphasis);
   article.append(body);
   return article;
 }
@@ -446,7 +506,7 @@ function renderActionCard(cardKey) {
 
   const card = el('div', 'pp-action-card');
   const header = el('div', 'pp-action-card-header');
-  header.append(glyph('shield', 18));
+  header.append(solutionBadge(14));
   header.append(el('span', 'pp-action-card-title', content.header));
   card.append(header);
   card.append(el('p', 'pp-action-card-body', content.body));
@@ -521,23 +581,6 @@ function renderAnswerPage(state, { live }) {
 /* ------------------------------------------------------------------ *
  * Wizard
  * ------------------------------------------------------------------ */
-
-/**
- * engine.populate() narrows a CONTENT entry down to { title, fields }, so the
- * step number, headings, and intro copy are not in `state.wizard`. Recover
- * them by matching the field-id signature back to the CONTENT entry it came
- * from. Pure and deterministic: the ids never change, only the values do.
- */
-const WIZARD_BY_SIGNATURE = new Map(
-  Object.entries(CONTENT)
-    .filter(([, entry]) => Array.isArray(entry.fields))
-    .map(([key, entry]) => [entry.fields.map(field => field.id).join('|'), { key, ...entry }])
-);
-
-function wizardChrome(wizard) {
-  const signature = (wizard.fields || []).map(field => field.id).join('|');
-  return WIZARD_BY_SIGNATURE.get(signature) || {};
-}
 
 const MULTILINE_FIELDS = new Set(['description', 'preferences-description', 'preview-banner-text']);
 
@@ -671,7 +714,7 @@ function previewControl(field, className, tag = 'input') {
  * string in it is still a real editable control bound to its wizard field —
  * the step's whole point is "preview and customize".
  */
-function renderPreviewStep(wizard, chrome) {
+function renderPreviewStep(wizard) {
   const byId = Object.fromEntries((wizard.fields || []).map(field => [field.id, field]));
   const section = el('div', 'pp-preview');
 
@@ -707,9 +750,9 @@ function renderPreviewStep(wizard, chrome) {
   if (byId['preview-banner-text']) {
     banner.append(previewControl(byId['preview-banner-text'], 'pp-cookie-text'));
   }
-  if (chrome.links && chrome.links.length) {
+  if (wizard.links && wizard.links.length) {
     const links = el('p', 'pp-cookie-links');
-    for (const link of chrome.links) links.append(el('span', 'pp-link-inline is-inert', link));
+    for (const link of wizard.links) links.append(el('span', 'pp-link-inline is-inert', link));
     banner.append(links);
   }
   const actions = el('div', 'pp-cookie-actions');
@@ -750,21 +793,21 @@ function renderStepper(step, totalSteps) {
   return nav;
 }
 
-function renderWizardFields(wizard, chrome) {
+function renderWizardFields(wizard) {
   const body = el('div', 'pp-wizard-fields');
   const fields = wizard.fields || [];
 
   if (fields.some(field => field.image)) {
     const grid = el('div', 'pp-layout-grid');
     grid.setAttribute('role', 'radiogroup');
-    grid.setAttribute('aria-label', chrome.heading || wizard.title);
+    grid.setAttribute('aria-label', wizard.heading || wizard.title);
     for (const field of fields) grid.append(renderLayoutField(field));
     body.append(grid);
     return body;
   }
 
   if (fields.every(field => field.id.startsWith('preview-'))) {
-    body.append(renderPreviewStep(wizard, chrome));
+    body.append(renderPreviewStep(wizard));
     return body;
   }
 
@@ -776,8 +819,8 @@ function renderWizardFields(wizard, chrome) {
       currentSection = section;
       if (section) {
         const group = el('section', 'pp-field-group');
-        if (chrome.subsectionHeading) group.append(el('h3', 'pp-subheading', chrome.subsectionHeading));
-        if (chrome.subsectionIntro) group.append(el('p', 'pp-subintro', chrome.subsectionIntro));
+        if (wizard.subsectionHeading) group.append(el('h3', 'pp-subheading', wizard.subsectionHeading));
+        if (wizard.subsectionIntro) group.append(el('p', 'pp-subintro', wizard.subsectionIntro));
         body.append(group);
         container = group;
       } else {
@@ -790,9 +833,10 @@ function renderWizardFields(wizard, chrome) {
 }
 
 function renderWizard(wizard) {
-  const chrome = wizardChrome(wizard);
-  const step = chrome.step || 1;
-  const totalSteps = chrome.totalSteps || 5;
+  // engine.populate() carries the whole content entry onto state.wizard, so
+  // the step chrome is read straight off it.
+  const step = wizard.step || 1;
+  const totalSteps = wizard.totalSteps || 5;
   const isLastStep = step === totalSteps;
 
   const panel = el('section', 'pp-wizard');
@@ -800,21 +844,21 @@ function renderWizard(wizard) {
 
   const header = el('header', 'pp-wizard-header');
   const identity = el('div', 'pp-wizard-identity');
-  identity.append(glyph('shield', 22));
+  identity.append(solutionBadge(18));
   const titles = el('div', 'pp-wizard-titles');
   titles.append(el('h2', 'pp-wizard-title', wizard.title));
-  if (chrome.subtitle) titles.append(el('p', 'pp-wizard-subtitle', chrome.subtitle));
+  if (wizard.subtitle) titles.append(el('p', 'pp-wizard-subtitle', wizard.subtitle));
   identity.append(titles);
   header.append(identity);
   header.append(renderStepper(step, totalSteps));
   panel.append(header);
 
   const body = el('div', 'pp-wizard-body');
-  if (chrome.heading) body.append(el('h3', 'pp-wizard-heading', chrome.heading));
-  if (chrome.intro) body.append(el('p', 'pp-wizard-intro', chrome.intro));
+  if (wizard.heading) body.append(el('h3', 'pp-wizard-heading', wizard.heading));
+  if (wizard.intro) body.append(el('p', 'pp-wizard-intro', wizard.intro));
   // Frames 5-7 carry the disclaimer; frames 4 and 8 do not.
   if (step > 1 && !isLastStep) body.append(disclaimerLine(COPY.disclaimer, 'pp-disclaimer pp-disclaimer-tight'));
-  body.append(renderWizardFields(wizard, chrome));
+  body.append(renderWizardFields(wizard));
   panel.append(body);
 
   const footer = el('footer', 'pp-wizard-footer');
