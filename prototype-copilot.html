@@ -37,8 +37,11 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
-  nav {
+  /* ── NAV ──
+     Scoped to `body > nav`, not bare `nav`: the prototype shell renders its
+     own <nav class="pp-toc"> inside the canvas, and a bare element selector
+     here would make it position:fixed. Same reason for `body > footer`. */
+  body > nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
@@ -205,7 +208,7 @@
   .pp-backlink:hover { color: var(--ink); }
 
   /* ── FOOTER ── */
-  footer {
+  body > footer {
     max-width: 1100px;
     margin: 0 auto;
     padding: 60px;
@@ -214,13 +217,13 @@
     align-items: center;
   }
 
-  footer p {
+  body > footer p {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--muted);
   }
 
-  footer a {
+  body > footer a {
     color: var(--accent);
     text-decoration: none;
   }

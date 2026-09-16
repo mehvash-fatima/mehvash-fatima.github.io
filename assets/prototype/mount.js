@@ -126,8 +126,8 @@ export function mount(root) {
    * order, so "click the highlighted thing" is the only path forward.
    * At the terminal beat nothing is armed at all.
    */
-  const armSpotlight = () => {
-    const beat = nextBeat();
+  const armSpotlight = (enabled = true) => {
+    const beat = enabled ? nextBeat() : null;
     for (const selector of HOTSPOTS[state.view] || []) {
       const node = root.querySelector(selector);
       if (!node) continue;
@@ -162,15 +162,27 @@ export function mount(root) {
   };
 
   /* --- draw -------------------------------------------------------- */
-  const draw = () => {
+  // Set when a draw wanted to hand focus on but could not, because the
+  // spotlight was held back behind the thinking pause. Consumed when the
+  // pause ends and the spotlight is finally armed.
+  let focusOnArm = false;
+
+  /**
+   * `arm: false` draws the settled state with NO spotlight. Used for the
+   * thinking pause: the suggested-action card the next beat targets is held
+   * hidden behind the latency card, and a spotlight ring on an invisible
+   * button would be a lie.
+   */
+  const draw = ({ arm = true } = {}) => {
     // Keyboard users drive this with Enter/Space on the armed button, and
     // replaceChildren destroys that button. Move focus onto the new one, but
     // only if focus was already inside the canvas — never steal it otherwise.
     const hadFocus = root.contains(document.activeElement);
     root.replaceChildren(render(state));
     fitCanvas();
-    const armed = armSpotlight();
+    const armed = armSpotlight(arm);
     announce();
+    focusOnArm = hadFocus && !arm;
     if (hadFocus && armed) armed.focus();
   };
 
@@ -259,12 +271,20 @@ export function mount(root) {
       if (token !== runToken) return;
     }
 
+    // A real pause only happens when motion is allowed; under reduce the beat
+    // settles at once, so the spotlight is armed by this draw as usual.
+    const pausing = Boolean(then.thinking) && !reduceMotion();
     state = applyBeat(state, beat, CONTENT);
-    draw();
+    draw({ arm: !pausing });
 
     if (then.thinking) {
       await thinkFor(then.thinking);
       if (token !== runToken) return;
+      if (pausing) {
+        const armed = armSpotlight();
+        if (focusOnArm && armed) armed.focus();
+        focusOnArm = false;
+      }
     }
 
     if (type && type.when === 'after') {
