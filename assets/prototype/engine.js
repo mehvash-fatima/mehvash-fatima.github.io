@@ -30,13 +30,19 @@ export function applyBeat(state, beat, content) {
     next.prompt = '';
   }
   if (then.push && then.push.chat) {
-    next.chat.push({ role: 'assistant', key: then.push.chat, ...lookup(content, then.push.chat) });
+    next.chat.push({ role: 'assistant', key: then.push.chat, ...structuredClone(lookup(content, then.push.chat)) });
   }
   if (then.set) {
+    const reserved = ['scenarioId', 'beatIndex', 'chat'];
+    for (const key of Object.keys(then.set)) {
+      if (reserved.includes(key)) {
+        throw new Error(`Cannot set reserved key: ${key}`);
+      }
+    }
     Object.assign(next, then.set);
   }
   if (then.populate && then.populate.wizard) {
-    const source = lookup(content, then.populate.wizard);
+    const source = structuredClone(lookup(content, then.populate.wizard));
     next.wizard = {
       title: source.title,
       fields: source.fields.map(field => ({ ...field, source: 'ai' }))

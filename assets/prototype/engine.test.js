@@ -71,3 +71,19 @@ test('applyBeat does not mutate the state it is given', () => {
   applyBeat(before, scenario.beats[0], content);
   assert.deepEqual(before, snapshot);
 });
+
+test('push beat deep-copies nested content to prevent aliasing', () => {
+  const richContent = {
+    'demo-with-array': { text: 'Response', citations: ['a', 'b'] }
+  };
+  const s = applyBeat(initialState(scenario), { then: { push: { chat: 'demo-with-array' } } }, richContent);
+  const messageArray = s.chat[0].citations;
+  messageArray[0] = 'mutated';
+  assert.equal(richContent['demo-with-array'].citations[0], 'a', 'mutating returned chat should not affect content');
+  assert.equal(s.chat[0].citations[0], 'mutated', 'returned message should reflect the mutation');
+});
+
+test('set clause rejects reserved keys with descriptive error', () => {
+  const badBeat = { then: { set: { beatIndex: 99 } } };
+  assert.throws(() => applyBeat(initialState(scenario), badBeat, content), /beatIndex/);
+});
