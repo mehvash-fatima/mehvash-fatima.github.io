@@ -49,9 +49,11 @@ website scan (1); natural-language access to insights and metrics, and
 contacting owners by email or Teams (2.1, 2.2); create a draft data inventory
 report (3).
 
-Open content question: frame `1:67583` carries the note "Placeholder location
-paths, need PM suggestions:". Those paths need real values before publishing, or
-the beat that shows them needs rewording.
+Placeholder content: frame `1:67583` carries the note "Placeholder location
+paths, need PM suggestions:" — paths the PM never supplied. **Decision:** any
+beat depending on those paths is reworded so the flow reads naturally without
+showing invented file or site locations. No fabricated paths are presented as if
+they were real product data.
 
 ## Architecture
 
