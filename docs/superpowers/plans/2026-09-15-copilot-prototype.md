@@ -14,7 +14,8 @@
 
 - No runtime dependencies, no dev dependencies, no `package.json`, no build step.
 - ES modules only. The prototype page is served over HTTP, never `file://`.
-- Tests run with `node --test assets/prototype/` and require Node 18 or newer.
+- Tests run with `node --test assets/prototype/`. Node v24.21.0 is installed at
+  `~/.local/bin/node` and is already on PATH — do not install anything.
 - Breakpoint between scaled canvas and mobile reflow: **768px**.
 - Design canvas is **1920x1080**; scaling above the breakpoint is a CSS transform.
 - Idle auto-reset fires after **90 seconds** of no interaction, paused while the tab is hidden.
@@ -169,9 +170,11 @@ test('replaying to a beat equals stepping through to it', () => {
   assert.deepEqual(stateAt(scenario, content, scenario.beats.length - 1), stepped);
 });
 
-test('reset returns exactly the initial state', () => {
+test('reset returns exactly the initial state after advancing', () => {
   const before = initialState(scenario);
-  stateAt(scenario, content, 1);
+  const advanced = stateAt(scenario, content, 1);
+  assert.ok(advanced.chat.length > 0, 'advancing should have produced messages');
+  assert.equal(initialState(scenario).chat.length, 0);
   assert.deepEqual(initialState(scenario), before);
 });
 
