@@ -35,6 +35,7 @@
   --pp-accent-hover:  #316baa;   /* BrandBackground.Rest / NeutralFg2.BrandHover */
   --pp-link:          #1b5b9a;   /* BrandForegroundLink / BrandForeground2    */
   --pp-brand-bg:      #ebf3fc;   /* BrandBackground2 */
+  --pp-brand-bg-2:    #e3effd;   /* BrandBackground2.Rest — email preview */
   --pp-brand-stroke:  #b4d6fa;   /* BrandStroke2     */
   --pp-header:        #00467e;   /* Global.Color.RoyalBlue.Shade10 — suite bar */
 
@@ -45,9 +46,19 @@
   --pp-ms-yellow:     #ffb902;
 
   /* --- Status ---------------------------------------------------- */
-  --pp-success:       #0e700e;   /* SuccessForeground1 */
+  --pp-success:       #0e700e;   /* SuccessForeground1 — Approved         */
   --pp-success-bg:    #edf6ed;
-  --pp-danger:        #bc2f32;   /* required-field asterisk */
+  --pp-danger:        #bc2f32;   /* required-field asterisk; Failed / N/A */
+  /* In progress / Active / Reopened / Completed reuse --pp-accent-hover
+     and Not started reuses --pp-ink-4: read off the Fluent status SVGs in
+     scenario 2.1's frames, where both already matched existing tokens. */
+
+  /* --- Chart wedges (scenario 2.1 Frame 1:67165's uncategorized-tracker
+         pie). Four flat fills, straight off the four slice SVGs. -------- */
+  --pp-chart-1:       #637cef;
+  --pp-chart-2:       #e3008c;
+  --pp-chart-3:       #2aa0a4;
+  --pp-chart-4:       #9373c0;
 
   /* --- The AI affordance ----------------------------------------
      The Copilot-suggested field fill, verbatim from the Figma:
@@ -1846,3 +1857,635 @@
 .pp-cookie-manage { display: inline-flex; align-items: center; }
 
 .pp-strong { font-weight: var(--pp-weight-semibold); }
+
+/* =====================================================================
+   Scenario 2.1 — SRR top compliance issues
+
+   Everything below serves frames 1:67165, 1:67788, 1:67810-1:67859 and
+   1:92886. Same rule as the rest of this file: no colour literals, only
+   tokens from the block at the top.
+   ===================================================================== */
+
+/* --- View: risks (Frame 1:67165) --------------------------------- */
+
+.pp-page-risks { overflow-y: auto; }
+
+.pp-hero-compact {
+  flex: none;
+  padding-top: var(--pp-space-7);
+  padding-bottom: var(--pp-space-7);
+}
+
+.pp-hero-compact .pp-prompt-bar {
+  margin-top: var(--pp-space-4);
+  width: 703px;
+  cursor: default;
+}
+
+.pp-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pp-space-2);
+  margin-top: var(--pp-space-3);
+}
+
+.pp-chip-row-centred { justify-content: center; }
+
+.pp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  max-width: 288px;
+  padding: var(--pp-space-1) var(--pp-space-2);
+  border: 1px solid var(--pp-brand-stroke);
+  border-radius: var(--pp-radius-lg);
+  background: var(--pp-surface);
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-chip.is-inert { cursor: default; }
+.pp-chip:not(.is-inert):hover { border-color: var(--pp-accent-hover); }
+
+.pp-section-heading {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-risk-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  gap: var(--pp-space-6);
+  padding: 0 var(--pp-space-7) var(--pp-space-7);
+}
+
+.pp-risk-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  min-width: 0;
+}
+
+.pp-risk-cards {
+  display: grid;
+  grid-template-columns: 514px minmax(0, 1fr);
+  gap: var(--pp-space-6);
+  align-items: start;
+}
+
+.pp-card {
+  background: var(--pp-surface);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-risk-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-6);
+}
+
+.pp-risk-row-title {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-accent-hover);
+}
+
+.pp-risk-hero-headline {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+/* The pie is four flat wedges — a conic-gradient, not exported artwork.
+   The wedge percentages are computed from the data in shell.js. */
+.pp-pie-wrap {
+  position: relative;
+  align-self: center;
+  width: 420px;
+  height: 260px;
+}
+
+.pp-pie {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 186px;
+  height: 186px;
+  margin: -93px 0 0 -93px;
+  border-radius: 50%;
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-pie-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink-2);
+  white-space: nowrap;
+}
+
+.pp-pie-label-1 { right: 0;   top: 44%; }
+.pp-pie-label-2 { left: 34%;  bottom: 0; }
+.pp-pie-label-3 { left: 0;    top: 48%; text-align: right; }
+.pp-pie-label-4 { left: 24%;  top: 0; }
+
+.pp-pie-label-name { color: var(--pp-ink); }
+.pp-pie-label-note { color: var(--pp-ink-3); }
+
+.pp-risk-list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--pp-space-6);
+}
+
+.pp-risk-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-2);
+  width: 100%;
+  padding: var(--pp-space-4);
+  border: 0;
+  border-bottom: 1px solid var(--pp-border-subtle);
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-risk-list > .pp-risk-row:last-child { border-bottom: 0; }
+.pp-risk-row.is-inert { cursor: default; }
+.pp-risk-row:not(.is-inert):hover { background: var(--pp-surface-alt); }
+
+.pp-risk-row-text {
+  font-size: var(--pp-text-md);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+}
+
+.pp-recent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  min-width: 0;
+}
+
+.pp-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+}
+
+.pp-recent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-radius: var(--pp-radius-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-recent-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pp-recent-query { color: var(--pp-ink-2); }
+
+.pp-recent-meta {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-4);
+}
+
+/* --- Data tables (Frames 1:67788 and 1:67810) --------------------- */
+
+.pp-table-wrap {
+  width: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-table th {
+  padding: var(--pp-space-2);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  font-weight: var(--pp-weight-semibold);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pp-table td {
+  padding: var(--pp-space-2);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  vertical-align: middle;
+}
+
+.pp-table th .pp-glyph { color: var(--pp-ink-3); }
+
+.pp-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  min-width: 0;
+}
+
+.pp-cell-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A filled status disc with an optional white glyph, exactly as the Fluent
+   status icons draw it. The colour bucket comes from the data. */
+.pp-status-dot {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: var(--pp-surface);
+  background: var(--pp-ink-4);
+}
+
+.pp-status-dot[data-status='info']    { background: var(--pp-accent-hover); }
+.pp-status-dot[data-status='success'] { background: var(--pp-success); }
+.pp-status-dot[data-status='danger']  { background: var(--pp-danger); }
+
+/* Initials monogram. The design mixes these with stock portraits; the
+   prototype uses one monogram for everybody — see the inventory. */
+.pp-mono {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pp-surface-sel);
+  font-size: var(--pp-text-xs);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-cell-number { text-align: left; }
+
+/* --- List panel: the dialog's right half in scenario 2.1 ---------- */
+
+.pp-panel .pp-wizard-body {
+  gap: var(--pp-space-4);
+  overflow: hidden;
+}
+
+.pp-panel .pp-table-wrap { flex: 1; }
+
+.pp-panel-toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-4);
+}
+
+.pp-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border: 0;
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-brand-bg);
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-filter-value { font-weight: var(--pp-weight-semibold); }
+
+.pp-panel-toolbar-trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+}
+
+.pp-panel-count {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+  white-space: nowrap;
+}
+
+.pp-panel-search {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  width: 220px;
+  padding: var(--pp-space-1) var(--pp-space-2);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  color: var(--pp-ink-3);
+}
+
+.pp-panel-search .pp-input {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+
+/* --- Chat pane additions (Frames 1:67810 and 1:67859) ------------- */
+
+.pp-bubble-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  margin-top: var(--pp-space-2);
+  padding-left: var(--pp-space-5);
+  list-style: decimal;
+  color: var(--pp-ink);
+}
+
+.pp-bubble-steps li { list-style: decimal; }
+
+.pp-chat-pane > .pp-chip-row {
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0;
+  margin-bottom: var(--pp-space-2);
+}
+
+.pp-email-tile {
+  width: 100%;
+  margin-top: var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  overflow: hidden;
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-email-tile-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 132px;
+  background: var(--pp-brand-bg-2);
+  color: var(--pp-accent-hover);
+}
+
+.pp-email-tile-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-surface);
+}
+
+.pp-email-tile-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pp-email-tile-title {
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-email-tile-subtitle {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-tile-open { color: var(--pp-ink-2); }
+
+/* --- View: email (Frame 1:92886) ---------------------------------- */
+
+.pp-desktop {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--pp-space-6) var(--pp-space-6) 0;
+  background: var(--pp-surface-sel);
+}
+
+.pp-compose {
+  display: flex;
+  flex-direction: column;
+  width: 1080px;
+  height: 100%;
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg) var(--pp-radius-lg) 0 0;
+  box-shadow: var(--pp-shadow-dialog);
+  overflow: hidden;
+}
+
+.pp-compose-titlebar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-compose-title {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-tabs {
+  flex: none;
+  display: flex;
+  gap: var(--pp-space-5);
+  padding: 0 var(--pp-space-4);
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-compose-tab {
+  padding: var(--pp-space-2) 0;
+  border-bottom: 2px solid transparent;
+  color: var(--pp-ink-2);
+}
+
+.pp-compose-tab.is-selected {
+  border-bottom-color: var(--pp-accent-hover);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-ribbon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  color: var(--pp-ink-2);
+}
+
+.pp-compose-font {
+  min-width: 96px;
+  padding: 2px var(--pp-space-2);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  font-size: var(--pp-text-sm);
+}
+
+.pp-compose-font-size { min-width: 44px; }
+
+.pp-compose-send {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-3) var(--pp-space-4);
+}
+
+.pp-compose-from { color: var(--pp-ink-2); }
+
+.pp-compose-field {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-compose-field-label {
+  padding: 2px var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface-sunk);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-field-value { flex: 1; }
+
+.pp-compose-copies {
+  display: flex;
+  gap: var(--pp-space-3);
+  color: var(--pp-ink-3);
+}
+
+.pp-compose-subject {
+  flex: 1;
+  color: var(--pp-ink-4);
+}
+
+.pp-compose-saved {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-email-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-5) var(--pp-space-7) var(--pp-space-7);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-ms-lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-ms-wordmark {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-brand-bg);
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-strip .pp-glyph { color: var(--pp-accent-hover); }
+
+.pp-email-heading {
+  font-size: var(--pp-text-xl);
+  font-weight: var(--pp-weight-bold);
+  line-height: var(--pp-leading-tight);
+  color: var(--pp-ink);
+}
+
+/* Literal authoring placeholder — styled as unfinished copy, never
+   replaced with anything invented. See Reword note R3. */
+.pp-email-placeholder { color: var(--pp-ink-3); }
+
+.pp-email-table th[scope='colgroup'] {
+  padding-top: var(--pp-space-4);
+  border-bottom: 0;
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-email-cta {
+  align-self: flex-start;
+  padding: var(--pp-space-3) var(--pp-space-6);
+  border: 0;
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-accent-hover);
+  font-weight: var(--pp-weight-bold);
+  color: var(--pp-spot-ink);
+}
+
+.pp-email-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-3);
+  margin-top: var(--pp-space-4);
+  padding: var(--pp-space-5) var(--pp-space-6);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-email-footer-text {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+/* The chat pane is anchored to its newest turn. Frames 1:67834 and 1:67859
+   both draw the log scrolled to the bottom with the oldest turns clipped off
+   the top, and the guided click-through needs the same: the hotspot always
+   lives in the newest message, so it must never fall below the fold. */
+.pp-chat-pane .pp-chat { justify-content: flex-end; }

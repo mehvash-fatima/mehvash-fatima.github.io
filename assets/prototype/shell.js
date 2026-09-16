@@ -22,8 +22,9 @@ import { CONTENT } from './scenarios.js';
  */
 export const HOTSPOTS = {
   home:   ['#prompt-bar'],
-  answer: ['#generate-draft-button'],
-  dialog: ['#wizard-next', '#wizard-save-close']
+  risks:  ['#srr-risk-card'],
+  answer: ['#generate-draft-button', '#view-tasks-button'],
+  dialog: ['#wizard-next', '#wizard-save-close', '#chat-suggestion', '#email-card-open']
 };
 
 /**
@@ -38,9 +39,29 @@ export const TYPING_TARGETS = {
 
 // The one place an id is turned into a string. Renderers read from these.
 const [PROMPT_BAR] = HOTSPOTS.home;
-const [GENERATE_DRAFT] = HOTSPOTS.answer;
-const [WIZARD_NEXT, WIZARD_SAVE_CLOSE] = HOTSPOTS.dialog;
+const [SRR_RISK_CARD] = HOTSPOTS.risks;
+const [GENERATE_DRAFT, VIEW_TASKS] = HOTSPOTS.answer;
+const [WIZARD_NEXT, WIZARD_SAVE_CLOSE, CHAT_SUGGESTION, EMAIL_CARD_OPEN] = HOTSPOTS.dialog;
 const [CHAT_INPUT] = TYPING_TARGETS.dialog;
+
+/**
+ * Which hotspot a suggested-action card's primary button carries, keyed by
+ * the card's own content key. A card whose key is absent renders that button
+ * inert, because no beat arms it. The selector itself still lives only in
+ * HOTSPOTS above.
+ */
+const ACTION_HOTSPOT = {
+  'action-card-pending': GENERATE_DRAFT,
+  'action-card-srr-tasks': VIEW_TASKS
+};
+
+/**
+ * Same idea for the risk dashboard: a risk row is clickable only when a
+ * scenario drills into it. Scenarios 2.2 and 3 add their rows' keys here.
+ */
+const RISK_HOTSPOT = {
+  srr: SRR_RISK_CARD
+};
 
 /* ------------------------------------------------------------------ *
  * Chrome copy. Verbatim from docs/superpowers/notes/figma-scenario-1.md
@@ -87,7 +108,65 @@ const COPY = {
   wizardSaveClose: 'Save and close',
   wizardCancel: 'Cancel',
   customize: 'Customize',
-  required: 'Required'
+  required: 'Required',
+
+  /* --- Risk dashboard (scenario 2.1 Frame 1:67165, shared entry point for
+         the compliance-issue scenarios). Verbatim from
+         docs/superpowers/notes/figma-scenario-2-1.md. The page title is
+         COPY.pageTitle above: the frame spells it "Privacy Manager" while
+         frames 4-6 of the same flow spell it "Privacy manager" — see
+         ambiguity B1, which rules in favour of one spelling throughout. --- */
+  risksHeading: 'Top compliance risks',
+  recentHeading: 'Recent',
+  risksChips: [
+    'Privacy notice compliance issues',
+    'Privacy requests due soon',
+    'Show me past due Privacy Assessments'
+  ],
+  heroRisk: {
+    title: 'Priva Tracker Scanning',
+    headline: '4 websites with uncategorized trackers',
+    // Four flat wedges, drawn as a conic-gradient. Shares add to 20, so the
+    // slice sizes are derived, never hard-coded as percentages.
+    slices: [
+      { label: 'California1.com', note: '(8 uncategorized)', share: 8 },
+      { label: 'India1.com', note: '(6 uncategorized)', share: 6 },
+      { label: 'Canada1.com', note: '(4 uncategorized)', share: 4 },
+      { label: 'France1.com', note: '(2 uncategorized)', share: 2 }
+    ]
+  },
+  // `key` is what RISK_HOTSPOT above is keyed by; a row whose key is absent
+  // from that map renders inert.
+  riskRows: [
+    {
+      key: 'srr',
+      title: 'Priva Subject Rights Requests',
+      lines: ['6 expiring requests with deadlines expiring within the next 15 days.']
+    },
+    {
+      key: 'tracker',
+      title: 'Priva Tracker Scanning',
+      lines: ['1 privacy statement detected missing during a recent scan of contoso.com']
+    },
+    {
+      key: 'risk',
+      title: 'Priva Risk Management',
+      lines: [
+        '205 high risk data transfers with personal data detected by risk management policies in the 7 days, affecting 50 users',
+        '1241 assets with personal data were detected in Risk Management policies in the past 7 days, affecting 100 users',
+        '25 personal data types in Azure and AWS aren’t protected by a data protection policy'
+      ]
+    }
+  ],
+  recent: [
+    { query: 'What are the California privacy consent laws for websites?', meta: '5 prompts, created consent model' },
+    { query: 'Summarize top 5 privacy compliance issues across all Priva solutions.', meta: '3 prompts' },
+    { query: 'Show me the past due Privacy Assessments where there is highly sensitive data.', meta: '2 prompts' },
+    { query: 'Show me the list of websites with uncategorized trackers in most to least order.', meta: '4 prompts' },
+    { query: 'Summarize the capabilities of Microsoft Priva.', meta: '1 prompt' }
+  ],
+  moreSuggestions: 'More suggested prompts',
+  openEmail: 'Open the draft email'
 };
 
 /* ------------------------------------------------------------------ *
@@ -131,7 +210,12 @@ const GLYPHS = {
   attach:      { d: 'M12.5 7.5 7.8 12.2a2.9 2.9 0 0 1-4.1-4.1L8.6 3.2a1.9 1.9 0 0 1 2.7 2.7L6.5 10.7a.9.9 0 0 1-1.3-1.3l4.3-4.3' },
   more:        { d: 'M4 8h.01M8 8h.01M12 8h.01' },
   play:        { d: 'M6 4.2 11.5 8 6 11.8z', fill: true },
-  doc:         { d: 'M4 2.5h5L12 5.5V13.5H4zM9 2.5v3h3' }
+  doc:         { d: 'M4 2.5h5L12 5.5V13.5H4zM9 2.5v3h3' },
+  dash:        { d: 'M4.5 8h7' },
+  search:      { d: 'M7.2 2.6a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2M10.6 10.6 13.6 13.6' },
+  sortDown:    { d: 'M8 3.2v9.2M4.6 9.2 8 12.6l3.4-3.4' },
+  mail:        { d: 'M2.5 4.2h11v7.6h-11zM2.5 4.6 8 8.6l5.5-4' },
+  info:        { d: 'M8 1.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 8 1.8M8 7.2v4M8 4.9v.1', fill: false }
 };
 
 function glyph(name, size = 16) {
@@ -267,24 +351,30 @@ function disclaimerLine(text = COPY.disclaimer, className = 'pp-disclaimer') {
  * Chat partitioning
  *
  * The answer page and the dialog's chat pane read from the same `chat`
- * array. The first user turn is the page's breadcrumb query and any
- * assistant turn carrying page furniture (a `toc` or a `sectionHeading`)
- * is the page's answer; everything later is a chat-pane message.
+ * array. An assistant turn carrying page furniture (a `toc` or a
+ * `sectionHeading`) is the page's answer; everything else is a chat-pane
+ * message, except the OPENING turn when it is the user's — that one is the
+ * query the page's breadcrumb shows.
+ *
+ * "Opening turn", not "first user turn": scenario 2.1 drills into a risk
+ * card rather than typing, so its chat starts with the assistant and its
+ * breadcrumb comes off that message instead (see renderAnswerPage). Keying
+ * on index 0 keeps the user turn that opens the dialog — the second message
+ * in that scenario — out of the page column, where nothing would render it.
  * ------------------------------------------------------------------ */
 function splitChat(chat) {
   const page = [];
   const pane = [];
-  let seenPageQuery = false;
-  for (const message of chat || []) {
+  (chat || []).forEach((message, index) => {
     if (message.role === 'user') {
-      if (!seenPageQuery) { page.push(message); seenPageQuery = true; }
+      if (index === 0) page.push(message);
       else pane.push(message);
     } else if (message.toc || message.sectionHeading) {
       page.push(message);
     } else {
       pane.push(message);
     }
-  }
+  });
   return { page, pane };
 }
 
@@ -415,6 +505,129 @@ function renderHome(state) {
 }
 
 /* ------------------------------------------------------------------ *
+ * View: risks (Frame 1:67165) — the Privacy Manager risk dashboard.
+ *
+ * A different landing surface from `home`: the same hero, then a
+ * "Top compliance risks" board and a "Recent" prompt rail. Scenario 2.1
+ * enters here by drilling into a risk row rather than typing a query, so
+ * the search box is presentational — no beat types into it and no id is
+ * put on it.
+ * ------------------------------------------------------------------ */
+function renderPie(hero) {
+  const wrap = el('div', 'pp-pie-wrap');
+  const slices = hero.slices || [];
+  const total = slices.reduce((sum, slice) => sum + slice.share, 0) || 1;
+
+  let at = 0;
+  const stops = slices.map((slice, index) => {
+    const from = (at / total) * 100;
+    at += slice.share;
+    const to = (at / total) * 100;
+    return `var(--pp-chart-${index + 1}) ${from}% ${to}%`;
+  });
+  const pie = el('div', 'pp-pie');
+  pie.style.background = `conic-gradient(${stops.join(', ')})`;
+  pie.setAttribute('role', 'img');
+  pie.setAttribute(
+    'aria-label',
+    slices.map(slice => `${slice.label} ${slice.note}`).join(', ')
+  );
+  wrap.append(pie);
+
+  slices.forEach((slice, index) => {
+    const label = el('div', `pp-pie-label pp-pie-label-${index + 1}`);
+    label.setAttribute('aria-hidden', 'true');
+    label.append(el('span', 'pp-pie-label-name', slice.label));
+    label.append(el('span', 'pp-pie-label-note', slice.note));
+    wrap.append(label);
+  });
+  return wrap;
+}
+
+function renderRiskRow(row) {
+  const spotlight = RISK_HOTSPOT[row.key];
+  // A row a scenario drills into is a real button; the rest are static.
+  const node = spotlight
+    ? hotspotButton(spotlight, '', 'pp-risk-row')
+    : el('div', 'pp-risk-row is-inert');
+
+  const title = el('div', 'pp-risk-row-title');
+  title.append(solutionBadge(14));
+  title.append(el('span', null, row.title));
+  node.append(title);
+  for (const line of row.lines) node.append(el('p', 'pp-risk-row-text', line));
+  return node;
+}
+
+function renderRisks() {
+  const page = el('div', 'pp-page pp-page-risks');
+
+  const back = el('div', 'pp-backrow');
+  back.append(inertButton(COPY.homeBack, 'pp-link-button', { iconBefore: 'arrowLeft' }));
+  page.append(back);
+
+  const hero = el('div', 'pp-hero pp-hero-compact');
+  hero.append(el('h1', 'pp-hero-title', COPY.pageTitle));
+  const sub = el('p', 'pp-hero-sub');
+  sub.append(document.createTextNode(`${COPY.homeSubtitle} `));
+  sub.append(inertButton(COPY.homeLearnMore, 'pp-link-inline', { iconAfter: 'external', iconSize: 12 }));
+  hero.append(sub);
+
+  const bar = el('div', 'pp-prompt-bar is-inert');
+  bar.append(copilotMark('sm'));
+  bar.append(el('span', 'pp-prompt-text is-placeholder', COPY.promptPlaceholder));
+  bar.append(glyph('send', 18));
+  hero.append(bar);
+
+  const chips = el('div', 'pp-chip-row pp-chip-row-centred');
+  for (const chip of COPY.risksChips) chips.append(el('span', 'pp-chip is-inert', chip));
+  hero.append(chips);
+  page.append(hero);
+
+  const board = el('div', 'pp-risk-board');
+
+  const main = el('section', 'pp-risk-main');
+  main.append(el('h2', 'pp-section-heading', COPY.risksHeading));
+  const cards = el('div', 'pp-risk-cards');
+
+  const heroCard = el('article', 'pp-card pp-risk-hero');
+  const heroTitle = el('div', 'pp-risk-row-title');
+  heroTitle.append(solutionBadge(14));
+  heroTitle.append(el('span', null, COPY.heroRisk.title));
+  heroCard.append(heroTitle);
+  heroCard.append(el('p', 'pp-risk-hero-headline', COPY.heroRisk.headline));
+  heroCard.append(renderPie(COPY.heroRisk));
+  cards.append(heroCard);
+
+  const list = el('article', 'pp-card pp-risk-list');
+  for (const row of COPY.riskRows) list.append(renderRiskRow(row));
+  cards.append(list);
+
+  main.append(cards);
+  board.append(main);
+
+  const recent = el('aside', 'pp-recent');
+  recent.append(el('h2', 'pp-section-heading', COPY.recentHeading));
+  const rows = el('ul', 'pp-recent-list');
+  for (const item of COPY.recent) {
+    const li = document.createElement('li');
+    const entry = el('div', 'pp-recent-row');
+    entry.append(glyph('list', 18));
+    const text = el('div', 'pp-recent-text');
+    text.append(el('p', 'pp-recent-query', item.query));
+    text.append(el('p', 'pp-recent-meta', item.meta));
+    entry.append(text);
+    li.append(entry);
+    rows.append(li);
+  }
+  recent.append(rows);
+  board.append(recent);
+
+  page.append(board);
+  return page;
+}
+
+/* ------------------------------------------------------------------ *
  * View: answer (Frames 3 and 9) — also the backdrop under the dialog
  * ------------------------------------------------------------------ */
 function renderAnswerHeader(query) {
@@ -457,6 +670,77 @@ function renderToc(toc) {
   return nav;
 }
 
+/* ------------------------------------------------------------------ *
+ * Data tables
+ *
+ * One renderer serves both tables in scenario 2.1: the six-row request
+ * summary on the answer page (Frame 1:67788) and the thirteen-row task list
+ * inside the dialog (Frames 1:67810-1:67859). A row is an array of cells; a
+ * cell is a plain object, so the data says what a cell IS rather than how it
+ * looks:
+ *   { text }                    plain
+ *   { text, link: true }        a link the design draws but no frame leads
+ *                               anywhere from — rendered inert (Reword R1)
+ *   { text, status, icon }      a status pill; `status` names the colour
+ *                               token bucket, `icon` an optional glyph
+ *   { text, avatar }            a person; `avatar` is the initials monogram
+ * ------------------------------------------------------------------ */
+function renderCell(cell) {
+  const content = el('div', 'pp-cell');
+  if (cell.status) {
+    const badge = el('span', 'pp-status-dot');
+    badge.dataset.status = cell.status;
+    if (cell.icon) badge.append(glyph(cell.icon, 11));
+    content.append(badge);
+  }
+  if (cell.avatar !== undefined) {
+    const mono = el('span', 'pp-mono', cell.avatar || '');
+    mono.setAttribute('aria-hidden', 'true');
+    content.append(mono);
+  }
+  if (cell.link) {
+    // No destination exists for these in any frame of the scenario.
+    content.append(el('span', 'pp-link-inline is-inert', cell.text));
+  } else {
+    content.append(el('span', 'pp-cell-text', cell.text));
+  }
+  return content;
+}
+
+function renderDataTable(table) {
+  const wrapper = el('div', 'pp-table-wrap');
+  const node = el('table', 'pp-table');
+  const sortable = new Set(table.sortColumns || []);
+
+  const thead = el('thead');
+  const headRow = el('tr');
+  (table.columns || []).forEach((column, index) => {
+    const th = el('th', null);
+    th.scope = 'col';
+    const inner = el('div', 'pp-cell');
+    inner.append(el('span', 'pp-cell-text', column));
+    if (sortable.has(index)) inner.append(glyph('sortDown', 13));
+    th.append(inner);
+    headRow.append(th);
+  });
+  thead.append(headRow);
+  node.append(thead);
+
+  const tbody = el('tbody');
+  for (const row of table.rows || []) {
+    const tr = el('tr');
+    for (const cell of row) {
+      const td = el('td');
+      td.append(renderCell(cell));
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+  node.append(tbody);
+  wrapper.append(node);
+  return wrapper;
+}
+
 function renderAnswerMessage(message) {
   const article = el('article', 'pp-answer');
   if (message.sectionHeading) article.append(el('h2', 'pp-answer-heading', message.sectionHeading));
@@ -490,6 +774,8 @@ function renderAnswerMessage(message) {
   const body = el('div', 'pp-answer-body');
   renderRichText(body, message.text, message.emphasis);
   article.append(body);
+
+  if (message.table) article.append(renderDataTable(message.table));
   return article;
 }
 
@@ -520,9 +806,16 @@ function renderActionCard(cardKey) {
 
   const row = el('div', 'pp-action-card-buttons');
   if (content.buttons && content.buttons.length) {
-    // The first button is the armed hotspot ("Generate draft"); the rest are
-    // inert, because no beat targets them.
-    row.append(hotspotButton(GENERATE_DRAFT, content.buttons[0], 'pp-button pp-button-secondary'));
+    // The first button is the armed hotspot ("Generate draft" on scenario 1's
+    // card, "View tasks" on scenario 2.1's); the rest are inert, because no
+    // beat targets them. Which id this card carries is read from
+    // ACTION_HOTSPOT, so the selector string still lives only in HOTSPOTS.
+    const spotlight = ACTION_HOTSPOT[cardKey];
+    if (spotlight) {
+      row.append(hotspotButton(spotlight, content.buttons[0], 'pp-button pp-button-secondary'));
+    } else {
+      row.append(inertButton(content.buttons[0], 'pp-button pp-button-secondary'));
+    }
     for (const label of content.buttons.slice(1)) {
       row.append(inertButton(label, 'pp-button pp-button-secondary'));
     }
@@ -554,8 +847,14 @@ function renderAnswerFooter() {
  */
 function renderAnswerPage(state, { live }) {
   const { page } = splitChat(state.chat);
-  const query = (page.find(message => message.role === 'user') || {}).text || '';
   const answers = page.filter(message => message.role === 'assistant');
+  // Two ways a breadcrumb is authored: scenario 1 types a query, so the
+  // breadcrumb IS the user's turn; scenario 2.1 drills into a risk card, so
+  // the answer carries its own `breadcrumb` string. The explicit one wins.
+  const query =
+    (answers.find(message => message.breadcrumb) || {}).breadcrumb ||
+    (page.find(message => message.role === 'user') || {}).text ||
+    '';
   const toc = (answers.find(message => message.toc) || {}).toc;
 
   const root = el('div', `pp-page pp-page-answer${live ? '' : ' is-backdrop'}`);
@@ -646,12 +945,26 @@ function renderTextField(field) {
   return wrapper;
 }
 
-function renderLayoutField(field) {
+/**
+ * The layout step is ONE field whose `value` is the chosen option's id, not
+ * three fields each holding a description. That shape is what makes the
+ * choice stick: mount.js's input handler writes `control.value` onto the
+ * field whose id matches `data-field-id`, so a radio carrying the group's
+ * field id and the option's id as its value lands the pick in state, and the
+ * next draw re-checks it. (Before this, the radios carried no
+ * `data-field-id` at all, the handler ignored them, and a clicked thumbnail
+ * silently snapped back on the next draw.)
+ *
+ * `recommended` — not `value` — decides which card wears the Copilot badge,
+ * so overriding the suggestion moves the tick without rewriting history.
+ */
+function renderLayoutOption(field, option) {
   const card = el('article', 'pp-layout-card');
   card.dataset.source = field.source || 'user';
-  if (field.suggested) card.dataset.suggested = 'true';
+  const isRecommended = field.suggested && option.id === field.recommended;
+  if (isRecommended) card.dataset.suggested = 'true';
 
-  if (field.suggested) {
+  if (isRecommended) {
     const badge = el('div', 'pp-suggestion-banner');
     const tag = el('span', 'pp-ai-badge');
     tag.append(glyph('sparkle', 13));
@@ -659,42 +972,48 @@ function renderLayoutField(field) {
     badge.append(tag);
     badge.append(iconButton('more', 'More options'));
     card.append(badge);
-    if (field.note) card.append(el('p', 'pp-layout-note', field.note));
+    if (option.note) card.append(el('p', 'pp-layout-note', option.note));
   }
 
-  if (field.image) {
+  if (option.image) {
     const figure = el('div', 'pp-layout-thumb');
     const img = document.createElement('img');
-    img.src = field.image;
-    img.alt = `${field.label} preview`;
+    img.src = option.image;
+    img.alt = `${option.label} preview`;
     figure.append(img);
     card.append(figure);
   }
 
-  const choiceId = `pp-layout-${field.id}`;
+  const choiceId = `pp-layout-${option.id}`;
   const head = el('div', 'pp-layout-head');
   const label = document.createElement('label');
   label.className = 'pp-layout-title';
   label.htmlFor = choiceId;
-  label.textContent = field.label;
+  label.textContent = option.label;
   head.append(label);
 
-  // A real radio, not a styled div. It deliberately carries no data-field-id:
-  // its value is a choice, not the field's text value.
   const radio = document.createElement('input');
   radio.type = 'radio';
   radio.className = 'pp-radio';
   radio.id = choiceId;
-  radio.name = 'pp-layout-choice';
-  radio.value = field.id;
-  radio.dataset.layoutChoice = field.id;
-  if (field.suggested) radio.checked = true;
+  radio.name = `pp-choice-${field.id}`;
+  radio.value = option.id;
+  radio.dataset.fieldId = field.id;
+  radio.checked = field.value === option.id;
   head.append(radio);
   card.append(head);
 
-  card.append(el('p', 'pp-layout-desc', field.value));
-  if (field.previewLabel) card.append(inertButton(field.previewLabel, 'pp-link-inline'));
+  card.append(el('p', 'pp-layout-desc', option.description));
+  if (option.previewLabel) card.append(inertButton(option.previewLabel, 'pp-link-inline'));
   return card;
+}
+
+function renderLayoutField(field) {
+  const grid = el('div', 'pp-layout-grid');
+  grid.setAttribute('role', 'radiogroup');
+  grid.setAttribute('aria-label', field.label);
+  for (const option of field.options) grid.append(renderLayoutOption(field, option));
+  return grid;
 }
 
 function previewControl(field, className, tag = 'input') {
@@ -797,12 +1116,9 @@ function renderWizardFields(wizard) {
   const body = el('div', 'pp-wizard-fields');
   const fields = wizard.fields || [];
 
-  if (fields.some(field => field.image)) {
-    const grid = el('div', 'pp-layout-grid');
-    grid.setAttribute('role', 'radiogroup');
-    grid.setAttribute('aria-label', wizard.heading || wizard.title);
-    for (const field of fields) grid.append(renderLayoutField(field));
-    body.append(grid);
+  const choiceField = fields.find(field => field.options);
+  if (choiceField) {
+    body.append(renderLayoutField(choiceField));
     return body;
   }
 
@@ -885,8 +1201,108 @@ function renderWizard(wizard) {
 }
 
 /* ------------------------------------------------------------------ *
+ * List panel — the dialog's right half in scenario 2.1 (Frames 1:67810,
+ * 1:67834, 1:67859). Same shell as the wizard, but a filtered list instead
+ * of a stepper: identity, a toolbar, a table, a footer.
+ *
+ * The footer's four buttons are all inert on purpose: the design draws them
+ * (and makes "Next" primary) but no frame in the scenario is reachable from
+ * any of them — the flow leaves through the chat pane. See ambiguity B5.
+ * ------------------------------------------------------------------ */
+function renderListPanel(panel) {
+  const section = el('section', 'pp-wizard pp-panel');
+  if (!panel) return section;
+  section.setAttribute('aria-label', panel.title);
+
+  const header = el('header', 'pp-wizard-header');
+  const identity = el('div', 'pp-wizard-identity');
+  identity.append(solutionBadge(18));
+  const titles = el('div', 'pp-wizard-titles');
+  titles.append(el('h2', 'pp-wizard-title', panel.title));
+  if (panel.subtitle) titles.append(el('p', 'pp-wizard-subtitle', panel.subtitle));
+  identity.append(titles);
+  header.append(identity);
+  section.append(header);
+
+  const body = el('div', 'pp-wizard-body');
+
+  const toolbar = el('div', 'pp-panel-toolbar');
+  const filters = el('div', 'pp-filters');
+  for (const filter of panel.filters || []) {
+    const pill = inertButton('', 'pp-filter-pill', { iconAfter: 'chevronDown', iconSize: 13 });
+    // Built as two runs so the value can carry its own weight, exactly as
+    // the design draws "Response deadline: Overdue".
+    const label = el('span', 'pp-filter-label', `${filter.label}: `);
+    const value = el('span', 'pp-filter-value', filter.value);
+    pill.prepend(value);
+    pill.prepend(label);
+    filters.append(pill);
+  }
+  toolbar.append(filters);
+
+  const trailing = el('div', 'pp-panel-toolbar-trailing');
+  if (panel.count) trailing.append(el('span', 'pp-panel-count', panel.count));
+  if (panel.filterPlaceholder) {
+    const box = el('div', 'pp-panel-search');
+    box.append(glyph('search', 14));
+    const input = document.createElement('input');
+    input.type = 'search';
+    input.className = 'pp-input';
+    input.readOnly = true;   // the prototype does not filter; say so honestly
+    input.placeholder = panel.filterPlaceholder;
+    input.setAttribute('aria-label', panel.filterPlaceholder);
+    box.append(input);
+    trailing.append(box);
+  }
+  toolbar.append(trailing);
+  body.append(toolbar);
+
+  if (panel.table) body.append(renderDataTable(panel.table));
+  section.append(body);
+
+  const footer = el('footer', 'pp-wizard-footer');
+  const left = el('div', 'pp-wizard-footer-left');
+  left.append(inertButton(COPY.wizardBack, 'pp-button pp-button-secondary'));
+  left.append(inertButton(COPY.wizardNext, 'pp-button pp-button-primary'));
+  footer.append(left);
+  const right = el('div', 'pp-wizard-footer-right');
+  right.append(inertButton(COPY.wizardSaveClose, 'pp-button pp-button-secondary'));
+  right.append(inertButton(COPY.wizardCancel, 'pp-button pp-button-secondary'));
+  footer.append(right);
+  section.append(footer);
+
+  return section;
+}
+
+/* ------------------------------------------------------------------ *
  * View: dialog (Frames 4-8) — chat pane + wizard over the answer page
  * ------------------------------------------------------------------ */
+/**
+ * The "SRR summary email" preview tile inside the chat card (Frame
+ * 1:67859 / component 1:67901). Its open glyph is the hotspot that leaves
+ * Priva for the draft, so it is a real button with a real accessible name.
+ */
+function renderEmailTile(card) {
+  const tile = el('div', 'pp-email-tile');
+  const art = el('div', 'pp-email-tile-art');
+  art.append(glyph('mail', 48));
+  tile.append(art);
+
+  const foot = el('div', 'pp-email-tile-foot');
+  const titles = el('div', 'pp-email-tile-titles');
+  titles.append(el('p', 'pp-email-tile-title', card.title));
+  titles.append(el('p', 'pp-email-tile-subtitle', card.subtitle));
+  foot.append(titles);
+
+  const open = hotspotButton(EMAIL_CARD_OPEN, '', 'pp-icon-button pp-email-tile-open');
+  open.append(glyph('external', 18));
+  open.setAttribute('aria-label', COPY.openEmail);
+  foot.append(open);
+
+  tile.append(foot);
+  return tile;
+}
+
 function renderPaneMessage(message) {
   if (message.role === 'user') {
     const bubble = el('div', 'pp-bubble pp-bubble-user');
@@ -901,6 +1317,22 @@ function renderPaneMessage(message) {
     for (const item of message.bullets) list.append(renderLabelledBullet(item));
     bubble.append(list);
   }
+  // Numbered steps whose lead-in is a link rather than a bold label. The
+  // design repeats the placeholder "Request name:" three times and gives it
+  // no destination, so every one is inert (Reword R1).
+  if (message.steps && message.steps.length) {
+    const list = el('ol', 'pp-bubble-steps');
+    for (const step of message.steps) {
+      const li = document.createElement('li');
+      if (step.label) li.append(el('span', 'pp-link-inline is-inert', step.label));
+      li.append(document.createTextNode(step.label ? ` ${step.text}` : step.text));
+      list.append(li);
+    }
+    bubble.append(list);
+  }
+  if (message.outro) bubble.append(el('p', 'pp-bubble-text', message.outro));
+  if (message.emailCard) bubble.append(renderEmailTile(message.emailCard));
+
   const footer = el('div', 'pp-bubble-footer');
   footer.append(el('span', 'pp-bubble-disclaimer', COPY.shortDisclaimer));
   const feedback = el('div', 'pp-feedback');
@@ -908,7 +1340,11 @@ function renderPaneMessage(message) {
   feedback.append(iconButton('thumbDown', COPY.thumbsDown));
   footer.append(feedback);
   bubble.append(footer);
-  bubble.append(inertButton(COPY.showProcess, 'pp-link-button', { iconAfter: 'chevronDown', iconSize: 13 }));
+  // Frame 1:67859's email card has no "Show process" row; every other card
+  // in the file does, so the flag is opt-out.
+  if (message.showProcess !== false) {
+    bubble.append(inertButton(COPY.showProcess, 'pp-link-button', { iconAfter: 'chevronDown', iconSize: 13 }));
+  }
   return bubble;
 }
 
@@ -923,6 +1359,18 @@ function renderChatPane(state) {
   log.setAttribute('aria-label', COPY.copilot);
   for (const message of messages) log.append(renderPaneMessage(message));
   pane.append(log);
+
+  // A suggested-prompt chip belongs to the newest assistant turn that offers
+  // one (Frame 1:67810). Sending it is what advances the flow, so it is the
+  // armed hotspot; it disappears with the next turn, exactly as the design
+  // shows in Frame 1:67834.
+  const newest = messages[messages.length - 1];
+  if (newest && newest.suggestion) {
+    const row = el('div', 'pp-chip-row');
+    row.append(hotspotButton(CHAT_SUGGESTION, newest.suggestion, 'pp-chip'));
+    row.append(iconButton('doc', COPY.moreSuggestions));
+    pane.append(row);
+  }
 
   const composer = el('div', 'pp-composer');
   // #copilot-chat-input is a typing target, not a click target, so it is a
@@ -951,7 +1399,8 @@ function renderDialog(state) {
   const dialog = el('div', 'pp-dialog');
   dialog.setAttribute('role', 'dialog');
   dialog.setAttribute('aria-modal', 'true');
-  dialog.setAttribute('aria-label', state.wizard ? state.wizard.title : COPY.copilot);
+  const panel = state.wizard || (state.panel ? CONTENT[state.panel] : null);
+  dialog.setAttribute('aria-label', panel ? panel.title : COPY.copilot);
 
   const header = el('header', 'pp-dialog-header');
   const brand = el('div', 'pp-dialog-brand');
@@ -969,11 +1418,156 @@ function renderDialog(state) {
 
   const body = el('div', 'pp-dialog-body');
   body.append(renderChatPane(state));
+  // The dialog's right half is a wizard in scenario 1 and a list panel in
+  // scenario 2.1. `state.panel` is a content key, same convention as
+  // state.actionCard.
   if (state.wizard) body.append(renderWizard(state.wizard));
+  else if (state.panel) body.append(renderListPanel(CONTENT[state.panel]));
   dialog.append(body);
 
   scrim.append(dialog);
   return scrim;
+}
+
+/* ------------------------------------------------------------------ *
+ * View: email (Frame 1:92886) — the generated draft, open in Outlook.
+ *
+ * The source frame is two flattened screenshots with no text layers, so the
+ * copy below was transcribed from the raster (see the inventory's Frame 7
+ * section and ambiguity B11). The compose window is rebuilt rather than
+ * exported: every string in it is plain text, and the screenshot's outer
+ * chrome is an unrelated mailbox that has no business in this flow. The
+ * backdrop is therefore a neutral desktop, not that mailbox.
+ * ------------------------------------------------------------------ */
+function microsoftLockup(text) {
+  const lockup = el('div', 'pp-ms-lockup');
+  lockup.append(el('span', 'pp-favicon'));
+  lockup.append(el('span', 'pp-ms-wordmark', text));
+  return lockup;
+}
+
+function renderEmailBody(draft) {
+  const body = el('div', 'pp-email-body');
+  body.append(microsoftLockup(draft.brand));
+
+  const strip = el('div', 'pp-email-strip');
+  strip.append(glyph('info', 16));
+  strip.append(el('span', null, draft.banner));
+  body.append(strip);
+
+  body.append(el('h1', 'pp-email-heading', draft.heading));
+  // A literal authoring placeholder, square brackets and all (Reword R3) —
+  // shown in its own muted style so it reads as unfinished copy, not product
+  // text, and never replaced with anything invented.
+  body.append(el('p', 'pp-email-placeholder', draft.description));
+
+  const table = el('table', 'pp-table pp-email-table');
+  const thead = el('thead');
+  const headRow = el('tr');
+  (draft.columns || []).forEach((column, index) => {
+    const th = el('th');
+    th.scope = 'col';
+    const inner = el('div', 'pp-cell');
+    inner.append(el('span', 'pp-cell-text', column));
+    if (index === 0) inner.append(glyph('sortDown', 13));
+    th.append(inner);
+    headRow.append(th);
+  });
+  thead.append(headRow);
+  table.append(thead);
+
+  for (const group of draft.groups || []) {
+    const tbody = el('tbody');
+    const groupRow = el('tr', 'pp-email-group');
+    const cell = el('th', null, group.label);
+    cell.scope = 'colgroup';
+    cell.colSpan = (draft.columns || []).length;
+    groupRow.append(cell);
+    tbody.append(groupRow);
+
+    for (const owner of group.rows) {
+      const tr = el('tr');
+      const nameCell = el('td');
+      const inner = el('div', 'pp-cell');
+      const mono = el('span', 'pp-mono', owner.initials);
+      mono.setAttribute('aria-hidden', 'true');
+      inner.append(mono);
+      inner.append(el('span', 'pp-cell-text', owner.name));
+      nameCell.append(inner);
+      tr.append(nameCell);
+      tr.append(el('td', 'pp-cell-number', owner.tasks));
+      tr.append(el('td', null, owner.deadline));
+      tbody.append(tr);
+    }
+    table.append(tbody);
+  }
+  body.append(table);
+
+  body.append(inertButton(draft.cta, 'pp-button pp-email-cta'));
+
+  const footer = el('div', 'pp-email-footer');
+  const sent = el('p', 'pp-email-footer-text');
+  sent.append(document.createTextNode(draft.footerBefore));
+  sent.append(el('span', 'pp-link-inline is-inert', draft.footerLink));
+  sent.append(document.createTextNode(draft.footerAfter));
+  footer.append(sent);
+  footer.append(inertButton(draft.privacyLink, 'pp-link-inline'));
+  footer.append(microsoftLockup(draft.brand));
+  body.append(footer);
+
+  return body;
+}
+
+function renderEmail(state) {
+  const draft = CONTENT[state.draft];
+  const desktop = el('div', 'pp-desktop');
+  if (!draft) return desktop;
+
+  const win = el('section', 'pp-compose');
+  win.setAttribute('aria-label', draft.windowTitle);
+
+  const titlebar = el('header', 'pp-compose-titlebar');
+  titlebar.append(el('span', 'pp-compose-title', draft.windowTitle));
+  titlebar.append(el('span', 'pp-window-controls'));
+  win.append(titlebar);
+
+  const tabs = el('nav', 'pp-compose-tabs');
+  draft.tabs.forEach((tab, index) => {
+    tabs.append(el('span', `pp-compose-tab${index === 0 ? ' is-selected' : ''}`, tab));
+  });
+  win.append(tabs);
+
+  const ribbon = el('div', 'pp-compose-ribbon');
+  ribbon.append(el('span', 'pp-compose-font', draft.fontName));
+  ribbon.append(el('span', 'pp-compose-font pp-compose-font-size', draft.fontSize));
+  for (const name of ['pencil', 'attach', 'link', 'more']) {
+    ribbon.append(iconButton(name, draft.windowTitle, 'pp-icon-button', 16));
+  }
+  win.append(ribbon);
+
+  const sendRow = el('div', 'pp-compose-send');
+  const send = inertButton(draft.send, 'pp-button pp-button-primary', { iconBefore: 'send' });
+  sendRow.append(send);
+  sendRow.append(el('span', 'pp-compose-from', draft.from));
+  win.append(sendRow);
+
+  const to = el('div', 'pp-compose-field');
+  to.append(el('span', 'pp-compose-field-label', draft.to));
+  to.append(el('span', 'pp-compose-field-value', ''));
+  const copies = el('div', 'pp-compose-copies');
+  copies.append(el('span', null, draft.cc));
+  copies.append(el('span', null, draft.bcc));
+  to.append(copies);
+  win.append(to);
+
+  const subject = el('div', 'pp-compose-field');
+  subject.append(el('span', 'pp-compose-subject', draft.subjectPlaceholder));
+  subject.append(el('span', 'pp-compose-saved', draft.savedNote));
+  win.append(subject);
+
+  win.append(renderEmailBody(draft));
+  desktop.append(win);
+  return desktop;
 }
 
 /* ------------------------------------------------------------------ *
@@ -982,17 +1576,25 @@ function renderDialog(state) {
 export function render(state) {
   const fragment = document.createDocumentFragment();
   const canvas = el('div', 'pp-canvas');
-  canvas.append(renderBrowserChrome());
-  canvas.append(renderSuiteHeader());
+  // The draft opens in Outlook, outside Priva entirely: Frame 1:92886 has no
+  // browser tab band and no suite header, so neither is drawn.
+  if (state.view !== 'email') {
+    canvas.append(renderBrowserChrome());
+    canvas.append(renderSuiteHeader());
+  }
 
   const stage = el('div', 'pp-stage');
-  if (state.view === 'dialog') {
+  if (state.view === 'email') {
+    stage.append(renderEmail(state));
+  } else if (state.view === 'dialog') {
     const backdrop = renderAnswerPage(state, { live: false });
     backdrop.setAttribute('aria-hidden', 'true');
     stage.append(backdrop);
     stage.append(renderDialog(state));
   } else if (state.view === 'answer') {
     stage.append(renderAnswerPage(state, { live: true }));
+  } else if (state.view === 'risks') {
+    stage.append(renderRisks());
   } else {
     stage.append(renderHome(state));
   }
