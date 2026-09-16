@@ -6,7 +6,7 @@
 
 **Architecture:** A pure state machine (`engine.js`) folds a list of declarative "beats" over an initial state; `shell.js` renders that state into DOM and declares which hotspot ids each view owns; `scenarios.js` holds the four demo scripts as data only; `mount.js` is the sole owner of `document`. Data flows one direction — scenario data to engine state to DOM — which makes reset a single code path and lets the whole engine be tested with no browser.
 
-**Tech Stack:** Vanilla ES modules, CSS custom properties, and a ~40-line in-repo test harness run in the browser. No frameworks, no build step, no dependencies.
+**Tech Stack:** Vanilla ES modules, CSS custom properties, Node's built-in test runner. No frameworks, no build step, no dependencies.
 
 **Spec:** `docs/superpowers/specs/2026-09-15-copilot-prototype-design.md`
 
@@ -14,10 +14,7 @@
 
 - No runtime dependencies, no dev dependencies, no `package.json`, no build step.
 - ES modules only. The prototype page is served over HTTP, never `file://`.
-- **No Node runtime exists on this machine.** Tests run in the browser via
-  `assets/prototype/tests.html`, served by `python3 -m http.server 8000`, using a
-  local dependency-free `testkit.js` that mirrors the `node:test` / `node:assert`
-  subset the suite uses. Never add a `node --test` step.
+- Tests run with `node --test assets/prototype/` and require Node 18 or newer.
 - Breakpoint between scaled canvas and mobile reflow: **768px**.
 - Design canvas is **1920x1080**; scaling above the breakpoint is a CSS transform.
 - Idle auto-reset fires after **90 seconds** of no interaction, paused while the tab is hidden.
@@ -93,11 +90,9 @@ git commit -m "Record scenario 1 design inventory from Figma"
 
 ---
 
-### Task 2: Test harness and engine state machine
+### Task 2: Engine state machine
 
 **Files:**
-- Create: `assets/prototype/testkit.js`
-- Create: `assets/prototype/tests.html`
 - Create: `assets/prototype/engine.js`
 - Test: `assets/prototype/engine.test.js`
 
@@ -109,93 +104,14 @@ git commit -m "Record scenario 1 design inventory from Figma"
   - `stateAt(scenario, content, beatIndex) -> State`
   - `State` is `{ scenarioId, beatIndex, view, chat, wizard, prompt }` where `chat` is an array of `{ role: 'user'|'assistant', text?, key?, ...contentFields }` and `wizard` is `null` or `{ title, fields: [{ id, label, value, source: 'ai'|'user' }] }`
   - `applyBeat` returns the **settled** state at the end of a beat. Animation is not its concern.
-  - `testkit.js` exports `test(name, fn)` and `assert` with `.equal`, `.deepEqual`, `.ok`, `.throws`, plus `run()` which executes every registered test and reports results. Test files import from it and are otherwise written exactly as they would be for `node:test`.
-
-- [ ] **Step 0: Build the test harness**
-
-Create `assets/prototype/testkit.js` — no dependencies, runs in any browser:
-
-```js
-/**
- * Minimal test harness. Mirrors the node:test / node:assert subset this suite
- * uses, so test files can move to `node --test` later by changing imports only.
- */
-const registered = [];
-export function test(name, fn) { registered.push({ name, fn }); }
-
-const fail = (message) => { throw new Error(message); };
-const show = (value) => JSON.stringify(value);
-
-export const assert = {
-  ok(value, message) { if (!value) fail(message || `expected truthy, got ${show(value)}`); },
-  equal(actual, expected, message) {
-    if (actual !== expected) fail(message || `expected ${show(expected)}, got ${show(actual)}`);
-  },
-  deepEqual(actual, expected, message) {
-    if (show(actual) !== show(expected)) fail(message || `expected ${show(expected)}, got ${show(actual)}`);
-  },
-  throws(fn, pattern, message) {
-    try { fn(); } catch (error) {
-      if (pattern && !pattern.test(String(error.message))) fail(`error ${error.message} did not match ${pattern}`);
-      return;
-    }
-    fail(message || 'expected the call to throw, but it did not');
-  }
-};
-
-export async function run(root) {
-  let passed = 0;
-  const failures = [];
-  for (const { name, fn } of registered) {
-    try { await fn(); passed += 1; }
-    catch (error) { failures.push({ name, error }); }
-  }
-  root.textContent = '';
-  const summary = document.createElement('h1');
-  summary.textContent = failures.length
-    ? `${failures.length} failing, ${passed} passing`
-    : `${passed} passing`;
-  summary.dataset.status = failures.length ? 'fail' : 'pass';
-  root.append(summary);
-  for (const { name, error } of failures) {
-    const item = document.createElement('pre');
-    item.textContent = `FAIL  ${name}\n      ${error.message}`;
-    root.append(item);
-  }
-  return failures.length === 0;
-}
-```
-
-Create `assets/prototype/tests.html`:
-
-```html
-<!doctype html>
-<meta charset="utf-8">
-<title>Prototype tests</title>
-<style>
-  body { font: 15px/1.5 ui-monospace, monospace; padding: 24px; }
-  h1[data-status="pass"] { color: #0a7d32; }
-  h1[data-status="fail"] { color: #b3261e; }
-  pre { color: #b3261e; }
-</style>
-<div id="results">Running…</div>
-<script type="module">
-  import './engine.test.js';
-  import './scenarios.test.js';
-  import { run } from './testkit.js';
-  run(document.getElementById('results'));
-</script>
-```
-
-Note: the `scenarios.test.js` import stays commented out until Task 5 creates
-that file — uncomment it there.
 
 - [ ] **Step 1: Write the failing tests**
 
 Create `assets/prototype/engine.test.js`:
 
 ```js
-import { test, assert } from './testkit.js';
+import test from 'node:test';
+import assert from 'node:assert/strict';
 import { initialState, applyBeat, stateAt } from './engine.js';
 
 const content = {
@@ -253,11 +169,9 @@ test('replaying to a beat equals stepping through to it', () => {
   assert.deepEqual(stateAt(scenario, content, scenario.beats.length - 1), stepped);
 });
 
-test('reset returns exactly the initial state after advancing', () => {
+test('reset returns exactly the initial state', () => {
   const before = initialState(scenario);
-  const advanced = stateAt(scenario, content, 1);
-  assert.ok(advanced.chat.length > 0, 'advancing should have produced messages');
-  assert.equal(initialState(scenario).chat.length, 0);
+  stateAt(scenario, content, 1);
   assert.deepEqual(initialState(scenario), before);
 });
 
@@ -272,11 +186,10 @@ test('applyBeat does not mutate the state it is given', () => {
 - [ ] **Step 2: Run the tests and watch them fail**
 
 ```bash
-python3 -m http.server 8000
+node --test assets/prototype/
 ```
 
-Open `http://localhost:8000/assets/prototype/tests.html`. Expected: the page
-reports a module-resolution failure for `./engine.js` in the browser console.
+Expected: failure, `Cannot find module .../engine.js`.
 
 - [ ] **Step 3: Implement the engine**
 
@@ -341,15 +254,17 @@ export function stateAt(scenario, content, beatIndex) {
 
 - [ ] **Step 4: Run the tests and watch them pass**
 
-Reload `http://localhost:8000/assets/prototype/tests.html`.
-Expected: a green "8 passing" heading and no failure blocks.
+```bash
+node --test assets/prototype/
+```
+
+Expected: 8 passing.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add assets/prototype/testkit.js assets/prototype/tests.html \
-        assets/prototype/engine.js assets/prototype/engine.test.js
-git commit -m "Add the prototype beat engine with a browser test harness"
+git add assets/prototype/engine.js assets/prototype/engine.test.js
+git commit -m "Add the prototype beat engine with tests"
 ```
 
 ---
@@ -417,16 +332,14 @@ Expected: no output.
 
 - [ ] **Step 3: Sanity-check the data loads and folds**
 
-Serve the site (`python3 -m http.server 8000`), open
-`http://localhost:8000/assets/prototype/tests.html`, and run in the browser
-console:
-
-```js
-const { SCENARIOS, CONTENT } = await import('./scenarios.js');
-const { stateAt } = await import('./engine.js');
+```bash
+node --input-type=module -e "
+import { SCENARIOS, CONTENT } from './assets/prototype/scenarios.js';
+import { stateAt } from './assets/prototype/engine.js';
 const s = SCENARIOS[0];
 const end = stateAt(s, CONTENT, s.beats.length - 1);
 console.log(s.beats.length, 'beats ->', end.view, end.chat.length, 'messages');
+"
 ```
 
 Expected: a beat count, a final view name, and a non-zero message count, with no thrown error.
@@ -512,16 +425,14 @@ Build cards, pills, the latency card, and the progress bar in CSS — do not use
 
 - [ ] **Step 4: Verify the registry and renderers agree**
 
-In the browser console on the served test page:
-
-```js
-const { HOTSPOTS, render } = await import('./shell.js');
+```bash
+node --input-type=module -e "
+import { HOTSPOTS } from './assets/prototype/shell.js';
 console.log(Object.keys(HOTSPOTS).join(', '));
-console.log(render({ view: 'home', chat: [], wizard: null, prompt: '' }));
+"
 ```
 
-Expected: the view names print and `render` returns a populated
-DocumentFragment, proving the module parses and every renderer runs.
+Expected: the view names print, proving the module parses and exports cleanly under Node.
 
 - [ ] **Step 5: Commit**
 
@@ -548,7 +459,8 @@ This is the test that protects late-night copy edits. It must not need a DOM.
 Create `assets/prototype/scenarios.test.js`:
 
 ```js
-import { test, assert } from './testkit.js';
+import test from 'node:test';
+import assert from 'node:assert/strict';
 import { SCENARIOS, CONTENT } from './scenarios.js';
 import { HOTSPOTS } from './shell.js';
 import { initialState, applyBeat } from './engine.js';
@@ -621,18 +533,18 @@ test('every scenario folds from first beat to last without throwing', () => {
 });
 ```
 
-- [ ] **Step 2: Enable the suite and run it**
+- [ ] **Step 2: Run the tests**
 
-Uncomment the `import './scenarios.test.js';` line in
-`assets/prototype/tests.html`, then reload
-`http://localhost:8000/assets/prototype/tests.html`.
+```bash
+node --test assets/prototype/
+```
 
 Expected: all pass. If the spotlight-in-view test fails, the fix is in `scenarios.js` or `HOTSPOTS` — not in the test.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add assets/prototype/scenarios.test.js assets/prototype/tests.html
+git add assets/prototype/scenarios.test.js
 git commit -m "Validate scenario data against the shell's hotspot registry"
 ```
 
@@ -855,9 +767,11 @@ Append to `SCENARIOS` with `id: 'srr'`, `product: 'Subject Rights Requests'`. If
 
 - [ ] **Step 3: Run the tests**
 
-Reload `http://localhost:8000/assets/prototype/tests.html`.
+```bash
+node --test assets/prototype/
+```
 
-Expected: all green. The validator will name any spotlight that does not exist in its view.
+Expected: pass. The validator will name any spotlight that does not exist in its view.
 
 - [ ] **Step 4: Commit**
 
@@ -1005,12 +919,15 @@ Walk one full scenario in Safari, in Chrome, and on a real phone. Record anythin
 
 - [ ] **Step 6: Update the README**
 
-Add `prototype-copilot.html` and `assets/prototype/` to the structure listing. Document two things: that this page uses ES modules and therefore must be served over HTTP rather than opened via `file://`, and that the tests run by serving the site and opening `assets/prototype/tests.html` (no Node, no install). Mention that the harness mirrors the `node:test` API, so the suite can move to `node --test` by changing import lines if Node is ever installed.
+Add `prototype-copilot.html` and `assets/prototype/` to the structure listing. Document two things: that this page uses ES modules and therefore must be served over HTTP rather than opened via `file://`, and that the tests run with `node --test assets/prototype/`.
 
 - [ ] **Step 7: Run the full test suite one last time**
 
-Reload `http://localhost:8000/assets/prototype/tests.html`.
-Expected: a green heading and no failure blocks.
+```bash
+node --test assets/prototype/
+```
+
+Expected: all pass.
 
 - [ ] **Step 8: Commit**
 

@@ -188,12 +188,7 @@ accessibility concerns, so the prototype must not be careless here.
 
 ## Testing
 
-Dependency-free automated tests. The machine has no Node runtime, so the suite
-runs in the browser: `assets/prototype/testkit.js` is a ~40-line harness
-mirroring the `node:test` / `node:assert` subset the tests use, and
-`assets/prototype/tests.html` runs them against the same
-`python3 -m http.server` used to preview the site. Nothing is installed. If Node
-is ever added, the suite moves to `node --test` by changing import lines only.
+Node's built-in test runner, no dependencies installed.
 
 - `engine.test.js` — applying a beat yields the expected state; reset restores
   `initial` exactly; replaying beats `0..n` equals stepping through them; idle
@@ -205,9 +200,8 @@ is ever added, the suite moves to `node --test` by changing import lines only.
   is what keeps this test dependency-free. This is the guard against a
   late-night copy edit silently producing a dead button.
 
-Browser automation (Playwright and the like) is deliberately excluded — it would
-require installing dependencies. Before publishing, a manual pass on Safari,
-Chrome, and a real phone.
+Browser automation is deliberately excluded. Before publishing, a manual pass on
+Safari, Chrome, and a real phone.
 
 ## Integration with the site
 
@@ -248,5 +242,3 @@ the same working session that reads the design.
 - ES modules and separate files, accepting the loss of `file://` preview on
   this one page.
 - No runtime or development dependencies.
-- Tests run in the browser through an in-repo harness, because no Node runtime
-  is installed and installing one was out of scope.
