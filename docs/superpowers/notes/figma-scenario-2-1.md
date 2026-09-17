@@ -16,9 +16,10 @@ page header with "Back", the Copilot mark and the edit pencil, and the boilerpla
 legal advice."** are byte-identical to the frames inventoried in `figma-scenario-1.md`. The short form
 **"AI-generated content may be incorrect"** is used inside chat cards.
 
-**One chrome string differs and it is a design bug — see Ambiguity B1:** frames 1–3 render the page title
-as **"Privacy Manager"** (capital M); frames 4–6 render the same header as **"Privacy manager"**
-(lower-case m), which is what scenario 1 uses throughout.
+**One chrome string differs and it is a design bug — see Ambiguity B1 (corrected):** frames 1–3 render the
+page title as **"Privacy Manager"** (capital M); frames 4–6 render the same header as
+**"Privacy manager"** (lower-case m), which is what scenario 1 uses throughout. The prototype unifies
+this scenario on the title-case form; see B1's full entry in the Ambiguities section below.
 
 **Visuals:** all CSS-buildable. No new brand marks appear — the Copilot mark
 (`assets/5135989b34f7.svg`) and the Priva mark (`assets/5abed2089d2b.svg`) exported for scenario 1 are
@@ -58,7 +59,8 @@ query. **There is no typing in this scenario's opening beat** (contrast scenario
   - "Canada1.com" / "(4 uncategorized)" — slice fill `#2AA0A4`
   - "France1.com" / "(2 uncategorized)" — slice fill `#9373C0`
 - **Risks card** (`.local-risks-card`), three stacked rows:
-  1. "Priva Subject Rights Requests" — "6 expiring requests with deadlines expiring within the next 15 days."
+  1. "Priva Subject Rights Requests" — "6 expiring requests with deadlines expiring within the next
+     15 days." — **corrected in the prototype to "15 expiring requests", see Ambiguity B7**
   2. "Priva Tracker Scanning" — "1 privacy statement detected missing during a recent scan of contoso.com"
   3. "Priva Risk Management" — three separate paragraphs:
      - "205 high risk data transfers with personal data detected by risk management policies in the 7 days, affecting 50 users"
@@ -100,7 +102,8 @@ pause, exactly as scenario 1 folded `1:67354`.
 
 **Copy (verbatim):**
 - Page title: "Privacy Manager"
-- Breadcrumb: "Details on risk: 15 requests with deadlines approaching in next 2 weeks"
+- Breadcrumb: "Details on risk: 15 requests with deadlines approaching in next 2 weeks" — **corrected in
+  the prototype to "next 15 days", see Ambiguity B7**
 - Loading heading: "Generating response..."
 - Loading body: "Copilot is searching across Priva solutions to generate a response and suggest questions
   to help you get started. "
@@ -121,15 +124,15 @@ card (`.local-suggestions-list`, node `I1:67798;22:30419;22:50638`).
 
 **Copy (verbatim):**
 - Page header — title "Privacy Manager", breadcrumb "Details on risk: 15 requests with deadlines
-  approaching in next 2 weeks"
+  approaching in next 2 weeks" — **corrected in the prototype to "next 15 days", see Ambiguity B7**
 - TOC (`.local-inline-drawer`): heading "Suggested topics"; items "Privacy requests summary" (selected),
   "Subject Rights Requests reports", "+ Add topic"
 - Output title: "Privacy requests summary"
 - Prompt row (sparkle glyph, then pencil and refresh glyphs):
   `Summarize 15 subject rights requests with deadlines approaching in next 2 weeks with a table that lists requests `
-  (trailing space present in the layer)
-- Sources label: "Sources"; one citation pill: 1 "Privacy Assessments" — **see Ambiguity B2** (wrong
-  solution for an SRR answer)
+  (trailing space present in the layer) — **corrected in the prototype to "15 days", see Ambiguity B7**
+- Sources label: "Sources"; one citation pill: 1 "Privacy Assessments" — **see Ambiguity B2, corrected in
+  the prototype** (wrong solution for an SRR answer)
 - Body text (`.local-output-text`), verbatim including the design's own punctuation:
   > 15 soon expiring privacy requests from Subject Rights Request were found with request deadlines
   > approaching within the next 15 days.
@@ -143,7 +146,8 @@ card (`.local-suggestions-list`, node `I1:67798;22:30419;22:50638`).
   (Straight apostrophe in "individuals'" — the design uses `'` here and `’` elsewhere; transcribed as
   authored. No bolding anywhere in this body.)
 - Table (`.local-assessments-table`) — columns, each with a sort arrow: "Request name", "Status",
-  "Action assigned to", "Response deadline", "Contact". Six rows:
+  "Action assigned to", "Response deadline", "Contact". Six rows (the design's "Daisy Philips" — one L —
+  is corrected to "Daisy Phillips" — two Ls — in the prototype; see Ambiguity B9):
 
   | Request name | Status | Action assigned to | Response deadline | Contact |
   |---|---|---|---|---|
@@ -184,7 +188,8 @@ in the chat pane's input area (node `I1:67833;34:110303;22:40374;75675:5468;7013
 
 **Copy (verbatim):**
 - Dialog header: Copilot mark, "Copilot", "Preview" pill; right side "Open in Consent Management" and a
-  close X. **"Open in Consent Management" is wrong for this flow — see Ambiguity B3 and Reword note R2.**
+  close X. **"Open in Consent Management" is wrong for this flow — corrected to "Open in Subject Rights
+  Requests" in the prototype — see Ambiguity B3 and Reword note R2.**
 - Chat — user bubble: "15 incomplete tasks from requests expiring soon" (identical to the action card's
   body text in Frame 3)
 - Chat — assistant card:
@@ -359,11 +364,16 @@ the table's (4/23/2024 for every row), so any pairing would be invented product 
 present and styled as the design draws it, never clickable, never pointing anywhere. No path, id or
 request title is invented.
 
-**R2 — "Open in Consent Management" (dialog header, Frames 4–6).**
+**R2 — "Open in Consent Management" (dialog header, Frames 4–6) — RESOLUTION UPDATED.**
 The design reuses scenario 1's dialog header verbatim, so an SRR flow offers to open *Consent Management*.
 Beyond being the wrong solution (Ambiguity B3), the button implies a Purview path that no frame in this
-scenario specifies. **Resolution applied:** identical to scenario 1's R1 — the button keeps its verbatim
-label and is rendered inert (`aria-disabled`, out of the tab order), so no destination is fabricated.
+scenario specifies. **Design said:** "Open in Consent Management" (verbatim from scenario 1).
+**Prototype now shows:** "Open in Subject Rights Requests" — the button's label is corrected to name the
+scenario's own product, the same phrasing pattern with the solution swapped in, while the destination
+question this note originally raised is resolved exactly as before: the button is rendered inert
+(`aria-disabled`, out of the tab order), so no path is fabricated. This supersedes the original
+resolution recorded here, which kept the label verbatim; the project's later ruling was that a
+confirmed wrong-solution slip should be corrected in the prototype rather than reproduced.
 
 **R3 — "[Description text goes here]" (Frame 7 email body).**
 A literal authoring placeholder, square brackets and all. It names no location, so nothing has to be
@@ -377,16 +387,26 @@ No other copy in this scenario depends on an unresolved location path.
 
 ## Ambiguities / notes for the implementer
 
-- **B1 (page title case flips mid-flow).** Frames 1–3: "Privacy Manager". Frames 4–6: "Privacy manager"
-  (which is also what scenario 1 uses everywhere, and what `shell.js`'s `COPY.pageTitle` already holds).
-  Two spellings of the same page title, four frames apart, is an authoring slip rather than intent.
-  **Implementation:** the existing `COPY.pageTitle` ("Privacy manager") is used for all frames, so the
-  title does not visibly change halfway through the scenario. Flagged rather than silently normalised.
-- **B2 (the citation names the wrong solution).** Frame 3's only source pill reads "Privacy Assessments",
-  on an answer that is entirely about Subject Rights Requests. Transcribed verbatim; almost certainly a
-  copy/paste from the Privacy Assessments scenario.
-- **B3 (the dialog offers the wrong solution).** "Open in Consent Management" in an SRR dialog — see
-  Reword note R2.
+- **B1 (page title case flips mid-flow) — CORRECTED.** **Design said:** Frames 1–3 render "Privacy
+  Manager" (capital M); Frames 4–6 render "Privacy manager" (lower-case m, coincidentally the same
+  spelling scenario 1 uses throughout). Two spellings of the same page title, four frames apart, is an
+  authoring slip rather than intent — confirmed by an independent reviewer. **Prototype now shows:** the
+  title-case form used on the main data surface (Frame 1:67165, the dashboard), "Privacy Manager",
+  everywhere in this scenario — dashboard, answer, and the dialog's page-header backdrop
+  (`shell.js`'s new `COPY.pageTitleSRR`). Scenario 1's own "Privacy manager" is untouched: it is that
+  scenario's own verbatim design text, not this bug, and lives on unchanged in `COPY.pageTitle`.
+- **B2 (the citation names the wrong solution) — CORRECTED.** **Design said:** Frame 3's only source pill
+  reads "Privacy Assessments" on an answer entirely about Subject Rights Requests — almost certainly a
+  copy/paste from the Privacy Assessments scenario. **Prototype now shows:** the citation re-pointed to
+  "Subject Rights Requests" — the scenario's own bare solution name, which already appears twice
+  elsewhere in this same scenario (the Tasks panel subtitle, Frame 4; and the chat reply's closing line,
+  "...from the Subject Rights Requests solution.", Frame 4). No source name was invented; the correction
+  reuses text the design already uses for this exact solution.
+- **B3 (the dialog offers the wrong solution) — CORRECTED.** **Design said:** "Open in Consent
+  Management" in an SRR dialog (Frames 4–6) — see Reword note R2 below for the full resolution.
+  **Prototype now shows:** "Open in Subject Rights Requests" — same phrasing pattern, scenario's own
+  product substituted in. The button remains rendered inert (no destination path is specified by any
+  frame in this scenario, so none is fabricated).
 - **B4 (a status string is authored pre-truncated).** Frame 4 row 3's status text layer literally
   contains "Completed; Awaitin..." — the ellipsis is typed into the copy, not produced by CSS overflow —
   while row 4 spells out "Completed; Awaiting approval". Both transcribed as authored. If a single value
@@ -401,24 +421,42 @@ No other copy in this scenario depends on an unresolved location path.
   in-pane variant was **not** implemented, because `mount.js` is out of scope for this task. The pause
   still reads correctly (the card appears inside the chat pane, where Frame 5 puts it); only its copy and
   size differ. A later session touching `mount.js` can add a per-beat latency variant.
-- **B7 (the dashboard's SRR count disagrees with the answer it opens).** Frame 1's SRR risk row says
-  "**6** expiring requests with deadlines expiring within the next **15 days**"; clicking it produces a
-  breadcrumb saying "**15** requests with deadlines approaching in next **2 weeks**" and a body saying
-  "**15** soon expiring privacy requests … within the next **15 days**". 6 vs 15, and 15 days vs 2 weeks.
-  Every string is transcribed verbatim; the numbers are not reconciled, because picking a winner would be
-  inventing product data. Flagged for the PM.
+- **B7 (the dashboard's SRR count disagrees with the answer it opens) — CORRECTED.** **Design said:**
+  Frame 1's SRR risk row says "**6** expiring requests with deadlines expiring within the next
+  **15 days**"; clicking it produces a breadcrumb saying "**15** requests with deadlines approaching in
+  next **2 weeks**", a prompt row saying "...deadlines approaching in next **2 weeks**...", and a body
+  saying "**15** soon expiring privacy requests … within the next **15 days**". 6 vs 15 on the count;
+  "15 days" vs "2 weeks" on the deadline. **Prototype now shows:** both reconciled. Count: "15"
+  everywhere — the answer's breadcrumb, prompt row, body text, and suggested-action card all already
+  agreed on 15 (four mentions to the dashboard's one), so the dashboard row was corrected from 6 to 15.
+  Deadline: "15 days" everywhere — this pairing was evenly split (dashboard + body said "15 days";
+  breadcrumb + prompt row said "2 weeks"), so per the project's tie-break rule the dashboard's figure
+  (the data surface) won; the breadcrumb and prompt row were corrected from "2 weeks" to "15 days". No
+  number was invented — both final values were already present, repeatedly, in the design's own text.
 - **B8 (mismatched solution glyphs in the risks card).** The "Priva Tracker Scanning" row carries the
   *Privacy Assessments* solution icon (Contact Card Ribbon) and the "Priva Risk Management" row carries
   the *Microsoft Priva* icon (Fingerprint); only the SRR row's icon matches its label. The prototype draws
   one shared solution badge for all three rather than reproducing the mismatch.
-- **B9 ("Daisy Philips" vs "Daisy Phillips").** Frame 3's table spells it with one L; Frame 7's email
-  spells it with two. Both transcribed as authored.
+- **B9 ("Daisy Philips" vs "Daisy Phillips") — CORRECTED.** **Design said:** Frame 3's table spells the
+  contact/assignee with one L, "Daisy Philips"; Frame 7's email spells the same person with two Ls,
+  "Daisy Phillips". **Prototype now shows:** "Daisy Phillips" (two Ls) everywhere — the table's three
+  occurrences were corrected to match the email's spelling, which B11 below independently confirmed
+  against the raw asset rather than a hand transcription.
 - **B10 (13 authored task rows, 11 visible).** The Tasks panel's table has 13 rows in the file; the dialog
   clips at 11 with the 12th partly visible. All 13 are carried in the data and the panel scrolls, so
   nothing is silently dropped.
-- **B11 (Frame 7 has no text layers).** Every string in Frame 7 is pixels. The transcription above was
-  read at full resolution and is believed exact, but it has not been (and cannot be) verified against a
-  text layer.
+- **B11 (Frame 7 has no text layers) — VERIFIED.** Every string in Frame 7 is pixels; the original
+  transcription above was read at full resolution and believed exact, but at the time this note was
+  written it had not been (and could not easily be) checked against a text layer, since none exists.
+  **Verification performed:** the raw image fill behind node `1:67948` (2076×2742 PNG) was pulled directly
+  — not the rendered/cropped node, which only shows the first two owner rows — via
+  `download_assets`/`get_screenshot` on the Figma MCP, and read at full resolution end to end. Every
+  string in the existing transcription is confirmed exact, including all three "Subject rights request"
+  group headings, all eight owner rows, the "Open Microsoft Priva" CTA, and the footer. In particular this
+  confirms "Daisy Phillips" is spelled with two Ls in both of its Frame 7 occurrences, which is the
+  evidence B9's correction above relies on. No prototype string differed from the verified transcription,
+  so this entry required no code change beyond B9's — it upgrades B11 from an unverified belief to a
+  confirmed fact.
 
 ---
 

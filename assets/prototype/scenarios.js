@@ -211,14 +211,24 @@ export const CONTENT = {
   // carried on the message rather than typed, because this scenario opens by
   // drilling into a risk card: there is no user turn to read a query off.
   'srr-answer': {
-    breadcrumb: 'Details on risk: 15 requests with deadlines approaching in next 2 weeks',
+    // CORRECTION B7: the design's breadcrumb and prompt row read "2 weeks"
+    // here while the dashboard row and this answer's own body text both say
+    // "15 days" — reconciled on "15 days", the dashboard's figure (the
+    // data surface), since the two readings were evenly split. See
+    // docs/superpowers/notes/figma-scenario-2-1.md B7.
+    breadcrumb: 'Details on risk: 15 requests with deadlines approaching in next 15 days',
     sectionHeading: 'Privacy requests summary',
-    promptRow: 'Summarize 15 subject rights requests with deadlines approaching in next 2 weeks with a table that lists requests ',
+    promptRow: 'Summarize 15 subject rights requests with deadlines approaching in next 15 days with a table that lists requests ',
     sourcesLabel: 'Sources',
-    // AMBIGUITY B2: the design's only citation names Privacy Assessments on
-    // an answer entirely about Subject Rights Requests. Transcribed as
-    // authored rather than corrected.
-    citations: ['Privacy Assessments'],
+    // CORRECTION B2: the design's only citation named "Privacy Assessments"
+    // on an answer entirely about Subject Rights Requests — almost certainly
+    // a copy/paste from the Privacy Assessments scenario. Re-pointed at the
+    // solution this answer is actually drawn from, using the scenario's own
+    // bare solution name (it already appears twice elsewhere in this
+    // scenario: the Tasks panel subtitle and the chat reply's closing line,
+    // "...from the Subject Rights Requests solution."). No name is invented.
+    // See docs/superpowers/notes/figma-scenario-2-1.md B2.
+    citations: ['Subject Rights Requests'],
     text: "15 soon expiring privacy requests from Subject Rights Request were found with request deadlines approaching within the next 15 days.\n\n- Impacts individuals' rights and expectations regarding their personal data.\n- Timely response crucial to maintaining regulatory compliance and fostering trust.\n- Failure to address promptly may result in legal consequences and reputational damage.\n\nSee below for a few of the requests expiring soonest:",
     toc: {
       heading: 'Suggested topics',
@@ -227,6 +237,11 @@ export const CONTENT = {
     },
     // Request names are links in the design with no destination in any frame
     // (Reword R1), so the shell renders them inert.
+    // CORRECTION B9: this table spelled the contact/assignee "Daisy Philips"
+    // (one L) in the design, while Frame 7's email spells the same person
+    // "Daisy Phillips" (two Ls, confirmed against the raw asset — see the
+    // scenario's B11 entry). Standardised on the two-L spelling here.
+    // See docs/superpowers/notes/figma-scenario-2-1.md B9.
     table: {
       columns: ['Request name', 'Status', 'Action assigned to', 'Response deadline', 'Contact'],
       sortColumns: [0, 1, 2, 3, 4],
@@ -255,9 +270,9 @@ export const CONTENT = {
         [
           { text: 'Dianne Russell - Export', link: true },
           { text: 'Active', status: 'info', icon: 'refresh' },
-          { text: 'Daisy Philips', avatar: 'DP' },
+          { text: 'Daisy Phillips', avatar: 'DP' },
           { text: '4/23/2024 11:16 AM' },
-          { text: 'Daisy Philips', avatar: 'DP' }
+          { text: 'Daisy Phillips', avatar: 'DP' }
         ],
         [
           { text: 'Kathryn Murphy - Export', link: true },
@@ -269,7 +284,7 @@ export const CONTENT = {
         [
           { text: 'Kristin Watson - Export', link: true },
           { text: 'Active', status: 'info', icon: 'refresh' },
-          { text: 'Daisy Philips', avatar: 'DP' },
+          { text: 'Daisy Phillips', avatar: 'DP' },
           { text: '4/23/2024 11:16 AM' },
           { text: 'Kat Larrson', avatar: 'KL' }
         ]

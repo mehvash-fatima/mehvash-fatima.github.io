@@ -98,6 +98,14 @@ const COPY = {
   thumbsDown: 'Not helpful',
   copilot: 'Copilot',
   openInConsent: 'Open in Consent Management',
+  // CORRECTION B3: the design reuses scenario 1's "Open in Consent
+  // Management" dialog-header button verbatim inside scenario 2.1's SRR
+  // dialog (frames 1:67810-1:67859). Re-pointed at the scenario's own
+  // product (see SCENARIOS[].product, 'Subject Rights Requests'), matching
+  // the phrasing pattern kept from Reword note R2 in
+  // docs/superpowers/notes/figma-scenario-2-1.md. Still rendered inert —
+  // no destination path is specified by any frame, so none is invented.
+  openInSRR: 'Open in Subject Rights Requests',
   closeDialog: 'Close',
   chatPlaceholder: "Ask a question or describe what you'd like to do in Privacy manager.",
   attach: 'Attach a file',
@@ -112,10 +120,16 @@ const COPY = {
 
   /* --- Risk dashboard (scenario 2.1 Frame 1:67165, shared entry point for
          the compliance-issue scenarios). Verbatim from
-         docs/superpowers/notes/figma-scenario-2-1.md. The page title is
-         COPY.pageTitle above: the frame spells it "Privacy Manager" while
-         frames 4-6 of the same flow spell it "Privacy manager" — see
-         ambiguity B1, which rules in favour of one spelling throughout. --- */
+         docs/superpowers/notes/figma-scenario-2-1.md, except for the page
+         title itself: CORRECTION B1 — frames 1-3 (1:67165, the dashboard,
+         and its answer) spell it "Privacy Manager" while frames 4-6 (the
+         dialog, 1:67810) spell it "Privacy manager". The project ruling is
+         to prefer the title-case form used on the main data surface, so
+         scenario 2.1 uses `pageTitleSRR` below everywhere, unifying frames
+         1-6 on "Privacy Manager". Scenario 1's own "Privacy manager"
+         (`pageTitle`, lower-case, its own verbatim design text) is
+         untouched. See docs/superpowers/notes/figma-scenario-2-1.md B1. --- */
+  pageTitleSRR: 'Privacy Manager',
   risksHeading: 'Top compliance risks',
   recentHeading: 'Recent',
   risksChips: [
@@ -141,7 +155,14 @@ const COPY = {
     {
       key: 'srr',
       title: 'Priva Subject Rights Requests',
-      lines: ['6 expiring requests with deadlines expiring within the next 15 days.']
+      // CORRECTION B7: the design's dashboard row read "6 expiring requests"
+      // while the answer it drills into (breadcrumb, prompt row, and body
+      // text) says 15 throughout — reconciled on 15, the figure the rest of
+      // the scenario supports 4-to-1. The "15 days" deadline here already
+      // agreed with the answer body; the answer's other two "2 weeks"
+      // mentions were the ones reconciled to match this dashboard figure.
+      // See docs/superpowers/notes/figma-scenario-2-1.md B7.
+      lines: ['15 expiring requests with deadlines expiring within the next 15 days.']
     },
     {
       key: 'tracker',
@@ -567,7 +588,9 @@ function renderRisks() {
   page.append(back);
 
   const hero = el('div', 'pp-hero pp-hero-compact');
-  hero.append(el('h1', 'pp-hero-title', COPY.pageTitle));
+  // CORRECTION B1: this dashboard is scenario 2.1's main surface — its own
+  // title-case spelling, not scenario 1's COPY.pageTitle.
+  hero.append(el('h1', 'pp-hero-title', COPY.pageTitleSRR));
   const sub = el('p', 'pp-hero-sub');
   sub.append(document.createTextNode(`${COPY.homeSubtitle} `));
   sub.append(inertButton(COPY.homeLearnMore, 'pp-link-inline', { iconAfter: 'external', iconSize: 12 }));
@@ -630,14 +653,14 @@ function renderRisks() {
 /* ------------------------------------------------------------------ *
  * View: answer (Frames 3 and 9) — also the backdrop under the dialog
  * ------------------------------------------------------------------ */
-function renderAnswerHeader(query) {
+function renderAnswerHeader(query, pageTitle) {
   const header = el('header', 'pp-page-header');
   const row = el('div', 'pp-backrow');
   row.append(inertButton(COPY.answerBack, 'pp-link-button', { iconBefore: 'arrowLeft' }));
   header.append(row);
 
   const main = el('div', 'pp-page-header-main');
-  main.append(el('h1', 'pp-page-title', COPY.pageTitle));
+  main.append(el('h1', 'pp-page-title', pageTitle));
 
   const breadcrumb = el('div', 'pp-breadcrumb');
   breadcrumb.append(el('span', 'pp-breadcrumb-text', query || ''));
@@ -857,8 +880,12 @@ function renderAnswerPage(state, { live }) {
     '';
   const toc = (answers.find(message => message.toc) || {}).toc;
 
+  // CORRECTION B1: scenario 2.1 uses its own title-case spelling throughout
+  // (dashboard, answer, and dialog backdrop); scenario 1 keeps its own
+  // verbatim "Privacy manager".
+  const pageTitle = state.scenarioId === 'srr' ? COPY.pageTitleSRR : COPY.pageTitle;
   const root = el('div', `pp-page pp-page-answer${live ? '' : ' is-backdrop'}`);
-  root.append(renderAnswerHeader(query));
+  root.append(renderAnswerHeader(query, pageTitle));
 
   const columns = el('div', 'pp-columns');
   if (toc) columns.append(renderToc(toc));
@@ -1410,8 +1437,11 @@ function renderDialog(state) {
   header.append(brand);
 
   const headerActions = el('div', 'pp-dialog-actions');
-  // R1: no destination exists for this button in scenario 1 — inert on purpose.
-  headerActions.append(inertButton(COPY.openInConsent, 'pp-link-button', { iconBefore: 'external' }));
+  // R1/R2: no destination exists for this button in either scenario — inert
+  // on purpose. CORRECTION B3: scenario 2.1's dialog names its own product
+  // rather than reusing scenario 1's "Consent Management" label verbatim.
+  const openInLabel = state.scenarioId === 'srr' ? COPY.openInSRR : COPY.openInConsent;
+  headerActions.append(inertButton(openInLabel, 'pp-link-button', { iconBefore: 'external' }));
   headerActions.append(iconButton('close', COPY.closeDialog, 'pp-icon-button pp-icon-button-lg'));
   header.append(headerActions);
   dialog.append(header);
