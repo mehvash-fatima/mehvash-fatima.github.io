@@ -18,8 +18,9 @@ legal advice."** are byte-identical to the frames inventoried in `figma-scenario
 
 **One chrome string differs and it is a design bug — see Ambiguity B1 (corrected):** frames 1–3 render the
 page title as **"Privacy Manager"** (capital M); frames 4–6 render the same header as
-**"Privacy manager"** (lower-case m), which is what scenario 1 uses throughout. The prototype unifies
-this scenario on the title-case form; see B1's full entry in the Ambiguities section below.
+**"Privacy manager"** (lower-case m). This is not scoped to this scenario — scenario 1's own frames mix
+both casings too (see `figma-scenario-1.md`'s B1 note). The prototype unifies **both scenarios** on the
+title-case form; see B1's full entry in the Ambiguities section below.
 
 **Visuals:** all CSS-buildable. No new brand marks appear — the Copilot mark
 (`assets/5135989b34f7.svg`) and the Priva mark (`assets/5abed2089d2b.svg`) exported for scenario 1 are
@@ -387,14 +388,21 @@ No other copy in this scenario depends on an unresolved location path.
 
 ## Ambiguities / notes for the implementer
 
-- **B1 (page title case flips mid-flow) — CORRECTED.** **Design said:** Frames 1–3 render "Privacy
-  Manager" (capital M); Frames 4–6 render "Privacy manager" (lower-case m, coincidentally the same
-  spelling scenario 1 uses throughout). Two spellings of the same page title, four frames apart, is an
-  authoring slip rather than intent — confirmed by an independent reviewer. **Prototype now shows:** the
-  title-case form used on the main data surface (Frame 1:67165, the dashboard), "Privacy Manager",
-  everywhere in this scenario — dashboard, answer, and the dialog's page-header backdrop
-  (`shell.js`'s new `COPY.pageTitleSRR`). Scenario 1's own "Privacy manager" is untouched: it is that
-  scenario's own verbatim design text, not this bug, and lives on unchanged in `COPY.pageTitle`.
+- **B1 (page title case flips mid-flow) — CORRECTED, then widened to both scenarios.** **Design said:**
+  Frames 1–3 render "Privacy Manager" (capital M); Frames 4–6 render "Privacy manager" (lower-case m).
+  Two spellings of the same page title, four frames apart, is an authoring slip rather than intent —
+  confirmed by an independent reviewer. **First pass (superseded):** the prototype unified scenario
+  2.1 alone on "Privacy Manager" via a scenario-only `COPY.pageTitleSRR` constant, on the assumption that
+  scenario 1's own lower-case "Privacy manager" was that scenario's own separate, correct verbatim text.
+  That assumption was wrong: scenario 1's own frames mix both casings too (see the B1 note in
+  `figma-scenario-1.md` — Frame 1's hero title and the global page-header title read lower-case, while
+  Frame 1's fifth suggestion chip already reads title-case). The casing slip is pervasive across the
+  whole source file, not scoped to one scenario, so scoping the fix to scenario 2.1 left the prototype
+  showing both casings depending which scenario a viewer was on. **Prototype now shows:** "Privacy
+  Manager" (title case) everywhere in *both* scenarios, via a single shared `COPY.pageTitle` (the
+  scenario-only `pageTitleSRR` constant was removed as redundant once the fix widened). This covers the
+  dashboard, both scenarios' answer pages and dialog backdrops, and scenario 1's dialog chat-input
+  placeholder, which also read "...Privacy manager." and is now "...Privacy Manager.".
 - **B2 (the citation names the wrong solution) — CORRECTED.** **Design said:** Frame 3's only source pill
   reads "Privacy Assessments" on an answer entirely about Subject Rights Requests — almost certainly a
   copy/paste from the Privacy Assessments scenario. **Prototype now shows:** the citation re-pointed to

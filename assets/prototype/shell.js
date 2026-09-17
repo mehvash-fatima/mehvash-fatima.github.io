@@ -78,7 +78,16 @@ const COPY = {
   disclaimer:
     'AI-generated content may be incorrect. Use it for informational purposes only and do not treat it as legal advice.',
   shortDisclaimer: 'AI-generated content may be incorrect',
-  pageTitle: 'Privacy manager',
+  // CORRECTION B1 (unified, both scenarios): the source design mixes
+  // "Privacy Manager" (title case) and "Privacy manager" (lower-case m)
+  // for the same product across BOTH scenarios' frames — see the B1 note in
+  // docs/superpowers/notes/figma-scenario-1.md and
+  // docs/superpowers/notes/figma-scenario-2-1.md for the exact frames each
+  // casing appears on. The prototype renders the title-case form
+  // everywhere, since that is what the primary data surfaces (this app's
+  // dashboard and hero) use. `pageTitle` is now the single source for both
+  // scenarios; there is no longer a separate SRR-only variant.
+  pageTitle: 'Privacy Manager',
   homeBack: 'Priva Home',
   answerBack: 'Back',
   homeSubtitle: "Manage your organization's privacy posture with the help of AI.",
@@ -107,7 +116,11 @@ const COPY = {
   // no destination path is specified by any frame, so none is invented.
   openInSRR: 'Open in Subject Rights Requests',
   closeDialog: 'Close',
-  chatPlaceholder: "Ask a question or describe what you'd like to do in Privacy manager.",
+  // CORRECTION B1 (unified): source design has this same placeholder as
+  // "...Privacy manager." (lower-case) in the consent-scenario dialog
+  // (Frame 1:67181) — corrected to match the title-case product name used
+  // everywhere else in the prototype now.
+  chatPlaceholder: "Ask a question or describe what you'd like to do in Privacy Manager.",
   attach: 'Attach a file',
   send: 'Send',
   copilotSuggestion: 'Copilot suggestion',
@@ -121,15 +134,9 @@ const COPY = {
   /* --- Risk dashboard (scenario 2.1 Frame 1:67165, shared entry point for
          the compliance-issue scenarios). Verbatim from
          docs/superpowers/notes/figma-scenario-2-1.md, except for the page
-         title itself: CORRECTION B1 — frames 1-3 (1:67165, the dashboard,
-         and its answer) spell it "Privacy Manager" while frames 4-6 (the
-         dialog, 1:67810) spell it "Privacy manager". The project ruling is
-         to prefer the title-case form used on the main data surface, so
-         scenario 2.1 uses `pageTitleSRR` below everywhere, unifying frames
-         1-6 on "Privacy Manager". Scenario 1's own "Privacy manager"
-         (`pageTitle`, lower-case, its own verbatim design text) is
-         untouched. See docs/superpowers/notes/figma-scenario-2-1.md B1. --- */
-  pageTitleSRR: 'Privacy Manager',
+         title itself, which is CORRECTION B1 (unified) — see the note on
+         `COPY.pageTitle` above. This view uses `COPY.pageTitle` directly;
+         there is no separate SRR-only title constant. --- */
   risksHeading: 'Top compliance risks',
   recentHeading: 'Recent',
   risksChips: [
@@ -588,9 +595,7 @@ function renderRisks() {
   page.append(back);
 
   const hero = el('div', 'pp-hero pp-hero-compact');
-  // CORRECTION B1: this dashboard is scenario 2.1's main surface — its own
-  // title-case spelling, not scenario 1's COPY.pageTitle.
-  hero.append(el('h1', 'pp-hero-title', COPY.pageTitleSRR));
+  hero.append(el('h1', 'pp-hero-title', COPY.pageTitle));
   const sub = el('p', 'pp-hero-sub');
   sub.append(document.createTextNode(`${COPY.homeSubtitle} `));
   sub.append(inertButton(COPY.homeLearnMore, 'pp-link-inline', { iconAfter: 'external', iconSize: 12 }));
@@ -880,12 +885,10 @@ function renderAnswerPage(state, { live }) {
     '';
   const toc = (answers.find(message => message.toc) || {}).toc;
 
-  // CORRECTION B1: scenario 2.1 uses its own title-case spelling throughout
-  // (dashboard, answer, and dialog backdrop); scenario 1 keeps its own
-  // verbatim "Privacy manager".
-  const pageTitle = state.scenarioId === 'srr' ? COPY.pageTitleSRR : COPY.pageTitle;
+  // CORRECTION B1 (unified): both scenarios render the same title-case
+  // product name now — see the note on `COPY.pageTitle` above.
   const root = el('div', `pp-page pp-page-answer${live ? '' : ' is-backdrop'}`);
-  root.append(renderAnswerHeader(query, pageTitle));
+  root.append(renderAnswerHeader(query, COPY.pageTitle));
 
   const columns = el('div', 'pp-columns');
   if (toc) columns.append(renderToc(toc));

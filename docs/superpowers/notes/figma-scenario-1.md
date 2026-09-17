@@ -15,6 +15,7 @@ Frames are listed in flow order (1–9). Node IDs are exactly as given in the ta
   right-side action icons (megaphone, alert bell, gear, question mark, person-feedback), persona avatar.
 - Page header (on the answer/output pages): "Back" button, page title "Privacy manager", breadcrumb
   query text, edit-pencil icon, Copilot logo icon, and (while loading) a gradient progress bar.
+  **Corrected to title-case "Privacy Manager" in the prototype — see Ambiguity B1 below.**
 - Disclaimer line reused verbatim in several places: **"AI-generated content may be incorrect. Use it
   for informational purposes only and do not treat it as legal advice."**
 
@@ -43,7 +44,8 @@ JSON) — this composite was **not** flattened/exported in this session; see Amb
 **Click target:** ambiguous — see Ambiguities note A1 below. No visible suggestion chip's text matches
 the query that appears in Frame 2's breadcrumb.
 **Copy (verbatim):**
-- Title: "Privacy manager " (note: trailing space present in the design layer's text content)
+- Title: "Privacy manager " (note: trailing space present in the design layer's text content) —
+  **corrected to "Privacy Manager" in the prototype, see Ambiguity B1**
 - Subtitle: "Manage your organization's privacy posture with the help of AI. " + link "Learn more" (with
   an external-link glyph after it)
 - Search placeholder: "Ask me anything about privacy..."
@@ -151,7 +153,8 @@ Copilot-suggested values.
   - Feedback row: "AI-generated content may be incorrect", "Show process"
 - Suggested-prompt chip in chat input area: "Some suggested prompt" (generic placeholder text as
   authored — see Ambiguities note A4)
-- Chat textarea placeholder: "Ask a question or describe what you'd like to do in Privacy manager."
+- Chat textarea placeholder: "Ask a question or describe what you'd like to do in Privacy manager." —
+  **corrected to "Privacy Manager" in the prototype, see Ambiguity B1**
 - Dialog header button: "Open in Consent Management" — see Reword note R1
 - Wizard title: "New consent model" / subtitle "Consent Management"; stepper shows 5 steps, step 1 active
 - Body heading: "Basic details"
@@ -363,6 +366,19 @@ No other scenario-1 copy was found to depend on an unresolved location path.
   the completed "Priva Consent Management" card is visible but not wired to any further frame in this
   scenario. Treat the guided click-through as complete at Frame 9 with no further highlighted element,
   or explicitly mark "Open" as inert/decorative.
+- **B1 (page title casing flips within this scenario too) — CORRECTED.** Not flagged when this scenario
+  was first inventoried, but confirmed on a later pass across both scenarios: this scenario's own
+  frames mix "Privacy Manager" (title case) and "Privacy manager" (lower-case m) for the same product,
+  the same slip already recorded as Ambiguity B1 in
+  `docs/superpowers/notes/figma-scenario-2-1.md`. **Design said:** lower-case "Privacy manager" on the
+  Frame 1 hero title (with its trailing space — see the "Global chrome" and Frame 1 sections above),
+  the global page-header title used on the answer/output pages, and Frame 4's dialog chat-input
+  placeholder, "...what you'd like to do in Privacy manager."; title-case "Privacy Manager" on Frame 1's
+  fifth suggestion chip, "Summarize the capabilities of Privacy Manager". **Prototype now shows:** "Privacy Manager" (title case) everywhere in this scenario too — the hero title, the
+  page-header title, and the chat placeholder are all corrected to match the suggestion chip's casing
+  and scenario 2.1's dashboard, so the product name reads identically everywhere in the prototype, in
+  both scenarios. This is the same `shell.js COPY.pageTitle` / `COPY.chatPlaceholder` constants scenario
+  2.1 uses — there is no longer a per-scenario split.
 - **Composite Copilot sidecar icon not flattened.** The 24px "Security Copilot" icon used in the dialog
   sidecar title (Frames 4–8) is built from 4 quarter-shapes plus a soft-light gradient overlay in the
   Figma file (5 separate image parts) rather than a single flat asset. This session exported a simpler
