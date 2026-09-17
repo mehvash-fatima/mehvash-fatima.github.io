@@ -140,3 +140,44 @@ What worked: instructing implementers to COMMIT IN STAGES (inventory first, then
 code). Every interruption after that cost minutes instead of a whole task. Keep doing
 that, and re-verify repo state with `git log` / `git status` after any agent failure
 rather than trusting a partial report.
+
+## Recommended route for the remaining work (read before re-invoking the skill)
+
+The first six tasks used full subagent-driven-development: implementer, reviewer,
+fix round, scoped re-review — 3-5 agent round trips each. That was right while the
+architecture was being decided, and it caught real defects (a test command that ran
+zero tests, an aliasing bug that would have corrupted replay, lost inline bold in the
+hero copy, a validator that could not fail).
+
+**It is overkill for what remains.** Tasks 7c, 8, 9 and 10 repeat patterns that are
+now established, and `scenarios.test.js` mechanically enforces most of what the
+per-task reviewers were checking by hand: spotlights resolve to declared hotspots,
+content keys resolve, `when` is present and valid, no orphaned content, emphasis
+phrases unique. Re-reviewing those properties duplicates a test.
+
+Suggested: **four dispatches, not fifteen.**
+
+| Dispatch | Work | Model |
+|---|---|---|
+| A | Finish 7b's browser walk; build 7c (RoPA) using scenario 2.1 as an explicit template | Sonnet |
+| B | Tasks 8 + 9 together — mobile reflow and the CTA band; small, independent, no Figma reads | Sonnet |
+| C | Task 10 — accessibility, cross-browser, README, plus the deferred B6 in-pane latency card | Sonnet |
+| D | One deep whole-branch review, explicitly including copy commits `f17e268` and `a782d1b` | Opus |
+
+Also worth doing:
+
+- **Verify in the browser ONCE, at the end, across all four scenarios** — rather than
+  every agent re-walking all prior scenarios for regressions. The test suite catches
+  data regressions; visual ones surface just as well in a single final pass.
+- **Read Figma cheaply.** Scenario 2.1's extraction cost ~330k tokens, partly on full
+  `get_design_context` where a screenshot would have done. Pull design context only
+  for frames whose TEXT must be verbatim; use `get_screenshot` for everything else.
+  If a frame is flattened raster, `download_assets` on the image node beats the
+  cropped frame screenshot.
+- **Skip the per-task ceremony** — brief extraction, review packages, per-task ledger
+  entries. This document plus `git log` carries enough.
+
+Trade-off, stated plainly: less review depth per task, concentrated into one thorough
+review at the end. A defect introduced in 7c would surface at the end rather than
+immediately. Given the remaining work is repetition guarded by a real test suite,
+that is the right trade — but it is a trade.
