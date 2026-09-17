@@ -410,6 +410,205 @@ export const CONTENT = {
     footerLink: 'Microsoft Email Orchestrator',
     footerAfter: ', a compliant and secure email platform for the Microsoft Cloud',
     privacyLink: 'Privacy Statement'
+  },
+
+  /* ================================================================
+     Scenario 2.2 — Tracker Scanning Top Compliance Issues.
+     Source: docs/superpowers/notes/figma-scenario-2-2.md (verbatim
+     transcription of Figma frames 1:67517, 1:67388, 1:67487, 1:67427,
+     1:67457 and the shared output card 1:67901).
+
+     The scenario enters on the same `risks` dashboard scenario 2.1
+     built: frame 1:67517 is a second, less-resolved copy of 1:67165
+     (placeholder chips, a repeated Recent rail), and the one row this
+     flow clicks is byte-identical in both. See ambiguity B1.
+     ================================================================ */
+
+  // Frame 1:67388 — the "Missing privacy statements" answer.
+  'tracker-answer': {
+    // CORRECTION B3: the design's breadcrumb here read "What are the
+    // California privacy consent laws for websites" — scenario 1's query,
+    // pasted onto a Tracker Scanning answer. Frames 1:67487-1:67457 show
+    // the intended crumb (node 1:67464), which is also the dashboard risk
+    // row this flow clicks, word for word. No value is invented.
+    // See docs/superpowers/notes/figma-scenario-2-2.md B3.
+    breadcrumb: '1 privacy statement detected missing during a recent scan of contoso.com',
+    sectionHeading: 'Missing privacy statements',
+    // CORRECTION B4: the design read "Provide a additional details on..." —
+    // an article left behind by an edit. The stray "a" is deleted and
+    // nothing else is touched. See figma-scenario-2-2.md B4.
+    promptRow: 'Provide additional details on the missing privacy statement detected during a scan of contoso.com',
+    sourcesLabel: 'Sources',
+    citations: ['Tracker Scanning'],
+    // The blank lines are authored as zero-width-space paragraphs in the
+    // layer; transcribed as ordinary blank lines. "websites that have
+    // recently scanned" is the design's own wording (ambiguity B10) and is
+    // left exactly as authored.
+    text: 'The scans conducted on Contoso.com and Contosopromos.com indicated that the location value provided for the privacy statement was not detected. This suggests that these websites may need to review and update their privacy statements to ensure they are providing the necessary location information.\n\nOn 5 other websites, the location value provided was detected and deemed accurate.\n- Contosopromos.com\n- Contoso.fr\n- Contoso.co.uk\n- Contosomarketing.com\n- Contoso.ca\n\nBelow is a list of all websites that have recently scanned for privacy statements:',
+    toc: {
+      heading: 'Suggested topics',
+      items: ['Missing privacy statements', 'Contoso.com scan details', 'Legal implications', '+ Add topic'],
+      selected: 'Missing privacy statements'
+    },
+    // Website names are plain text here, not links (contrast scenario 2.1's
+    // request table). Every "Crawl definition" value is authored
+    // pre-truncated, row 1 with four dots where row 2 has three (B7), and
+    // the scan times mix 12-hour, 24-hour and no meridiem at all, three of
+    // them with a trailing space (B8). All transcribed as authored.
+    table: {
+      columns: ['Website name', 'Crawl definition', 'Scan region', 'Scan status', 'Scan result', 'Last scan time'],
+      sortColumns: [0],
+      rows: [
+        [
+          { text: 'Contoso.com' },
+          { text: 'Cookies, Privacy statement....' },
+          { text: 'West US' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Failed', status: 'danger', icon: 'close' },
+          { text: '4/1/2024, 4:45 ' }
+        ],
+        [
+          { text: 'Contosopromos.com' },
+          { text: 'Cookies, Privacy statement...' },
+          { text: 'West US' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Succeeded', status: 'success', icon: 'check' },
+          { text: '3/28/2024, 11:00 AM' }
+        ],
+        [
+          { text: 'Contoso.fr' },
+          { text: 'Privacy statement, Consent...' },
+          { text: 'EU' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Succeeded', status: 'success', icon: 'check' },
+          { text: '3/18/2024, 20:45' }
+        ],
+        [
+          { text: 'Contoso.co.uk' },
+          { text: 'Pixels, Privacy statement, C...' },
+          { text: 'East US' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Succeeded', status: 'success', icon: 'check' },
+          { text: '3/12/2024, 16:00' }
+        ],
+        [
+          { text: 'Contosomarketing.com' },
+          { text: 'Privacy statement, Reject all...' },
+          { text: 'EU' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Succeeded', status: 'success', icon: 'check' },
+          { text: '3/7/2024, 17:15 ' }
+        ],
+        [
+          { text: 'Contoso.ca' },
+          { text: 'Privacy statement, Consent...' },
+          { text: 'West US' },
+          { text: 'Complete', status: 'info', icon: 'check' },
+          { text: 'Succeeded', status: 'success', icon: 'check' },
+          { text: '2/22/2024, 14:45 ' }
+        ]
+      ]
+    }
+  },
+
+  // Frame 1:67388's "Suggested actions" card. Its "Review scan" button is
+  // the hotspot that opens the dialog; unlike scenario 2.1's card, its body
+  // text is NOT what the dialog replays as the prompt.
+  'action-card-tracker-scan': {
+    header: 'Priva Tracker Scanning',
+    body: 'Review scan configuration for Contoso.com',
+    buttons: ['Review scan']
+  },
+
+  // Frame 1:67487 — the dialog's chat pane. The design answers one prompt
+  // with THREE separate output cards (ambiguity B13), so the turn carries a
+  // `cards` array. None of them has a "Show process" row.
+  'tracker-scan-reply': {
+    showProcess: false,
+    cards: [
+      {
+        text: 'In the most recent scan for 5 websites a different location path was used for the privacy statement. ',
+        value: '//*[@id="c-uhff-footer_privacyandcookies"]/a',
+        valueAction: 'Hide value'
+      },
+      {
+        text: 'The location path used in this scan matches the correctly scanned one found in other websites. This scan seems up to date, and problem may be in the website itself.'
+      },
+      {
+        // Lower-case "teams" is the design's own; the chip below answers this
+        // question with "email". Both transcribed verbatim — see B5.
+        text: 'Would you like me to generate a teams message to the website owner summarizing the issue?'
+      }
+    ],
+    suggestion: 'Yes, generate email'
+  },
+
+  // Frame 1:67487 — the dialog's right half. A third panel type after the
+  // wizard and the list: a tabbed scan editor, open on tab 3. `kind` picks
+  // the renderer, so no scenario id is hard-coded in the shell.
+  'tracker-scan-panel': {
+    kind: 'scan',
+    title: 'Contoso.com – Scan 2',
+    // Authored as an ordered list — the numbers are list markers, not copy.
+    tabs: ['Basic details', 'Authentication steps', 'Scan definition', 'Scan trigger'],
+    activeTab: 'Scan definition',
+    intro: 'Select the items you want to scan for across your website.',
+    introLink: 'Learn more',
+    sections: [
+      {
+        heading: 'Trackers and tags',
+        text: 'Select the trackers and tags you want to scan for and whether to capture associated tags and relationships.',
+        expanded: false
+      },
+      {
+        heading: 'Compliance objects',
+        // No terminating full stop — as authored.
+        text: 'Select or unselect the compliance objects you want to scan for. If anything is missing, you can also manually add compliance objects to scan for',
+        expanded: true
+      }
+    ],
+    addObject: 'Add compliance object',
+    // CORRECTION B9: all three panel copies of the location path were
+    // authored with a literal space ("c-uhff footer_..."), while the chat
+    // card writes the same value with a hyphen. The design's own copy says
+    // the two "match", and a space cannot appear inside a single HTML id
+    // token, so the hyphenated form — the design's own string — is used in
+    // all four places. See figma-scenario-2-2.md B9.
+    objects: [
+      {
+        label: '“Privacy statement” link',
+        checked: true,
+        highlight: true,
+        fieldLabel: 'Location path',
+        value: '//*[@id="c-uhff-footer_privacyandcookies"]/a',
+        detectedLabel: 'Copilot detected:',
+        detected: '//*[@id="c-uhff-footer_privacyandcookies"]/a',
+        note: 'Based on other recent scans, the location path seems to be up to date in this scan. '
+      },
+      {
+        label: 'Consent banner',
+        checked: true,
+        fieldLabel: 'Location path',
+        value: '//*[@id="c-uhff-footer_privacyandcookies"]/a'
+      },
+      { label: '“Cookie policy” link', checked: false, fieldLabel: 'Location path', placeholder: 'Add location path' },
+      { label: '“Do not sell” link', checked: false, fieldLabel: 'Location path', placeholder: 'Add location path' },
+      { label: '“Accept all” button', checked: false, fieldLabel: 'Location path', placeholder: 'Add location path' },
+      { label: '“Reject all” button', checked: false, fieldLabel: 'Location path', placeholder: 'Add location path' }
+    ]
+  },
+
+  // Frame 1:67457 / shared card 1:67901 — the same component scenario 2.1's
+  // email card uses, re-skinned with the Teams product mark. Terminal: the
+  // tile's open glyph is drawn but no frame follows it (B12).
+  'tracker-teams-card': {
+    text: 'Here’s a generated summary teams message of compliance issues for the websites. Open to verify items and send via teams:',
+    emailCard: {
+      title: 'Website summary ',
+      subtitle: 'Compliance issues listed out',
+      icon: 'teams'
+    },
+    showProcess: false
   }
 };
 
@@ -540,6 +739,61 @@ export const SCENARIOS = [
         spotlight: '#email-card-open',
         await: 'click',
         then: { set: { view: 'email', draft: 'srr-email-draft' } }
+      }
+    ]
+  },
+
+  {
+    id: 'tracker',
+    label: '2.2 — Tracker Scanning top compliance issues',
+    product: 'Tracker Scanning',
+    initial: { view: 'risks' },
+    beats: [
+      // Frames 1:67517 -> 1:67388. Drilling into the "Tracker Scanning" risk
+      // row, not typing — the answer carries its own breadcrumb, exactly as
+      // scenario 2.1 does. This scenario has no loading frame of its own
+      // (contrast 1:67371), but the pause is still played here as the
+      // `thinking` value so the answer does not appear instantaneously.
+      {
+        spotlight: '#tracker-risk-card',
+        await: 'click',
+        then: {
+          thinking: 1200,
+          push: { chat: 'tracker-answer' },
+          set: { view: 'answer', actionCard: 'action-card-tracker-scan' }
+        }
+      },
+      // Frame 1:67388 -> 1:67487. "Review scan" opens the dialog: the chat
+      // pane replays the user's prompt, Copilot answers in three cards, and
+      // the scan configuration editor fills the right half. `when: 'after'`
+      // because #copilot-chat-input only exists once this beat's `set` has
+      // opened the dialog. Note the prompt is NOT the action card's body
+      // text (contrast scenario 2.1) — the design gives it its own wording.
+      {
+        spotlight: '#review-scan-button',
+        await: 'click',
+        then: {
+          type: { into: '#copilot-chat-input', text: 'Check for recent updates made to scans', when: 'after' },
+          push: { chat: 'tracker-scan-reply' },
+          set: { view: 'dialog', panel: 'tracker-scan-panel' }
+        }
+      },
+      // Frames 1:67487 -> 1:67427 -> 1:67457. Sending the suggested-prompt
+      // chip. `when: 'before'` because the design types and sends from the
+      // dialog it is already in, and only then shows the latency card
+      // (1:67427) resolving into the Teams message card (1:67457) — so the
+      // typing plays before the pause, not after it. The text typed is the
+      // user bubble the design draws, which is not the chip's own label
+      // (ambiguity B5). Terminal: 1:67457 has no onward frame, so the
+      // card's open glyph is drawn but never armed (B12).
+      {
+        spotlight: '#chat-suggestion',
+        await: 'click',
+        then: {
+          type: { into: '#copilot-chat-input', text: 'Generate a summary message for the website owners.', when: 'before' },
+          thinking: 1200,
+          push: { chat: 'tracker-teams-card' }
+        }
       }
     ]
   }

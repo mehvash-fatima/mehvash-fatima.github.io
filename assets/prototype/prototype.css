@@ -60,6 +60,11 @@
   --pp-chart-3:       #2aa0a4;
   --pp-chart-4:       #9373c0;
 
+  /* --- Scenario 2.2's Teams output card (Frame 1:67457). Fluent
+         status/generic/cornflower/background/2/rest, straight off the
+         card's fill. ------------------------------------------------- */
+  --pp-cornflower-bg: #c8d1fa;
+
   /* --- The AI affordance ----------------------------------------
      The Copilot-suggested field fill, verbatim from the Figma:
      a cyan→indigo wash at 10% over white.                          */
@@ -2489,3 +2494,212 @@
    the top, and the guided click-through needs the same: the hotspot always
    lives in the newest message, so it must never fall below the fold. */
 .pp-chat-pane .pp-chat { justify-content: flex-end; }
+
+/* =====================================================================
+   Scenario 2.2 — Tracker Scanning (Frames 1:67517, 1:67388, 1:67487,
+   1:67427, 1:67457). Everything below is CSS-drawn; the scenario's one
+   exported asset is the Teams product mark on the output card.
+   ===================================================================== */
+
+/* --- Chat pane: a turn made of several output cards --------------- */
+
+/* Frame 1:67487 answers one prompt with three stacked cards. */
+.pp-bubble-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+}
+
+/* The detected XPath, quoted inside the first card. */
+.pp-bubble-value {
+  width: 100%;
+  font-size: var(--pp-text-sm);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink-4);
+  overflow-wrap: anywhere;
+}
+
+.pp-bubble-value-actions { display: flex; }
+
+/* The small bordered "Hide value" button under it. */
+.pp-button-tiny {
+  min-height: 24px;
+  padding: 0 var(--pp-space-2);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-regular);
+}
+
+/* --- Output card: the Teams variant of the shared tile ------------ */
+
+.pp-email-tile-art-teams { background: var(--pp-cornflower-bg); }
+
+.pp-teams-mark {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+/* --- Scan configuration panel: the dialog's third right-half type -- */
+
+/* The list panel clips its body (its table scrolls instead); this one
+   scrolls as a whole, because the object grid runs past the fold exactly
+   as it does in the frames. */
+.pp-scan-panel .pp-wizard-body {
+  gap: var(--pp-space-4);
+  overflow-y: auto;
+}
+
+.pp-scan-panel .pp-wizard-header { padding: var(--pp-space-4) var(--pp-space-6); }
+
+.pp-scan-tabs {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  gap: var(--pp-space-6);
+  margin: 0;
+  padding: 0 0 var(--pp-space-1);
+  list-style: decimal;
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-scan-tabs li {
+  list-style-position: inside;
+  color: var(--pp-ink-2);
+  font-size: var(--pp-text-base);
+}
+
+.pp-scan-tab {
+  display: inline-block;
+  padding-bottom: var(--pp-space-2);
+}
+
+.pp-scan-tab.is-selected {
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+  box-shadow: inset 0 -2px 0 0 var(--pp-accent-hover);
+}
+
+.pp-scan-tabs li:has(.is-selected) { color: var(--pp-ink); font-weight: var(--pp-weight-semibold); }
+
+.pp-scan-intro {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink);
+}
+
+.pp-scan-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+}
+
+.pp-scan-section-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-scan-section-text {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+  max-width: 62ch;
+}
+
+.pp-scan-add {
+  align-self: flex-start;
+  color: var(--pp-ink);
+}
+
+.pp-scan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pp-space-4);
+  align-items: start;
+}
+
+.pp-scan-object {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-4);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+}
+
+/* The one card carrying a Copilot suggestion is drawn lifted and
+   brand-outlined, the same affordance the wizard's suggested fields use. */
+.pp-scan-object.is-highlight {
+  border-color: var(--pp-ai-stroke);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-scan-object-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+}
+
+.pp-scan-object-label {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-checkbox {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--pp-ink-3);
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-surface);
+}
+
+.pp-checkbox.is-checked {
+  border-color: var(--pp-accent-hover);
+  background: var(--pp-accent-hover);
+  color: var(--pp-spot-ink);
+}
+
+.pp-scan-field-label {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-scan-input {
+  flex: none;
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border: 1px solid var(--pp-border);
+  border-bottom-color: var(--pp-ink-4);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  font-size: var(--pp-text-sm);
+}
+
+.pp-scan-detected-label {
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-scan-detected-value {
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-ai);
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink);
+  overflow-wrap: anywhere;
+}
+
+.pp-scan-note {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-scan-object .pp-bubble-footer { margin-top: var(--pp-space-1); }

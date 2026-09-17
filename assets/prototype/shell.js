@@ -22,8 +22,8 @@ import { CONTENT } from './scenarios.js';
  */
 export const HOTSPOTS = {
   home:   ['#prompt-bar'],
-  risks:  ['#srr-risk-card'],
-  answer: ['#generate-draft-button', '#view-tasks-button'],
+  risks:  ['#srr-risk-card', '#tracker-risk-card'],
+  answer: ['#generate-draft-button', '#view-tasks-button', '#review-scan-button'],
   dialog: ['#wizard-next', '#wizard-save-close', '#chat-suggestion', '#email-card-open']
 };
 
@@ -39,8 +39,8 @@ export const TYPING_TARGETS = {
 
 // The one place an id is turned into a string. Renderers read from these.
 const [PROMPT_BAR] = HOTSPOTS.home;
-const [SRR_RISK_CARD] = HOTSPOTS.risks;
-const [GENERATE_DRAFT, VIEW_TASKS] = HOTSPOTS.answer;
+const [SRR_RISK_CARD, TRACKER_RISK_CARD] = HOTSPOTS.risks;
+const [GENERATE_DRAFT, VIEW_TASKS, REVIEW_SCAN] = HOTSPOTS.answer;
 const [WIZARD_NEXT, WIZARD_SAVE_CLOSE, CHAT_SUGGESTION, EMAIL_CARD_OPEN] = HOTSPOTS.dialog;
 const [CHAT_INPUT] = TYPING_TARGETS.dialog;
 
@@ -52,15 +52,17 @@ const [CHAT_INPUT] = TYPING_TARGETS.dialog;
  */
 const ACTION_HOTSPOT = {
   'action-card-pending': GENERATE_DRAFT,
-  'action-card-srr-tasks': VIEW_TASKS
+  'action-card-srr-tasks': VIEW_TASKS,
+  'action-card-tracker-scan': REVIEW_SCAN
 };
 
 /**
  * Same idea for the risk dashboard: a risk row is clickable only when a
- * scenario drills into it. Scenarios 2.2 and 3 add their rows' keys here.
+ * scenario drills into it. Scenario 3 adds its row's key here.
  */
 const RISK_HOTSPOT = {
-  srr: SRR_RISK_CARD
+  srr: SRR_RISK_CARD,
+  tracker: TRACKER_RISK_CARD
 };
 
 /* ------------------------------------------------------------------ *
@@ -115,6 +117,11 @@ const COPY = {
   // docs/superpowers/notes/figma-scenario-2-1.md. Still rendered inert —
   // no destination path is specified by any frame, so none is invented.
   openInSRR: 'Open in Subject Rights Requests',
+  // Scenario 2.2's frames (1:67487-1:67457) already name their own solution
+  // here, so this one is verbatim — no correction needed. Still inert: no
+  // frame specifies a destination (Reword note R2 in
+  // docs/superpowers/notes/figma-scenario-2-2.md).
+  openInTracker: 'Open in Tracker Scanning',
   closeDialog: 'Close',
   // CORRECTION B1 (unified): source design has this same placeholder as
   // "...Privacy manager." (lower-case) in the consent-scenario dialog
@@ -194,7 +201,26 @@ const COPY = {
     { query: 'Summarize the capabilities of Microsoft Priva.', meta: '1 prompt' }
   ],
   moreSuggestions: 'More suggested prompts',
-  openEmail: 'Open the draft email'
+  openEmail: 'Open the draft email',
+  // Scenario 2.2's output card holds a Teams message rather than an email.
+  // Both labels are the prototype's own accessible names for a glyph the
+  // design draws bare — neither is design copy.
+  openMessage: 'Open the draft message',
+  // Accessible names for the scan panel's checkboxes, which the design draws
+  // as bare glyphs. The prototype's own words, not design copy.
+  objectSelected: 'Selected',
+  objectNotSelected: 'Not selected'
+};
+
+/**
+ * Which "Open in <solution>" label the dialog header carries, keyed by the
+ * scenario. Every one is rendered inert — no frame in any scenario specifies
+ * a destination — so this map is purely which product name to print.
+ */
+const DIALOG_OPEN_IN = {
+  consent: COPY.openInConsent,
+  srr: COPY.openInSRR,
+  tracker: COPY.openInTracker
 };
 
 /* ------------------------------------------------------------------ *
@@ -240,6 +266,7 @@ const GLYPHS = {
   play:        { d: 'M6 4.2 11.5 8 6 11.8z', fill: true },
   doc:         { d: 'M4 2.5h5L12 5.5V13.5H4zM9 2.5v3h3' },
   dash:        { d: 'M4.5 8h7' },
+  add:         { d: 'M8 3.5v9M3.5 8h9' },
   search:      { d: 'M7.2 2.6a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2M10.6 10.6 13.6 13.6' },
   sortDown:    { d: 'M8 3.2v9.2M4.6 9.2 8 12.6l3.4-3.4' },
   mail:        { d: 'M2.5 4.2h11v7.6h-11zM2.5 4.6 8 8.6l5.5-4' },
@@ -1305,6 +1332,119 @@ function renderListPanel(panel) {
 }
 
 /* ------------------------------------------------------------------ *
+ * Scan configuration panel (scenario 2.2, Frames 1:67487-1:67457)
+ *
+ * The dialog's third right-half type, after scenario 1's wizard and 2.1's
+ * list. A tabbed scan editor opened on its third tab, with two collapsible
+ * sections and a grid of compliance-object cards, one of which carries a
+ * Copilot suggestion.
+ *
+ * Every control here is inert (Reword note R3): the tabs, the "+ Add
+ * compliance object" action, the "Learn more" link and the six location-path
+ * inputs have no frame behind them, and the panel's own component carries a
+ * Save / undo / redo toolbar that the frames do not render at all, so it is
+ * not drawn either.
+ * ------------------------------------------------------------------ */
+function renderScanObject(object) {
+  const card = el('article', `pp-scan-object${object.highlight ? ' is-highlight' : ''}`);
+
+  const head = el('div', 'pp-scan-object-head');
+  head.append(el('span', 'pp-scan-object-label', object.label));
+  const box = el('span', `pp-checkbox${object.checked ? ' is-checked' : ''}`);
+  box.setAttribute('role', 'img');
+  box.setAttribute(
+    'aria-label',
+    `${object.label}: ${object.checked ? COPY.objectSelected : COPY.objectNotSelected}`
+  );
+  if (object.checked) box.append(glyph('check', 11));
+  head.append(box);
+  card.append(head);
+
+  if (object.fieldLabel) card.append(el('p', 'pp-scan-field-label', object.fieldLabel));
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'pp-input pp-scan-input';
+  input.readOnly = true;      // the prototype edits no scan configuration
+  input.value = object.value || '';
+  if (object.placeholder) input.placeholder = object.placeholder;
+  input.setAttribute('aria-label', `${object.label} ${object.fieldLabel || ''}`.trim());
+  card.append(input);
+
+  if (object.detected) {
+    card.append(el('p', 'pp-scan-detected-label', object.detectedLabel));
+    card.append(el('p', 'pp-scan-detected-value', object.detected));
+  }
+  if (object.note) card.append(el('p', 'pp-scan-note', object.note));
+  if (object.detected || object.note) {
+    const footer = el('div', 'pp-bubble-footer');
+    footer.append(el('span', 'pp-bubble-disclaimer', COPY.shortDisclaimer));
+    const feedback = el('div', 'pp-feedback');
+    feedback.append(iconButton('thumbUp', COPY.thumbsUp));
+    feedback.append(iconButton('thumbDown', COPY.thumbsDown));
+    footer.append(feedback);
+    card.append(footer);
+  }
+  return card;
+}
+
+function renderScanPanel(panel) {
+  const section = el('section', 'pp-wizard pp-panel pp-scan-panel');
+  if (!panel) return section;
+  section.setAttribute('aria-label', panel.title);
+
+  const header = el('header', 'pp-wizard-header');
+  header.append(el('h2', 'pp-wizard-title', panel.title));
+  section.append(header);
+
+  const body = el('div', 'pp-wizard-body');
+
+  // Authored as an ordered list, so "1." … "4." are list markers rather than
+  // typed text — same treatment the numbered chat steps get in scenario 2.1.
+  const tabs = el('ol', 'pp-scan-tabs');
+  for (const label of panel.tabs || []) {
+    const li = document.createElement('li');
+    const selected = label === panel.activeTab;
+    const item = el('span', `pp-scan-tab${selected ? ' is-selected' : ''}`, label);
+    if (selected) item.setAttribute('aria-current', 'step');
+    li.append(item);
+    tabs.append(li);
+  }
+  body.append(tabs);
+
+  if (panel.intro) {
+    const intro = el('p', 'pp-scan-intro');
+    intro.append(document.createTextNode(`${panel.intro} `));
+    if (panel.introLink) intro.append(inertButton(panel.introLink.trim(), 'pp-link-inline'));
+    body.append(intro);
+  }
+
+  for (const group of panel.sections || []) {
+    const wrap = el('div', 'pp-scan-section');
+    const heading = el('h3', 'pp-scan-section-heading');
+    heading.append(glyph(group.expanded ? 'chevronDown' : 'chevronRight', 12));
+    heading.append(el('span', null, group.heading));
+    wrap.append(heading);
+    if (group.text) wrap.append(el('p', 'pp-scan-section-text', group.text));
+    body.append(wrap);
+  }
+
+  // The objects belong to the expanded "Compliance objects" section, which is
+  // the last one the design draws — so appending them after the sections puts
+  // them exactly where the frame does.
+  if (panel.addObject) {
+    body.append(inertButton(panel.addObject, 'pp-link-button pp-scan-add', { iconBefore: 'add', iconSize: 14 }));
+  }
+  if (panel.objects && panel.objects.length) {
+    const grid = el('div', 'pp-scan-grid');
+    for (const object of panel.objects) grid.append(renderScanObject(object));
+    body.append(grid);
+  }
+
+  section.append(body);
+  return section;
+}
+
+/* ------------------------------------------------------------------ *
  * View: dialog (Frames 4-8) — chat pane + wizard over the answer page
  * ------------------------------------------------------------------ */
 /**
@@ -1313,9 +1453,22 @@ function renderListPanel(panel) {
  * Priva for the draft, so it is a real button with a real accessible name.
  */
 function renderEmailTile(card) {
+  const teams = card.icon === 'teams';
   const tile = el('div', 'pp-email-tile');
-  const art = el('div', 'pp-email-tile-art');
-  art.append(glyph('mail', 48));
+  const art = el('div', `pp-email-tile-art${teams ? ' pp-email-tile-art-teams' : ''}`);
+  // Scenario 2.1's card shows a 48px Mail glyph; scenario 2.2's shows the
+  // Microsoft Teams product mark, the one asset that scenario exported —
+  // a seven-shape brand logo, not something to approximate with a path.
+  if (teams) {
+    const mark = document.createElement('img');
+    mark.className = 'pp-teams-mark';
+    mark.src = 'assets/f4e216c68090.svg';
+    mark.alt = '';
+    mark.setAttribute('aria-hidden', 'true');
+    art.append(mark);
+  } else {
+    art.append(glyph('mail', 48));
+  }
   tile.append(art);
 
   const foot = el('div', 'pp-email-tile-foot');
@@ -1324,22 +1477,23 @@ function renderEmailTile(card) {
   titles.append(el('p', 'pp-email-tile-subtitle', card.subtitle));
   foot.append(titles);
 
+  // Scenario 2.1 arms this glyph (it opens the Outlook draft); scenario 2.2
+  // has no onward frame for it, so no beat names it and the spotlight
+  // machinery leaves it inert — ambiguity B12.
   const open = hotspotButton(EMAIL_CARD_OPEN, '', 'pp-icon-button pp-email-tile-open');
   open.append(glyph('external', 18));
-  open.setAttribute('aria-label', COPY.openEmail);
+  open.setAttribute('aria-label', teams ? COPY.openMessage : COPY.openEmail);
   foot.append(open);
 
   tile.append(foot);
   return tile;
 }
 
-function renderPaneMessage(message) {
-  if (message.role === 'user') {
-    const bubble = el('div', 'pp-bubble pp-bubble-user');
-    bubble.append(el('p', null, message.text));
-    return bubble;
-  }
-
+/**
+ * One output card in the chat pane. Usually a whole assistant turn; in
+ * scenario 2.2 a turn is three of these (see renderPaneMessage below).
+ */
+function renderAssistantCard(message) {
   const bubble = el('div', 'pp-bubble pp-bubble-assistant');
   if (message.text) bubble.append(el('p', 'pp-bubble-text', message.text));
   if (message.bullets && message.bullets.length) {
@@ -1361,6 +1515,15 @@ function renderPaneMessage(message) {
     bubble.append(list);
   }
   if (message.outro) bubble.append(el('p', 'pp-bubble-text', message.outro));
+  // Frame 1:67487's first card quotes the detected XPath as a muted value
+  // with a "Hide value" button under it. The button toggles nothing in any
+  // frame, so it is inert (Reword note R3).
+  if (message.value) bubble.append(el('p', 'pp-bubble-value', message.value));
+  if (message.valueAction) {
+    const row = el('div', 'pp-bubble-value-actions');
+    row.append(inertButton(message.valueAction, 'pp-button pp-button-tiny'));
+    bubble.append(row);
+  }
   if (message.emailCard) bubble.append(renderEmailTile(message.emailCard));
 
   const footer = el('div', 'pp-bubble-footer');
@@ -1376,6 +1539,27 @@ function renderPaneMessage(message) {
     bubble.append(inertButton(COPY.showProcess, 'pp-link-button', { iconAfter: 'chevronDown', iconSize: 13 }));
   }
   return bubble;
+}
+
+function renderPaneMessage(message) {
+  if (message.role === 'user') {
+    const bubble = el('div', 'pp-bubble pp-bubble-user');
+    bubble.append(el('p', null, message.text));
+    return bubble;
+  }
+  // Scenario 2.2's Frame 1:67487 answers one prompt with THREE separate
+  // output cards. A beat pushes exactly one chat entry, so the entry carries
+  // them all and they stack inside the one turn — which is what the frame
+  // shows, since none of the three ever appears without the others
+  // (ambiguity B13 in docs/superpowers/notes/figma-scenario-2-2.md).
+  if (message.cards && message.cards.length) {
+    const stack = el('div', 'pp-bubble-stack');
+    for (const card of message.cards) {
+      stack.append(renderAssistantCard({ showProcess: message.showProcess, ...card }));
+    }
+    return stack;
+  }
+  return renderAssistantCard(message);
 }
 
 function renderChatPane(state) {
@@ -1440,10 +1624,10 @@ function renderDialog(state) {
   header.append(brand);
 
   const headerActions = el('div', 'pp-dialog-actions');
-  // R1/R2: no destination exists for this button in either scenario — inert
+  // R1/R2: no destination exists for this button in any scenario — inert
   // on purpose. CORRECTION B3: scenario 2.1's dialog names its own product
   // rather than reusing scenario 1's "Consent Management" label verbatim.
-  const openInLabel = state.scenarioId === 'srr' ? COPY.openInSRR : COPY.openInConsent;
+  const openInLabel = DIALOG_OPEN_IN[state.scenarioId] || COPY.openInConsent;
   headerActions.append(inertButton(openInLabel, 'pp-link-button', { iconBefore: 'external' }));
   headerActions.append(iconButton('close', COPY.closeDialog, 'pp-icon-button pp-icon-button-lg'));
   header.append(headerActions);
@@ -1451,10 +1635,12 @@ function renderDialog(state) {
 
   const body = el('div', 'pp-dialog-body');
   body.append(renderChatPane(state));
-  // The dialog's right half is a wizard in scenario 1 and a list panel in
-  // scenario 2.1. `state.panel` is a content key, same convention as
-  // state.actionCard.
+  // The dialog's right half is a wizard in scenario 1, a list panel in 2.1
+  // and a scan editor in 2.2. `state.panel` is a content key, same convention
+  // as state.actionCard; the panel's own `kind` picks its renderer, so no
+  // scenario id is hard-coded here.
   if (state.wizard) body.append(renderWizard(state.wizard));
+  else if (panel && panel.kind === 'scan') body.append(renderScanPanel(panel));
   else if (state.panel) body.append(renderListPanel(CONTENT[state.panel]));
   dialog.append(body);
 
