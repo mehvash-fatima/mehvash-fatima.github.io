@@ -332,10 +332,12 @@ session can overrule with full information:
    editable and searchable like every other string in this prototype.
 2. The compose window's chrome (title bar, ribbon tabs, Send row, address rows, subject row) is likewise
    plain boxes and text — **CSS-buildable**.
-3. The 3840×2160 "Edit 1" screenshot's *outer* content is an unrelated personal mailbox mock (an inbox
-   list with "Monarch Project Update", "Fw: Volunteers needed", "Honeybee…", the account
-   "katyreid@ou…"). None of it belongs to this scenario, and a 1.7 MB raster of someone's inbox is not
-   something to ship into a portfolio page to show three lines of Outlook chrome.
+3. The 3840×2160 "Edit 1" screenshot's *outer* content is an unrelated mailbox screenshot — an inbox
+   list, its message subjects, and a signed-in account address, none of which belong to this scenario.
+   The specifics are deliberately not transcribed here: this repository is public (it serves
+   mehvash.com), and recording a real-looking account address and someone's message subjects in a
+   committed file would publish them just as surely as exporting the image would. A 1.7 MB raster of an
+   inbox is not something to ship into a portfolio page in order to show three lines of Outlook chrome.
    **The renderer therefore draws the compose window on a neutral dimmed backdrop rather than reproducing
    the surrounding inbox.** This is the one place where the prototype deliberately shows less than the
    frame.
