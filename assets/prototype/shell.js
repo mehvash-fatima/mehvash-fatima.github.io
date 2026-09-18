@@ -23,7 +23,7 @@ import { CONTENT } from './scenarios.js';
 export const HOTSPOTS = {
   home:   ['#prompt-bar'],
   risks:  ['#srr-risk-card', '#tracker-risk-card'],
-  answer: ['#generate-draft-button', '#view-tasks-button', '#review-scan-button'],
+  answer: ['#generate-draft-button', '#view-tasks-button', '#review-scan-button', '#toc-topic', '#create-summary-button'],
   dialog: ['#wizard-next', '#wizard-save-close', '#chat-suggestion', '#email-card-open']
 };
 
@@ -40,7 +40,7 @@ export const TYPING_TARGETS = {
 // The one place an id is turned into a string. Renderers read from these.
 const [PROMPT_BAR] = HOTSPOTS.home;
 const [SRR_RISK_CARD, TRACKER_RISK_CARD] = HOTSPOTS.risks;
-const [GENERATE_DRAFT, VIEW_TASKS, REVIEW_SCAN] = HOTSPOTS.answer;
+const [GENERATE_DRAFT, VIEW_TASKS, REVIEW_SCAN, TOC_TOPIC, CREATE_SUMMARY] = HOTSPOTS.answer;
 const [WIZARD_NEXT, WIZARD_SAVE_CLOSE, CHAT_SUGGESTION, EMAIL_CARD_OPEN] = HOTSPOTS.dialog;
 const [CHAT_INPUT] = TYPING_TARGETS.dialog;
 
@@ -53,7 +53,11 @@ const [CHAT_INPUT] = TYPING_TARGETS.dialog;
 const ACTION_HOTSPOT = {
   'action-card-pending': GENERATE_DRAFT,
   'action-card-srr-tasks': VIEW_TASKS,
-  'action-card-tracker-scan': REVIEW_SCAN
+  'action-card-tracker-scan': REVIEW_SCAN,
+  // Scenario 3's first card is deliberately absent: on frame 1:67760 the beat
+  // arms the topic rail, not this button, so it renders inert. The second
+  // card, on frame 1:67601, is the one that opens the dialog.
+  'action-card-ropa-assessments': CREATE_SUMMARY
 };
 
 /**
@@ -122,6 +126,10 @@ const COPY = {
   // frame specifies a destination (Reword note R2 in
   // docs/superpowers/notes/figma-scenario-2-2.md).
   openInTracker: 'Open in Tracker Scanning',
+  // Scenario 3's frame (1:67629) also names its own solution, so this is
+  // verbatim too. Inert for the same reason as the others: no frame gives
+  // the button a destination, and none is invented.
+  openInAssessments: 'Open in Privacy Assessments',
   closeDialog: 'Close',
   // CORRECTION B1 (unified): source design has this same placeholder as
   // "...Privacy manager." (lower-case) in the consent-scenario dialog
@@ -220,7 +228,8 @@ const COPY = {
 const DIALOG_OPEN_IN = {
   consent: COPY.openInConsent,
   srr: COPY.openInSRR,
-  tracker: COPY.openInTracker
+  tracker: COPY.openInTracker,
+  ropa: COPY.openInAssessments
 };
 
 /* ------------------------------------------------------------------ *
@@ -715,7 +724,15 @@ function renderToc(toc) {
     const li = document.createElement('li');
     const isAdd = item.trim().startsWith('+');
     const isSelected = item === toc.selected;
-    const entry = el('div', `pp-toc-item${isSelected ? ' is-selected' : ''}${isAdd ? ' is-add' : ''}`);
+    // Scenario 3 is the only flow that advances by picking a topic, so a rail
+    // item becomes a real button only when the data names it. Which item that
+    // is comes from the data; the selector comes from HOTSPOTS, never from
+    // the item's text.
+    const isHotspot = Boolean(toc.hotspot) && item === toc.hotspot;
+    const classes = `pp-toc-item${isSelected ? ' is-selected' : ''}${isAdd ? ' is-add' : ''}`;
+    const entry = isHotspot
+      ? hotspotButton(TOC_TOPIC, null, classes)
+      : el('div', classes);
     entry.append(el('span', 'pp-toc-label', item));
     if (!isAdd) entry.append(glyph(isSelected ? 'refresh' : 'play', 14));
     li.append(entry);
@@ -813,11 +830,17 @@ function renderAnswerMessage(message) {
     const sources = el('div', 'pp-sources');
     sources.append(el('p', 'pp-sources-label', message.sourcesLabel || 'Sources'));
     const pills = el('ul', 'pp-citations');
+    // A citation is either a bare label (numbered by position, which is what
+    // scenarios 1 and 2.1 show) or an object carrying its own number. Scenario
+    // 3's answer cites sources 1 and 3 — the design skips 2 — so the position
+    // is not the number, and inferring it would silently renumber dw.com.
     message.citations.forEach((citation, index) => {
+      const label = typeof citation === 'string' ? citation : citation.label;
+      const number = typeof citation === 'string' ? index + 1 : citation.index;
       const li = document.createElement('li');
       const pill = el('span', 'pp-citation');
-      pill.append(el('span', 'pp-citation-index', String(index + 1)));
-      pill.append(el('span', 'pp-citation-label', citation.trim()));
+      pill.append(el('span', 'pp-citation-index', String(number)));
+      pill.append(el('span', 'pp-citation-label', String(label).trim()));
       pill.append(glyph('external', 13));
       li.append(pill);
       pills.append(li);
@@ -910,7 +933,10 @@ function renderAnswerPage(state, { live }) {
     (answers.find(message => message.breadcrumb) || {}).breadcrumb ||
     (page.find(message => message.role === 'user') || {}).text ||
     '';
-  const toc = (answers.find(message => message.toc) || {}).toc;
+  // The rail reflects the CURRENT answer, so its selection follows the newest
+  // page answer rather than the first one.
+  const current = answers.length ? answers[answers.length - 1] : null;
+  const toc = current && current.toc ? current.toc : (answers.find(message => message.toc) || {}).toc;
 
   // CORRECTION B1 (unified): both scenarios render the same title-case
   // product name now — see the note on `COPY.pageTitle` above.
@@ -925,7 +951,11 @@ function renderAnswerPage(state, { live }) {
     main.setAttribute('aria-live', 'polite');
     main.setAttribute('aria-atomic', 'false');
   }
-  for (const message of answers) main.append(renderAnswerMessage(message));
+  // Only the newest page answer renders. Scenarios 1, 2.1 and 2.2 push exactly
+  // one, so this is identical for them; scenario 3 pushes a second when a
+  // topic is picked, and the design REPLACES the body rather than stacking
+  // two. Chat-pane history is unaffected — splitChat keeps that separate.
+  if (current) main.append(renderAnswerMessage(current));
   columns.append(main);
 
   columns.append(renderActionCard(state.actionCard));
@@ -1387,6 +1417,55 @@ function renderScanObject(object) {
   return card;
 }
 
+/**
+ * Scenario 3's RoPA report (Frame 1:67629): a subway nav of nine steps beside
+ * the generated sections.
+ *
+ * The step count and the block count deliberately disagree — see RULING R1 in
+ * docs/superpowers/notes/figma-scenario-3.md. The rail is verbatim at nine
+ * because that is what the design draws; the body carries only the blocks the
+ * design actually authored. The rail is decorative here: no beat targets a
+ * step, so nothing in it is a button.
+ */
+function renderReportPanel(panel) {
+  const section = el('section', 'pp-wizard pp-panel pp-report-panel');
+  if (!panel) return section;
+  section.setAttribute('aria-label', panel.title);
+
+  const header = el('header', 'pp-wizard-header');
+  header.append(el('h2', 'pp-wizard-title', panel.title));
+  section.append(header);
+
+  const body = el('div', 'pp-wizard-body pp-report-body');
+
+  const rail = el('ol', 'pp-subway');
+  for (const step of panel.steps || []) {
+    const li = el('li', 'pp-subway-item');
+    li.append(el('span', 'pp-subway-marker'));
+    li.append(el('span', 'pp-subway-label', step));
+    rail.append(li);
+  }
+  body.append(rail);
+
+  // Numbered by the list marker rather than by typed digits, same treatment
+  // the scan panel's tabs get.
+  const blocks = el('ol', 'pp-report-blocks');
+  for (const block of panel.blocks || []) {
+    const li = el('li', 'pp-report-block');
+    li.append(el('h3', 'pp-report-heading', block.heading));
+    li.append(el('p', 'pp-report-answer', block.body));
+    const pill = el('span', 'pp-risk-pill');
+    pill.append(el('span', 'pp-risk-pill-label', panel.riskLabel));
+    pill.append(el('span', 'pp-risk-pill-value', panel.riskValue));
+    li.append(pill);
+    blocks.append(li);
+  }
+  body.append(blocks);
+
+  section.append(body);
+  return section;
+}
+
 function renderScanPanel(panel) {
   const section = el('section', 'pp-wizard pp-panel pp-scan-panel');
   if (!panel) return section;
@@ -1641,6 +1720,7 @@ function renderDialog(state) {
   // scenario id is hard-coded here.
   if (state.wizard) body.append(renderWizard(state.wizard));
   else if (panel && panel.kind === 'scan') body.append(renderScanPanel(panel));
+  else if (panel && panel.kind === 'report') body.append(renderReportPanel(panel));
   else if (state.panel) body.append(renderListPanel(CONTENT[state.panel]));
   dialog.append(body);
 

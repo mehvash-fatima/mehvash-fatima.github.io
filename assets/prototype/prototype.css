@@ -2703,3 +2703,152 @@
 }
 
 .pp-scan-object .pp-bubble-footer { margin-top: var(--pp-space-1); }
+
+/* =====================================================================
+   Scenario 3 — the RoPA report panel (Frame 1:67629)
+
+   Two columns inside the dialog's right half: a subway rail naming the
+   nine steps the design draws, and the generated blocks beside it. The
+   rail scrolls with the panel rather than independently — the design
+   shows both moving together.
+   ===================================================================== */
+
+.pp-report-panel .pp-wizard-header { padding: var(--pp-space-4) var(--pp-space-6); }
+
+.pp-report-panel .pp-wizard-title {
+  text-align: center;
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-report-body {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-6) var(--pp-space-4);
+}
+
+/* --- Subway rail --------------------------------------------------- */
+
+.pp-subway {
+  flex: none;
+  width: 212px;
+  margin: 0;
+  padding: 0 0 0 var(--pp-space-4);
+  list-style: none;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink);
+}
+
+.pp-subway-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  min-height: 42px;
+}
+
+.pp-subway-marker {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--pp-success);
+}
+
+/* The connector runs from one marker to the next, so it is drawn on every
+   item but the last. 7px centres a 2px line under a 16px marker. */
+.pp-subway-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: calc(50% + 8px);
+  height: calc(100% - 16px);
+  width: 2px;
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-ink-3);
+}
+
+.pp-subway-label { min-width: 0; }
+
+/* --- Generated blocks ---------------------------------------------- */
+
+.pp-report-blocks {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-left: var(--pp-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  list-style: decimal;
+}
+
+.pp-report-blocks::marker,
+.pp-report-block::marker {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-report-block {
+  background: var(--pp-surface-alt);
+  border-radius: var(--pp-radius-lg);
+  padding: var(--pp-space-4);
+}
+
+.pp-report-heading {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  line-height: 20px;
+  color: var(--pp-ink-2);
+  padding-bottom: var(--pp-space-3);
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-report-answer {
+  padding: var(--pp-space-3) 0;
+  font-size: var(--pp-text-md);
+  line-height: 22px;
+  color: var(--pp-ink);
+}
+
+/* --- Risk pill ------------------------------------------------------ */
+
+.pp-risk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 var(--pp-space-2);
+  border-radius: 16px;
+  background: rgba(159, 216, 159, 0.2);
+  border: 1px solid rgba(14, 112, 14, 0.6);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.pp-risk-pill-label { color: var(--pp-ink-3); }
+.pp-risk-pill-value { color: var(--pp-success); }
+
+/* --- A topic rail item that is also a hotspot -----------------------
+   `.pp-toc-item` is normally a <div>; scenario 3 renders one of them as a
+   real <button>, so the button's own chrome has to be cleared or it picks
+   up the UA's background, border, centring and font. */
+
+button.pp-toc-item {
+  width: 100%;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.pp-toc-item:not(.is-inert):hover { background: var(--pp-surface-alt); }
+button.pp-toc-item.is-inert { cursor: default; }

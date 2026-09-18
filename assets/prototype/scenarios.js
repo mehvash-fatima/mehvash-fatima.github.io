@@ -609,6 +609,163 @@ export const CONTENT = {
       icon: 'teams'
     },
     showProcess: false
+  },
+
+  /* ---------------------------------------------------------------- *
+   * Scenario 3 — Privacy Assessments, "Generate Data Inventory / RoPA".
+   * Source: docs/superpowers/notes/figma-scenario-3.md (frames 1:67565,
+   * 1:67584, 1:67760, 1:67601, 1:67629).
+   * ---------------------------------------------------------------- */
+
+  // Frame 1:67760 — the answer page as first generated. Carries a `toc`, so
+  // splitChat files it as the PAGE's answer rather than a chat-pane message.
+  //
+  // The citations are numbered 1 and 3, not 1 and 2: the design skips 2. They
+  // are authored as objects so the data states the number the design shows,
+  // instead of the renderer inferring it from array position and quietly
+  // renumbering dw.com to 2.
+  //
+  // `toc.hotspot` names the item beat 2 arms. The selector for it lives only
+  // in HOTSPOTS.answer — the data says WHICH item is clickable, never what
+  // its id is.
+  'answer-france-legal': {
+    sectionHeading: 'Legal framework and authorities',
+    promptRow: 'Explain the legal considerations behind documenting personal data in France',
+    sourcesLabel: 'Sources',
+    citations: [
+      { label: 'iclg.com', index: 1 },
+      { label: 'dw.com', index: 3 }
+    ],
+    text: 'In France, documenting personal data involves adhering to specific legal requirements. Let\u2019s explore the key aspects:\n\nRelevant Legislation and Competent Authorities:\n\n- The General Data Protection Regulation (GDPR), effective since May 25, 2018, is the principal data protection legislation in the EU.\n- In France, the French Data Protection Act (FDPA) has been in force since January 6, 1978. It was amended in 2018 to align with GDPR requirements under French law.\n- Other relevant legislation includes the ePrivacy Directive, which governs electronic communications, and various regulations related to data processing, security, and individual rights1',
+    // The design bolds the three named instruments inside the bullets.
+    emphasis: [
+      'General Data Protection Regulation (GDPR)',
+      'French Data Protection Act (FDPA)',
+      'ePrivacy Directive'
+    ],
+    toc: {
+      heading: 'Suggested topics',
+      items: [
+        'Legal framework and authorities',
+        'Data principles and definitions',
+        'Compliance requirements',
+        'Specific considerations',
+        'Enforcement and sanctions',
+        '+ Add topic'
+      ],
+      selected: 'Legal framework and authorities',
+      hotspot: 'Compliance requirements'
+    }
+  },
+
+  // Frame 1:67601 — the same page after "Compliance requirements" is picked.
+  // Pushed as a second page answer, not merged into the first: the design
+  // REPLACES the body, and renderAnswerPage shows the newest page answer.
+  //
+  // AMBIGUITY B14, left as designed: the heading still reads "Legal framework
+  // and authorities" even though the selected topic is now "Compliance
+  // requirements". Confirmed in the node, not just the render. Either the
+  // heading is the answer's overall title and is meant to stay, or it was not
+  // updated — the frames do not settle it, so it is reproduced rather than
+  // "fixed". One string to flip if that call changes.
+  'answer-france-compliance': {
+    sectionHeading: 'Legal framework and authorities',
+    promptRow: 'Explain the legal considerations behind documenting personal data in France',
+    sourcesLabel: 'Sources',
+    citations: [
+      { label: 'iclg.com', index: 1 },
+      { label: 'dw.com', index: 3 }
+    ],
+    text: 'Territorial Scope:\n- Both GDPR and FDPA apply to all sectors in France.\n\nKey Principles:\n- Data processing must be lawful, fair, and transparent.\n- Data minimization: Collect only necessary data.\n- Purpose limitation: Use data only for specified purposes.\n- Accuracy: Ensure data accuracy and update as needed.\n- Storage limitation: Retain data for the necessary period.\n- Security: Protect data against unauthorized access or breaches.\n\nIndividual Rights:\n- Individuals have rights to access, rectify, erase, and restrict processing of their data.\n- They can also object to processing and request data portability.\n\nRegistration Formalities and Prior Approval:\n- Organizations processing personal data may need to register with the French data protection authority (CNIL).',
+    toc: {
+      heading: 'Suggested topics',
+      items: [
+        'Legal framework and authorities',
+        'Data principles and definitions',
+        'Compliance requirements',
+        'Specific considerations',
+        'Enforcement and sanctions',
+        '+ Add topic'
+      ],
+      selected: 'Compliance requirements'
+    }
+  },
+
+  // Frame 1:67760's suggested-action card. Its button is NOT armed — beat 2
+  // arms the topic rail instead — so this key is absent from ACTION_HOTSPOT
+  // and the button renders inert.
+  'action-card-ropa': {
+    header: 'Privacy Assessments',
+    body: 'Create a summary for processing activities in France',
+    buttons: ['Create processing activity summary']
+  },
+
+  // Frame 1:67601's card. RULING R6: the header really does gain its "Priva "
+  // prefix between the two frames, matching the convention the other
+  // scenarios' cards already use, so both states are authored and beat 2
+  // swaps them. RULING R5: the panel LABEL above the card is not swapped —
+  // frame 1:67601 alone calls it "Suggested Priva tasks" where every other
+  // frame in every scenario says "Suggested actions", and it is one shared
+  // string (COPY.suggestedActions).
+  'action-card-ropa-assessments': {
+    header: 'Priva Privacy Assessments',
+    body: 'Create a summary for processing activities in France using relevant assessments.',
+    buttons: ['Create processing activity summary']
+  },
+
+  // Frame 1:67629's chat pane. RULING R3: the design's last bullet reads
+  // "(1 or more may apply" with no closing bracket — unbalanced within the
+  // string itself, and its sibling "(1 or more)" closes correctly, so this is
+  // a confirmed slip rather than a suspected one.
+  'ropa-report-reply': {
+    text: 'For an EU-GDPR data inventory the following fields will be included:\n\n- Processing Activity\n- Department\n- Name of Asset\n- Asset Internal Contact\n- Categories of personal data\n- Third party transfer categories (1 or more)\n- Data boundary involved\n- Data Retention (highest for group)\n- Lawful basis of processing (1 or more may apply)',
+    showProcess: true
+  },
+
+  // Frame 1:67629's right half. `kind` picks the renderer, same convention as
+  // scenario 2.2's scan panel.
+  //
+  // RULING R1: the nav rail lists nine steps and the design authors five
+  // blocks, of which blocks 4 and 5 repeat block 3's answer verbatim — the
+  // asset list, pasted under "Asset internal contacts" and "Categories of
+  // personal data". That is unfinished filler. The rail stays verbatim at
+  // nine because it is a real artifact of the design; the body stops after
+  // block 3, where the authored content stops. Nothing is invented to fill
+  // the gap, and the design's own frame clips at roughly the same place.
+  //
+  // RULING R2: block 3's heading is "Name of asssts" in the design. Corrected
+  // to "Name of assets" — nav step 3 and the chat pane's field list both
+  // disagree with the misspelling, which makes it confirmed, not suspected.
+  'ropa-report-panel': {
+    kind: 'report',
+    title: 'France Processing Activity Summary \u2013 April 3/2024',
+    steps: [
+      '1: Processing activity summary',
+      '2: Department',
+      '3: Name of assets',
+      '4: Asset internal contacts',
+      '5: Categories of personal data',
+      '6: Third party transfer categories',
+      '7: Data boundary',
+      '8: Data retention',
+      '9: Lawful basis of processing'
+    ],
+    riskLabel: 'Risk level: ',
+    riskValue: 'Low \u2013 Sensitive data',
+    blocks: [
+      {
+        heading: 'Processing activity',
+        body: 'Employee data is collected and processed for the purposes of employee payroll, health & benefits processing, and internal surveys. Partner data is collected for the purposes of providing services to customers and for billing purposes. Customer data is collected and processed for business needs such as to track active orders, process payments or refunds, and troubleshoot order issues with support teams. Customer data is collected with consent to send promotional emails, inform customers of relevant product updates or news, and to share with affiliates based on selected preferences.'
+      },
+      {
+        heading: 'Department',
+        body: 'Marketing, HR-Payroll, HR-Records mgmt, Order fulfillment, Billing, Product promotions team, Customer care support'
+      },
+      {
+        heading: 'Name of assets',
+        body: 'Workpay, CRM tool, Sellingforce, TrackShip, PaymentApp, CampaignMgr, SupportTktSystem'
+      }
+    ]
   }
 };
 
@@ -793,6 +950,70 @@ export const SCENARIOS = [
           type: { into: '#copilot-chat-input', text: 'Generate a summary message for the website owners.', when: 'before' },
           thinking: 1200,
           push: { chat: 'tracker-teams-card' }
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'ropa',
+    label: '3 \u2014 Generate data inventory / RoPA',
+    product: 'Privacy Assessments',
+    initial: { view: 'home' },
+    beats: [
+      // Frames 1:67565 -> 1:67584 -> 1:67760. The entry is the PROMPT BAR,
+      // not a risk card: frame 1:67584's breadcrumb carries the query and no
+      // chip on 1:67565 matches it, so the opening beat is the user typing it
+      // — scenario 1's reading exactly. Frame 1:67584 is the timed loading
+      // state, folded in here as the `thinking` pause rather than a beat.
+      {
+        spotlight: '#prompt-bar',
+        await: 'click',
+        then: {
+          type: { into: '#prompt-bar', text: 'How do I document personal data in France', when: 'before' },
+          thinking: 1200,
+          push: { chat: 'answer-france-legal' },
+          set: { view: 'answer', actionCard: 'action-card-ropa' }
+        }
+      },
+      // Frame 1:67760 -> 1:67601. Picking a second topic from the rail. This
+      // is the only beat in the prototype whose target is a topic rather than
+      // a button, and the only one that replaces the page's answer instead of
+      // adding to it — the push lands a second PAGE answer and the newest
+      // one is what renders.
+      //
+      // No loading frame sits between 1:67760 and 1:67601, but the pause is
+      // played anyway: the rail marks a generated topic with a refresh glyph,
+      // so a topic arriving instantly would contradict the design's own
+      // affordance. Same call as scenario 2.2's opening beat.
+      {
+        spotlight: '#toc-topic',
+        await: 'click',
+        then: {
+          thinking: 1200,
+          push: { chat: 'answer-france-compliance' },
+          set: { actionCard: 'action-card-ropa-assessments' }
+        }
+      },
+      // Frames 1:67601 -> 1:67629. "Create processing activity summary" opens
+      // the dialog: the chat pane replays the prompt, Copilot lists the nine
+      // fields, and the RoPA report fills the right half. `when: 'after'`
+      // because #copilot-chat-input only exists once this beat's `set` has
+      // opened the dialog.
+      //
+      // The design's user bubble has a trailing space ("...summary "), which
+      // is dropped here — it would type as an invisible extra keystroke and
+      // changes nothing anyone can see. Recorded in the inventory.
+      //
+      // Terminal: 1:67629 has no onward frame, so no beat follows and
+      // "Open in Privacy Assessments" is drawn but never armed.
+      {
+        spotlight: '#create-summary-button',
+        await: 'click',
+        then: {
+          type: { into: '#copilot-chat-input', text: 'Create an EU-GDPR processing activity summary', when: 'after' },
+          push: { chat: 'ropa-report-reply' },
+          set: { view: 'dialog', panel: 'ropa-report-panel' }
         }
       }
     ]
