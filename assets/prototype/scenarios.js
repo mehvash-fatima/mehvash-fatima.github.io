@@ -662,14 +662,17 @@ export const CONTENT = {
   // Pushed as a second page answer, not merged into the first: the design
   // REPLACES the body, and renderAnswerPage shows the newest page answer.
   //
-  // AMBIGUITY B14, left as designed: the heading still reads "Legal framework
-  // and authorities" even though the selected topic is now "Compliance
-  // requirements". Confirmed in the node, not just the render. Either the
-  // heading is the answer's overall title and is meant to stay, or it was not
-  // updated — the frames do not settle it, so it is reproduced rather than
-  // "fixed". One string to flip if that call changes.
+  // CORRECTION B14 (owner's call, 2026-09-18): the design's heading still reads
+  // "Legal framework and authorities" here even though the selected topic is
+  // "Compliance requirements" and the body below is compliance content —
+  // confirmed in the node, not just the render. Reproduced faithfully at first,
+  // because the frames alone cannot settle whether the heading is the answer's
+  // overall title or simply was not updated. Overruled deliberately: a visitor
+  // clicking a topic and watching the heading stay on a different one reads it
+  // as a broken prototype, and the replacement is the topic's own label rather
+  // than anything invented. Recorded in the inventory's B14 entry.
   'answer-france-compliance': {
-    sectionHeading: 'Legal framework and authorities',
+    sectionHeading: 'Compliance requirements',
     promptRow: 'Explain the legal considerations behind documenting personal data in France',
     sourcesLabel: 'Sources',
     citations: [
