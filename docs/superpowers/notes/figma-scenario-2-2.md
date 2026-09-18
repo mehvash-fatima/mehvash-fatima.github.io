@@ -426,3 +426,28 @@ No copy in this scenario depends on an unresolved location path.
 | Cornflower card panel `#C8D1FA` | 5 | CSS — one new token, `--pp-cornflower-bg` |
 | Copilot mark, Priva mark | all | Reused from scenario 1 (`assets/5135989b34f7.svg`, `assets/5abed2089d2b.svg`) |
 | Email-card CSS (`.pp-email-tile`) | 5 | Reused from scenario 2.1 — the same component `1:67901`, one fill/art variant added rather than a second renderer |
+
+---
+
+## Browser walk (verification)
+
+Walked in headless Chrome over CDP with `docs/superpowers/tools/walk-prototype.mjs`,
+clicking only `.is-spotlit`. All three beats advance, exactly one spotlight is armed
+before each click, `#copilot-chat-input` receives *"Check for recent updates made to
+scans"* in the `dialog` view the beat's `when: 'after'` names, and the run ends in the
+terminal state — no spotlight armed, completion panel shown, `#email-card-open`
+rendered but never armed (B12, as designed). No page errors. Scenarios 1 and 2.1 were
+re-walked against the same shared files and are unchanged: 7 and 4 beats respectively,
+each reaching its terminal state.
+
+**The Teams mark stands as an export.** It is a genuine brand logo — seven paths in
+five Microsoft brand colours — not something CSS should draw. No change.
+
+**One defect the walk found, fixed in `mount.js`.** `armSpotlight` swept only
+`HOTSPOTS[state.view]`, but the chat transcript carries a suggested-action button
+forward into the views that follow it: in the `dialog` view `#review-scan-button` was
+still an enabled, keyboard-reachable button with no `aria-disabled`, silently doing
+nothing on click. The same held for `#generate-draft-button` (scenario 1) and
+`#view-tasks-button` (scenario 2.1), so this was never specific to 2.2. The disarm
+sweep now runs over the union of every view's hotspots; a view's entry in `HOTSPOTS`
+still governs which hotspot that view may *arm*, and ids are still declared once.

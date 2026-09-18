@@ -15,6 +15,17 @@ import { SCENARIOS, CONTENT } from './scenarios.js';
 import { initialState, applyBeat, stateAt } from './engine.js';
 import { render, HOTSPOTS } from './shell.js';
 
+/**
+ * Every hotspot selector the shell can render, in any view. `armSpotlight`
+ * disarms over this union rather than over the current view's list: a view's
+ * entry in HOTSPOTS says which hotspots that view may ARM, but the chat
+ * transcript carries suggested-action buttons forward into later views, so a
+ * button armed in `answer` is still in the DOM once the dialog opens. Sweeping
+ * only the current view left those looking and behaving live — enabled, in the
+ * tab order, silently inert on click. Ids still live only in HOTSPOTS.
+ */
+const ALL_HOTSPOTS = [...new Set(Object.values(HOTSPOTS).flat())];
+
 const IDLE_MS = 90_000;
 const TYPE_MS = 26;        // per character
 const CANVAS_W = 1920;
@@ -128,7 +139,7 @@ export function mount(root) {
    */
   const armSpotlight = (enabled = true) => {
     const beat = enabled ? nextBeat() : null;
-    for (const selector of HOTSPOTS[state.view] || []) {
+    for (const selector of ALL_HOTSPOTS) {
       const node = root.querySelector(selector);
       if (!node) continue;
       const armed = Boolean(beat) && beat.spotlight === selector;
