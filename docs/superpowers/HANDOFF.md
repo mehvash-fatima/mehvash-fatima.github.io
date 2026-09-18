@@ -1,6 +1,6 @@
 # Copilot Privacy Manager prototype — handoff
 
-**Last session ended:** 2026-09-17, mid Task 7b.
+**Last session ended:** 2026-09-18, after Task 7c.
 **Branch:** `copilot-prototype` (local only, never pushed). 25 commits ahead of `main`.
 **Spec:** `docs/superpowers/specs/2026-09-15-copilot-prototype-design.md`
 **Plan:** `docs/superpowers/plans/2026-09-15-copilot-prototype.md`
@@ -30,8 +30,8 @@ may be gone; everything load-bearing from it is reproduced below.
 | 5 — Scenario validator | Complete, reviewed. 10 tests |
 | 6 — mount.js + standalone page | Complete, reviewed (adversarial pass clean) |
 | 7a — SRR scenario (2.1) | Complete, reviewed. 4 beats. Plus two correction commits |
-| **7b — Tracker Scanning (2.2)** | **IN PROGRESS — see below** |
-| 7c — RoPA / Privacy Assessments (3) | Not started |
+| 7b — Tracker Scanning (2.2) | Complete. Browser-walked; found and fixed a hotspot-disarm bug |
+| 7c — RoPA / Privacy Assessments (3) | Complete. 3 beats. Browser-walked and screenshot-compared |
 | 8 — Mobile reflow below 768px | Not started |
 | 9 — CTA band in case study 02 | Not started |
 | 10 — Accessibility + cross-browser + README | Not started |
@@ -44,7 +44,24 @@ editable Copilot-suggested wizard fields whose badge drops when a human edits th
 Reset, Previous (by replay), a step indicator, and a 90-second idle auto-reset that
 pauses while the tab is hidden. Desktop only so far — the canvas scales by transform.
 
-### Task 7b, exactly where it stands
+### Verifying in a browser
+
+`docs/superpowers/tools/walk-prototype.mjs` walks a scenario in headless Chrome over
+raw CDP (no dependencies — Node 24 has a global `WebSocket`). Usage is in its header.
+Two things it learned the hard way, both encoded in it now:
+
+- **Poll the mount's own busy signals** (`.is-typing`, `.pp-latency`), not a stability
+  heuristic. Nothing changes during a 1200ms `thinking` pause either, and a click
+  landing mid-animation **fast-forwards** it instead of advancing the beat — so a
+  too-eager walk silently burns a click and under-reports the beat count.
+- **Disable the cache** (`Network.setCacheDisabled`). ES modules are cached hard, and
+  a walk after an edit will otherwise re-verify the code you just changed away from.
+
+**The walk cannot see visual fidelity.** Every defect fixed in the last commit of
+scenario 3 was found by screenshotting the canvas and putting it next to the frame,
+and none of them failed a test. Budget for that pass on any new scenario.
+
+### Task 7b, as completed
 
 - `837bfd3` — inventory committed: `docs/superpowers/notes/figma-scenario-2-2.md` (5 frames)
 - `a8ab00b` — WIP code committed: tracker data, renderers, CSS, one new SVG asset
@@ -53,14 +70,16 @@ All four modules parse; 22/22 tests pass, so the tracker data already satisfies 
 validator. Three beats are authored with spotlights `#tracker-risk-card`,
 `#review-scan-button`, `#chat-suggestion`; `HOTSPOTS` now has a `risks` view.
 
-**Remaining for 7b:**
-1. Browser-walk scenario 2.2 over CDP — every beat advances, exactly one spotlight
-   at a time, typing lands in the view each `when` names, terminal state reached.
-2. Regression-walk scenarios 1 (7 beats) and 2.1 (4 beats) — shared files were edited.
-3. Justify `assets/f4e216c68090.svg` (referenced at `shell.js:1465`): confirm it is a
-   genuine logo/mark and not something CSS should draw. If CSS-drawable, delete and
-   rebuild in CSS.
-4. Then a task review, per the plan's process.
+All four items closed in `01bcd03`:
+
+1. Walked — three beats, one spotlight each, terminal state reached.
+2. Scenarios 1 and 2.1 regression-walked; unchanged.
+3. `assets/f4e216c68090.svg` is the Microsoft Teams brand mark — seven paths in five
+   brand colours. A genuine logo, kept.
+4. The walk found a defect older than the scenario: `armSpotlight` swept only
+   `HOTSPOTS[state.view]`, so a suggested-action button the chat transcript carries
+   into a later view stayed enabled, in the tab order, and silently did nothing on
+   click. It now sweeps the union of every view's hotspots.
 
 ## Rules that bind all remaining work
 
