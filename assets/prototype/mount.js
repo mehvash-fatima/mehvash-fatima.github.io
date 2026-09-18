@@ -299,8 +299,20 @@ export function mount(root) {
     }
 
     if (type && type.when === 'after') {
+      // The bubble for this text is already on screen: `type` pushes it as a
+      // user turn and the draw above rendered it. So hold it back, play the
+      // typing into the composer, then clear the composer and reveal the
+      // bubble — which is the order sending a message actually happens in.
+      // Without this the settled frame shows the same sentence twice, once
+      // in the transcript and once still sitting in the input.
+      const pane = root.querySelector('.pp-chat');
+      const sent = pane ? pane.lastElementChild : null;
+      if (sent) sent.hidden = true;
       await typeInto(type.into, type.text);
-      if (token !== runToken) return;
+      if (token !== runToken) { if (sent) sent.hidden = false; return; }
+      const composer = root.querySelector(type.into);
+      if (composer) writeTyped(composer, '');
+      if (sent) sent.hidden = false;
     }
 
     running = false;

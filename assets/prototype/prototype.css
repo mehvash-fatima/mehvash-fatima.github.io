@@ -2783,10 +2783,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--pp-space-3);
-  list-style: decimal;
 }
 
-.pp-report-blocks::marker,
+/* `.pp-canvas ol { list-style: none }` is the reset, and it outranks a bare
+   class selector — so the marker goes on the li, the same way
+   `.pp-bubble-steps li` does. */
+.pp-report-blocks li { list-style: decimal; }
+
 .pp-report-block::marker {
   font-size: var(--pp-text-base);
   font-weight: var(--pp-weight-semibold);

@@ -687,7 +687,10 @@ export const CONTENT = {
         'Enforcement and sanctions',
         '+ Add topic'
       ],
-      selected: 'Compliance requirements'
+      selected: 'Compliance requirements',
+      // Frame 1:67601 shows BOTH generated topics with the refresh glyph,
+      // only one of which is selected.
+      generated: ['Legal framework and authorities', 'Compliance requirements']
     }
   },
 
@@ -718,7 +721,18 @@ export const CONTENT = {
   // string itself, and its sibling "(1 or more)" closes correctly, so this is
   // a confirmed slip rather than a suspected one.
   'ropa-report-reply': {
-    text: 'For an EU-GDPR data inventory the following fields will be included:\n\n- Processing Activity\n- Department\n- Name of Asset\n- Asset Internal Contact\n- Categories of personal data\n- Third party transfer categories (1 or more)\n- Data boundary involved\n- Data Retention (highest for group)\n- Lawful basis of processing (1 or more may apply)',
+    text: 'For an EU-GDPR data inventory the following fields will be included:',
+    bullets: [
+      'Processing Activity',
+      'Department',
+      'Name of Asset',
+      'Asset Internal Contact',
+      'Categories of personal data',
+      'Third party transfer categories (1 or more)',
+      'Data boundary involved',
+      'Data Retention (highest for group)',
+      'Lawful basis of processing (1 or more may apply)'
+    ],
     showProcess: true
   },
 

@@ -716,6 +716,12 @@ function renderAnswerHeader(query, pageTitle) {
 }
 
 function renderToc(toc) {
+  // A topic that has been GENERATED carries the refresh glyph; one that has
+  // not carries play. Selection is a separate thing — frame 1:67601 shows two
+  // topics with refresh and only one of them selected. Scenarios that only
+  // ever generate the topic they select (1 and 2.1) need say nothing: the
+  // selected item is the generated one.
+  const generated = toc.generated || (toc.selected ? [toc.selected] : []);
   const nav = el('nav', 'pp-toc');
   nav.setAttribute('aria-label', toc.heading);
   nav.append(el('h2', 'pp-toc-heading', toc.heading));
@@ -734,7 +740,7 @@ function renderToc(toc) {
       ? hotspotButton(TOC_TOPIC, null, classes)
       : el('div', classes);
     entry.append(el('span', 'pp-toc-label', item));
-    if (!isAdd) entry.append(glyph(isSelected ? 'refresh' : 'play', 14));
+    if (!isAdd) entry.append(glyph(generated.includes(item) ? 'refresh' : 'play', 14));
     li.append(entry);
     list.append(li);
   }

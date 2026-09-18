@@ -256,3 +256,43 @@ either direction: the rail is verbatim, the body stops where the authored conten
 | Chat pane, latency card, dialog chrome | 2, 5 | Reused from scenarios 1 and 2.1 |
 
 **Nothing new was exported for this scenario.**
+
+---
+
+## Browser walk (verification)
+
+Walked in headless Chrome over CDP with `docs/superpowers/tools/walk-prototype.mjs`,
+clicking only `.is-spotlit`. All three beats advance, exactly one spotlight is armed
+before each click (`#prompt-bar` → `#toc-topic` → `#create-summary-button`), the query
+types into the prompt bar in the `home` view and the dialog prompt into
+`#copilot-chat-input` in the `dialog` view its `when: 'after'` names, and the run ends
+in the terminal state — no spotlight armed, completion panel shown. No page errors.
+Scenarios 1, 2.1 and 2.2 were re-walked and are unchanged.
+
+Frames 3, 4 and 5 were also compared against the design by screenshot, which is what
+turned up the four defects below — none of them is the kind of thing the test suite can
+see.
+
+**Four fidelity defects found by looking, and fixed:**
+
+1. **The dialog's assistant reply lost its bullets.** Authored as `\n- ` inside `text`,
+   which `renderRichText` understands but the chat pane's `renderAssistantCard` does
+   not — it renders `text` as one paragraph. Re-authored using the `bullets` array the
+   pane already supports.
+2. **The report blocks lost their numbers.** `.pp-canvas ol { list-style: none }` is the
+   reset and it outranks a bare class selector. Moved the rule onto the `li`, which is
+   how `.pp-bubble-steps` already does it.
+3. **The typed prompt showed twice.** With `when: 'after'` the beat's draw has already
+   rendered the user's bubble before the typing animation runs, so the settled frame
+   left the same sentence in the composer *and* in the transcript. The last bubble is
+   now held back during the animation and the composer cleared when it finishes — which
+   is the order sending a message actually happens in. Scenarios 1 and 2.2 hid this
+   because a later beat's redraw cleared the composer; scenario 3's typing beat is
+   terminal, so nothing came along to clean up after it.
+4. **The topic rail's glyph rule was wrong.** It gave the refresh glyph to the *selected*
+   topic; frame `1:67601` gives it to every *generated* topic and selects only one of
+   them. Selection and generation are now separate, with the generated list defaulting
+   to the selected item so scenarios 1 and 2.1 are unaffected.
+
+Defect 3 was a pre-existing bug in the shared mount, not something this scenario
+introduced — it was simply never visible until a scenario ended on a typing beat.
