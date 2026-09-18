@@ -228,15 +228,21 @@ per the prototype-wide ruling 10. It already does; the shared string is reused u
 
 ## Ambiguities left alone
 
-**B14 — Frame 4's answer heading does not follow the selected topic.** The rail selection
-moves to "Compliance requirements" and the body swaps to compliance content, but the 20px
-heading still reads **"Legal framework and authorities"** (confirmed in the node, not just
-the render). Two readings are available and neither can be confirmed from the frames: the
-heading is the answer's overall title and is *meant* to stay, or it was simply not
-updated. Following the project's own precedent on suspected slips, **the prototype
-reproduces it as designed.** Flagged because it is the one place in this scenario where
-faithfulness and "looks correct to a visitor" pull in opposite directions — reversing it
-is one string in `scenarios.js` if that is the call.
+**B14 — Frame 4's answer heading does not follow the selected topic. CORRECTED on the
+owner's call, 2026-09-18.** The rail selection moves to "Compliance requirements" and the
+body swaps to compliance content, but the 20px heading still reads **"Legal framework and
+authorities"** (confirmed in the node, not just the render). Two readings are available and
+neither can be confirmed from the frames: the heading is the answer's overall title and is
+*meant* to stay, or it was simply not updated. Following the project's own precedent on
+suspected slips, the prototype first reproduced it as designed, and it was flagged as the
+one place in this scenario where faithfulness and "looks correct to a visitor" pull in
+opposite directions.
+
+**Resolution:** the owner chose to correct it. The prototype renders **"Compliance
+requirements"**; the design says "Legal framework and authorities". What makes this
+correction safe where scenario 2.1's four suspected slips were not: the replacement is the
+selected topic's own label, already present in the frame, so nothing is invented — the
+risk that rule guards against does not arise here.
 
 **B15 — the report claims nine sections and delivers five.** See R1. Not corrected in
 either direction: the rail is verbatim, the body stops where the authored content stops.
