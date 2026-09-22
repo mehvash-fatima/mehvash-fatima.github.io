@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Microsoft Priva – Privacy management · Mehvash Fatima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -40,7 +40,7 @@
     --wash-1:    #C8B89A;
     --wash-2:    #E8D5B0;
     --wash-3:    #C8A870;
-    --serif:     'Playfair Display', Georgia, serif;
+    --hand:      'Reenie Beanie', 'Segoe Script', cursive;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
   }
@@ -263,10 +263,10 @@
   }
 
   .hero h1 {
-    font-family: var(--serif);
-    font-size: clamp(42px, 6vw, 78px);
+    font-family: var(--hand);
+    font-size: clamp(60px, 8.6vw, 112px);
     font-weight: 400;
-    line-height: 1.08;
+    line-height: 0.92;
     letter-spacing: -0.02em;
     color: var(--ink);
     margin-bottom: 32px;
@@ -368,8 +368,9 @@
   .toc-item-content { flex: 1; min-width: 0; }
 
   .toc-item-title {
-    font-family: var(--serif);
-    font-size: 18px;
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 500;
     color: var(--ink);
     transition: color 0.2s;
     display: block;
@@ -431,8 +432,8 @@
   }
 
   .cs-number {
-    font-family: var(--serif);
-    font-size: 72px;
+    font-family: var(--mono);
+    font-size: 56px;
     color: var(--numeral-display);
     line-height: 1;
     padding-top: 4px;
@@ -451,10 +452,10 @@
   }
 
   .cs-title {
-    font-family: var(--serif);
-    font-size: clamp(28px, 4vw, 48px);
+    font-family: var(--hand);
+    font-size: clamp(44px, 5.8vw, 70px);
     font-weight: 400;
-    line-height: 1.15;
+    line-height: 0.95;
     color: var(--ink);
     margin-bottom: 16px;
   }
@@ -659,8 +660,8 @@
   }
 
   .sidebar-value.large {
-    font-family: var(--serif);
-    font-size: 36px;
+    font-family: var(--mono);
+    font-size: 27px;
     color: var(--highlight);
     line-height: 1;
     margin-bottom: 6px;
@@ -919,9 +920,9 @@
   }
 
   .about-photo-caption {
-    font-family: var(--serif);
+    font-family: var(--mono);
     font-style: italic;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--ink);
     text-align: center;
     margin-top: 16px;
@@ -1012,8 +1013,8 @@
   }
 
   .cs-slide-overlay h3 {
-    font-family: var(--serif);
-    font-size: 21px;
+    font-family: var(--mono);
+    font-size: 17px;
     font-weight: 400;
     line-height: 1.25;
     color: var(--ink-strong);

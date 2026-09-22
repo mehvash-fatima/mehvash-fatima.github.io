@@ -5,9 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Copilot Privacy Manager — Interactive prototype · Mehvash Fatima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  /* Site chrome only. Everything inside #pp-root is styled by
+  /* This page deliberately sits out the site's display typography. The
+     prototype reproduces Microsoft Priva's own UI, so the canvas has to stay
+     on the product's type (--pp-font, Segoe UI) to remain faithful to the
+     Figma frames — and a hand-lettered page title above a pixel-accurate
+     product screenshot would fight it. Only DM Sans and DM Mono are loaded
+     here; neither Reenie Beanie nor the old Playfair is used.
+
+     Site chrome only. Everything inside #pp-root is styled by
      assets/prototype/prototype.css; the rules below are the nav, footer,
      skip link and page frame copied from case-study-02-copilot.html so this
      page sits inside the same site. */
@@ -23,7 +30,6 @@
     --accent:    #7D6428;
     --highlight: #5E4A1C;
     --tag-bg:    #F0EAE0;
-    --serif:     'Playfair Display', Georgia, serif;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
   }
