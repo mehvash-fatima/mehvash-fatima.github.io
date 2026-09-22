@@ -10,6 +10,9 @@
  *     --user-data-dir=/tmp/pp-chrome about:blank &
  *   node docs/superpowers/tools/walk-prototype.mjs <scenarioId> <beatCount>
  *
+ * It refuses to start if two browsers are sharing the debugging port — see
+ * the guard below for the failure that taught it to check.
+ *
  * What a passing walk looks like: exactly one spotlight before every click,
  * the step counter advancing by one each time, and a terminal state with no
  * spotlight and the completion panel shown.
@@ -18,6 +21,40 @@ const PORT = process.env.CDP_PORT || 9222;
 const URL_ = 'http://localhost:8000/prototype-copilot.html';
 
 const listTargets = async () => (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+
+/**
+ * Refuse to run when two browsers are sharing the debugging port.
+ *
+ * Learned the hard way: a headless Chrome left over from an earlier session
+ * was still holding 127.0.0.1:9222 while a freshly launched one bound
+ * [::1]:9222. Node resolves 127.0.0.1 to IPv4, so every walk silently drove
+ * the STALE browser while the new one sat idle. Those results happened to be
+ * valid — same host, same server, cache disabled — but nothing reported the
+ * collision, and it would NOT have been valid had the two been serving
+ * different working trees.
+ *
+ * Chrome does not report its --user-data-dir over /json/version, so the
+ * profile cannot be asserted directly. What it does expose is a per-browser
+ * GUID in webSocketDebuggerUrl: two different GUIDs answering on the two
+ * stacks of one port means two different browsers.
+ */
+const browserId = async host => {
+  try {
+    const res = await fetch(`http://${host}:${PORT}/json/version`, { signal: AbortSignal.timeout(2000) });
+    if (!res.ok) return null;
+    return (await res.json()).webSocketDebuggerUrl?.split('/').pop() || null;
+  } catch { return null; }          // nothing listening on this stack: fine
+};
+
+const [v4, v6] = await Promise.all([browserId('127.0.0.1'), browserId('[::1]')]);
+if (v4 && v6 && v4 !== v6) {
+  console.error(`Two different browsers are listening on port ${PORT}:`);
+  console.error(`  127.0.0.1 -> browser ${v4}   <- the one Node will actually use`);
+  console.error(`  [::1]     -> browser ${v6}`);
+  console.error('Almost certainly a headless Chrome left behind by an earlier');
+  console.error('session. Kill the stray one, or set CDP_PORT to a free port.');
+  process.exit(2);
+}
 
 const targets = await listTargets();
 const page = targets.find(t => t.type === 'page');
