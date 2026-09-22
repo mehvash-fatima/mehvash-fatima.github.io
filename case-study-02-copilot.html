@@ -451,44 +451,71 @@
     font-weight: 400;
   }
 
-  .cs-header-content {
+  .cs-header {
     position: relative;
-    padding: 30px 34px 34px;
+    /* Room for the slanted edges to run without touching the content, and a
+       bounded bleed past the text column so the shape reads as a torn sheet
+       laid under the page rather than a box drawn around it. .case-study
+       keeps 60px of side padding at every width, so this can never reach the
+       viewport edge. */
+    padding: 38px 40px 46px;
+    margin-left: calc(-1 * min(28px, 3.5vw));
+    margin-right: calc(-1 * min(28px, 3.5vw));
   }
 
-  /* Torn-paper wash behind the header, same device as the homepage hero.
-     It covers the content column only — the ghosted numeral sits outside it,
-     because --numeral-display lands under 3:1 on any of these tints and
-     dropping it onto the wash would have meant darkening it into something
-     that no longer reads as ghosted. */
-  .cs-header-content::before {
+  /* The project's wash — square at the top left, falling away hard to the right; the last tag runs off. Angular on purpose, like the homepage
+     hero, and each one cuts a different corner so the four read as
+     siblings rather than one shape recoloured. The taper crosses the tag
+     row: numeral, title and subtitle sit on the sheet, the end of the
+     tags does not. */
+  .cs-header::before {
     content: '';
     position: absolute;
+    inset: 0;
     z-index: 0;
-    top: 0;
-    bottom: 0;
-    /* Bounded bleed. .case-study keeps 60px of side padding at every width,
-       so 24px can never reach the viewport edge and start a scrollbar. */
-    left: calc(-1 * min(24px, 3vw));
-    right: calc(-1 * min(24px, 3vw));
     background: var(--cs-wash);
-    /* Vertical offsets in px, not %. As percentages the warp scales with the
-       block's height — harmless at 260px on a desktop header, but the same
-       shape on a phone, where the block runs past 1400px tall, leaned like a
-       parallelogram. Pinned in px it stays the same torn edge at any height. */
-    clip-path: polygon(1.6% 0%, 100% 12px, 98% 100%, 0% calc(100% - 15px));
+    clip-path: polygon(0% 0%, 99% 5%, 68% 100%, 4% 92%);
   }
 
-  .cs-header-content > * {
+  /* These proportions are tuned to a wide, short header. On a phone the block
+     runs past 700px tall and the same percentages rake it into a
+     parallelogram, so it flattens to a subtle torn edge and nothing spills —
+     on a single narrow column, content running off the sheet just reads as
+     broken. */
+  @media (max-width: 860px) {
+    .cs-header {
+      padding: 28px 24px 32px;
+    }
+
+    /* The mobile eyebrow is inside .cs-header, so it is on the sheet now too
+       and needs the same treatment its desktop twin got — --accent reads
+       3.4:1 on the mid tint at 11px. */
+    .cs-eyebrow-mobile {
+      color: var(--highlight);
+    }
+
+    .cs-header::before {
+      clip-path: polygon(0% 0%, 100% 2%, 98% 100%, 1% 97%);
+    }
+  }
+
+  .cs-header > * {
     position: relative;
     z-index: 1;
   }
 
-  /* --accent drops to 3.9:1 or worse on these tints; --highlight holds 5.3:1
-     at the darkest. The mobile eyebrow sits outside the wash and keeps
-     --accent. */
+  /* --accent reads 3.9:1 on the mid tint and 2.8:1 on the darkest;
+     --highlight holds 5.3:1 at the worst of them. The mobile eyebrow sits
+     outside the shape and keeps --accent. */
   .cs-header-content .cs-eyebrow {
     color: var(--highlight);
+  }
+
+  /* The numeral is on the sheet now. --numeral-display drops to 2.2:1 on the
+     darkest tint; --numeral clears the 3:1 bar for 56px text on all four,
+     though only by 0.09 at #D9CCB2 — worth re-measuring if the tints move. */
+  .cs-header .cs-number {
+    color: var(--numeral);
   }
 
   .cs-eyebrow {
