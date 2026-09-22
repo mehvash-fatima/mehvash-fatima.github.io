@@ -12,7 +12,7 @@
  * Nothing re-derives that from the view names; the scenario declares it.
  */
 import { SCENARIOS, CONTENT } from './scenarios.js';
-import { initialState, applyBeat, stateAt } from './engine.js';
+import { initialState, applyBeat } from './engine.js';
 import { render, HOTSPOTS } from './shell.js';
 
 /**
@@ -218,10 +218,6 @@ export function mount(root) {
     }
     const complete = el('pp-complete');
     if (complete) complete.hidden = Boolean(beat);
-    const prev = el('pp-prev');
-    if (prev) prev.disabled = state.beatIndex < 0;
-    const next = el('pp-next');
-    if (next) next.disabled = !beat;
   };
 
   /* --- draw -------------------------------------------------------- */
@@ -393,14 +389,6 @@ export function mount(root) {
     runBeat(beat);
   };
 
-  const back = () => {
-    cancel();
-    if (state.beatIndex < 0) return;
-    state = stateAt(scenario, CONTENT, state.beatIndex - 1);
-    draw();
-    bumpIdle();
-  };
-
   const reset = () => {
     cancel();
     state = initialState(scenario);
@@ -461,8 +449,6 @@ export function mount(root) {
     const node = el(id);
     if (node) node.addEventListener('click', handler);
   };
-  bind('pp-next', advance);
-  bind('pp-prev', back);
   bind('pp-reset', () => { reset(); bumpIdle(); });
   bind('pp-restart', () => { reset(); bumpIdle(); });
 

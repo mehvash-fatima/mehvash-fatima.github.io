@@ -176,19 +176,20 @@
   margin-right: auto;
 }
 
-.pp-controls button,
+/* Scenario tabs. Sized down from the body scale: there are four of them
+   carrying long labels, and they are a picker rather than the thing you came
+   to press. */
 .pp-tabs button {
   font: inherit;
-  font-size: var(--pp-text-base);
-  padding: var(--pp-space-2) var(--pp-space-4);
+  font-size: var(--pp-text-sm);
+  padding: var(--pp-space-1) var(--pp-space-3);
   border: 1px solid var(--pp-border);
   border-radius: var(--pp-radius-sm);
   background: var(--pp-surface);
-  color: var(--pp-ink);
+  color: var(--pp-ink-2);
   cursor: pointer;
 }
 
-.pp-controls button:hover,
 .pp-tabs button:hover { background: var(--pp-surface-sunk); }
 
 .pp-tabs button[aria-selected='true'] {
@@ -197,10 +198,43 @@
   color: var(--pp-surface);
 }
 
+/* Step counter and Reset travel together on the right, reading as one
+   status-and-action pair rather than as two more buttons in the row. */
 .pp-controls .pp-step {
   font-size: var(--pp-text-sm);
   color: var(--pp-ink-3);
-  margin: 0;
+  margin: 0 var(--pp-space-1) 0 0;
+}
+
+/* Reset is the only control here that DOES something to the demo, so it is
+   shaped unlike the tabs on purpose: a pill rather than a rectangle, drawn in
+   the spotlight's gold rather than the tabs' neutral grey. It is not filled —
+   the selected tab already owns the one solid accent block in this row, and
+   two of them would compete. */
+.pp-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font: inherit;
+  font-size: var(--pp-text-sm);
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border: 1px solid var(--pp-spot);
+  border-radius: var(--pp-radius-pill);
+  background: transparent;
+  color: var(--pp-spot);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pp-reset svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.pp-reset:hover {
+  background: var(--pp-spot);
+  color: var(--pp-spot-ink);
 }
 
 .pp-viewport {
@@ -3073,12 +3107,17 @@ button.pp-toc-item.is-inert { cursor: default; }
 
   .pp-tabs button { flex: 1 1 100%; text-align: left; }
 
-  .pp-controls button,
   .pp-tabs button,
+  .pp-reset,
   .pp-complete button,
   .pp-filter-pill { min-height: 44px; }
 
-  .pp-controls .pp-step { width: 100%; }
+  .pp-reset { flex: none; }
+
+  /* Step and Reset share the row under the stacked tabs, so the pair stays a
+     pair. `flex: 1` on the counter pushes Reset to the far edge without
+     needing a margin to do it. */
+  .pp-controls .pp-step { flex: 1; }
 
   /* --- Release the fixed pixel widths -------------------------------
      These are drawn against a 1920px canvas. Unscaled on a phone each one
