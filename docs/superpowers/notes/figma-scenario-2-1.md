@@ -482,3 +482,21 @@ No other copy in this scenario depends on an unresolved location path.
 | "Edit 1" Outlook desktop screenshot (3840×2160 PNG) | 7 | Declined — 1.7 MB raster of an unrelated mailbox; compose window rebuilt in CSS on a neutral backdrop |
 | "Email 1" email-body screenshot (2076×2742 PNG) | 7 | Declined — fully legible plain text/table; rebuilt in CSS so the copy stays editable |
 | Copilot mark, Priva mark | all | Reused from scenario 1 (`assets/5135989b34f7.svg`, `assets/5abed2089d2b.svg`) |
+
+---
+
+## B6 — resolved (2026-09-22)
+
+Implemented. `mount.js` now draws both latency patterns, choosing by where the pause
+happens rather than by a flag in the data: a pause while the Copilot dialog is open
+gets the small in-pane card ("OK..." + progress bar + "Stop generating", Frame 5);
+everything else gets the full-page "Generating response..." card (Frame 2). Since it is
+read off the settled view, no beat can select the wrong one.
+
+Implementing it exposed a defect that had been live since this scenario shipped: the
+pause was not holding anything back inside the dialog. `thinkFor` hides the newest chat
+turn with `held.hidden = true`, but the UA's `[hidden] { display: none }` is a bare
+attribute selector and `.pp-bubble-assistant { display: flex }` outranks it — so the
+answer appeared instantly, in full, above its own latency card. Obvious in a screenshot
+of that moment; invisible to every test. Fixed with a canvas-scoped `.pp-canvas [hidden]`
+rule that wins on specificity.

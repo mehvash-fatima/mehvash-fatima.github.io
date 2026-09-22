@@ -14,11 +14,17 @@ across data governance, privacy, and AI-powered security tooling.
 ├── case-study-02-copilot.html    # AI-Powered Privacy Manager
 ├── case-study-03-priva.html      # Microsoft Priva – Privacy Management
 ├── case-study-04-babylon.html    # Project Babylon — Azure Purview
-└── assets/                       # Image files referenced by the pages
+├── prototype-copilot.html        # Interactive prototype for case study 02
+├── assets/
+│   ├── prototype/                # The prototype's modules, CSS and tests
+│   └── …                         # Image files referenced by the pages
+└── docs/superpowers/             # Design notes, plan and Figma inventories
 ```
 
 Each page is self-contained HTML with its CSS and JavaScript inlined — no build
-step, no framework, no dependencies beyond Google Fonts (loaded via CDN).
+step, no framework, no dependencies beyond Google Fonts (loaded via CDN). The
+one exception is the prototype, which is ES modules in `assets/prototype/`;
+see below.
 
 ## Images
 
@@ -42,8 +48,58 @@ python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
-Opening the `.html` files directly via `file://` also works, but a local server
-matches how GitHub Pages serves the site (root-relative paths, correct MIME types).
+Opening the `.html` files directly via `file://` also works for the case study
+pages, but a local server matches how GitHub Pages serves the site (root-relative
+paths, correct MIME types).
+
+**`prototype-copilot.html` is the exception: it must be served over HTTP.** It
+loads `assets/prototype/mount.js` as an ES module, and browsers refuse module
+imports from `file://` under the same-origin policy — the page will render its
+heading and then stay blank, with a CORS error in the console. Use the server
+above.
+
+## The interactive prototype
+
+`prototype-copilot.html` replays four Copilot Privacy Manager scenarios, rebuilt
+in code from the original Figma frames. A visitor advances by clicking whichever
+control is ringed in gold; everything else on screen is deliberately inert.
+
+It is built as data, not as pages:
+
+```
+assets/prototype/
+├── scenarios.js   the demo scripts — data only, no imports, no DOM
+├── engine.js      pure: applyBeat(state, beat, content) -> settled state
+├── shell.js       render(state) -> DOM, plus the hotspot registries
+├── mount.js       the only module that touches `document` — timers, animation
+├── engine.test.js
+└── scenarios.test.js   validates the scripts against the shell
+```
+
+Editing the demo means editing `scenarios.js`. The tests check the hand-authored
+scripts mechanically: that every spotlight resolves to a hotspot the shell renders
+*in the view that beat runs in*, that content keys resolve and none is orphaned,
+that every scenario folds start to finish, and that emphasis phrases occur exactly
+once in their own text.
+
+### Tests
+
+```bash
+node --test
+```
+
+Run it from the repository root and **pass no path**. `node --test assets/prototype/`
+runs zero tests on Node 24 while still reporting success — the suite is found by
+its `*.test.js` naming, not by directory.
+
+### What the tests cannot see
+
+The suite validates data. It has nothing to say about layout, contrast, focus
+order, or whether a card is clipped — every visual defect found while building
+this came from driving a real browser and comparing against the Figma frame.
+`docs/superpowers/tools/walk-prototype.mjs` walks a scenario in headless Chrome
+over CDP (no dependencies) and reports the settled state after each beat; its
+header has the usage. Screenshot and compare for anything it cannot assert.
 
 ## Deploying
 
