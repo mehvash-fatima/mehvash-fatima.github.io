@@ -1,0 +1,3179 @@
+/* =====================================================================
+   Copilot Privacy Manager prototype — desktop stylesheet.
+
+   Every colour, radius and type size below is taken from the Figma
+   source (file TlIT2Cy6DqGvN9kiODC9dz) via the design-context dumps
+   behind docs/superpowers/notes/figma-scenario-1.md. The Fluent token
+   name each value carries in that file is noted beside it so a later
+   session can trace it back.
+
+   Nothing below this token block uses a colour literal.
+   Desktop only — the mobile reflow is a later task.
+   ===================================================================== */
+
+:root {
+  /* --- Surfaces -------------------------------------------------- */
+  --pp-bg:            #f5f5f5;   /* NeutralBackground3 — behind the page card */
+  --pp-surface:       #ffffff;   /* NeutralBackground1 — page + card fill     */
+  --pp-surface-alt:   #fafafa;   /* NeutralBackground2 — chat pane, toc rail  */
+  --pp-surface-sunk:  #f0f0f0;   /* NeutralBackground4 — browser chrome       */
+  --pp-surface-sel:   #e6e6e6;   /* NeutralBackground2.Selected               */
+
+  /* --- Ink ------------------------------------------------------- */
+  --pp-ink:           #242424;   /* NeutralForeground1 */
+  --pp-ink-2:         #424242;   /* NeutralForeground2 */
+  --pp-ink-3:         #616161;   /* NeutralForeground3 */
+  --pp-ink-4:         #707070;   /* NeutralForeground4 */
+
+  /* --- Strokes --------------------------------------------------- */
+  --pp-border:        #d1d1d1;   /* NeutralStroke1 */
+  --pp-border-subtle: #e0e0e0;   /* NeutralStroke2 */
+  --pp-border-strong: #bdbdbd;
+
+  /* --- Brand ----------------------------------------------------- */
+  --pp-accent:        #004e8c;   /* primary button fill in the Figma buttons  */
+  --pp-accent-hover:  #316baa;   /* BrandBackground.Rest / NeutralFg2.BrandHover */
+  --pp-link:          #1b5b9a;   /* BrandForegroundLink / BrandForeground2    */
+  --pp-brand-bg:      #ebf3fc;   /* BrandBackground2 */
+  --pp-brand-bg-2:    #e3effd;   /* BrandBackground2.Rest — email preview */
+  --pp-brand-stroke:  #b4d6fa;   /* BrandStroke2     */
+  --pp-header:        #00467e;   /* Global.Color.RoyalBlue.Shade10 — suite bar */
+
+  /* --- Microsoft brand mark (the four favicon squares) ----------- */
+  --pp-ms-red:        #f25022;
+  --pp-ms-green:      #80ba01;
+  --pp-ms-blue:       #02a4ef;
+  --pp-ms-yellow:     #ffb902;
+
+  /* --- Status ---------------------------------------------------- */
+  --pp-success:       #0e700e;   /* SuccessForeground1 — Approved         */
+  --pp-success-bg:    #edf6ed;
+  --pp-danger:        #bc2f32;   /* required-field asterisk; Failed / N/A */
+  /* In progress / Active / Reopened / Completed reuse --pp-accent-hover
+     and Not started reuses --pp-ink-4: read off the Fluent status SVGs in
+     scenario 2.1's frames, where both already matched existing tokens. */
+
+  /* --- Chart wedges (scenario 2.1 Frame 1:67165's uncategorized-tracker
+         pie). Four flat fills, straight off the four slice SVGs. -------- */
+  --pp-chart-1:       #637cef;
+  --pp-chart-2:       #e3008c;
+  --pp-chart-3:       #2aa0a4;
+  --pp-chart-4:       #9373c0;
+
+  /* --- Scenario 2.2's Teams output card (Frame 1:67457). Fluent
+         status/generic/cornflower/background/2/rest, straight off the
+         card's fill. ------------------------------------------------- */
+  --pp-cornflower-bg: #c8d1fa;
+
+  /* --- The AI affordance ----------------------------------------
+     The Copilot-suggested field fill, verbatim from the Figma:
+     a cyan→indigo wash at 10% over white.                          */
+  --pp-ai:            linear-gradient(145deg, rgba(58, 192, 223, 0.1) 0%, rgba(114, 121, 248, 0.1) 100%);
+  --pp-ai-solid:      #7279f8;
+  --pp-ai-stroke:     var(--pp-brand-stroke);
+
+  /* --- Guidance layer (this prototype's own, not Microsoft's) ----
+     Borrowed from the portfolio's accent so the "click here" ring
+     reads as the case study speaking, never as product chrome.     */
+  --pp-spot:          #7d6428;
+  --pp-spot-glow:     rgba(125, 100, 40, 0.18);
+  --pp-spot-ink:      #ffffff;
+
+  /* --- Washes and overlays --------------------------------------
+     The two ends of the Copilot gradient as opaque stops (the progress
+     bar), the decorative "Bento" wash behind the home suggestion cards,
+     and the two neutral overlays.                                    */
+  --pp-ai-from:       rgb(58, 192, 223);
+  --pp-ai-to:         rgb(114, 121, 248);
+  --pp-bento-rose:    rgba(233, 176, 200, 0.45);
+  --pp-bento-indigo:  rgba(168, 176, 238, 0.42);
+  --pp-bento-amber:   rgba(240, 196, 140, 0.4);
+  --pp-bento-fade:    rgba(233, 176, 200, 0);
+  --pp-on-header-bg:  rgba(255, 255, 255, 0.18);
+  --pp-on-header-stroke: rgba(255, 255, 255, 0.5);
+  --pp-scrim:         rgba(0, 0, 0, 0.32);
+
+  /* --- Radii ----------------------------------------------------- */
+  --pp-radius-xs:     2px;
+  --pp-radius-sm:     4px;   /* buttons, inputs — the Figma's button radius */
+  --pp-radius-md:     6px;
+  --pp-radius-lg:     8px;   /* cards, page surface */
+  --pp-radius-xl:     12px;  /* dialog, bento */
+  --pp-radius-pill:   999px;
+
+  /* --- Spacing --------------------------------------------------- */
+  --pp-space-1:       4px;
+  --pp-space-2:       8px;
+  --pp-space-3:       12px;
+  --pp-space-4:       16px;
+  --pp-space-5:       20px;
+  --pp-space-6:       24px;
+  --pp-space-7:       32px;
+  --pp-space-8:       40px;
+  --pp-space-9:       56px;
+
+  /* --- Type ------------------------------------------------------ */
+  --pp-font:          'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --pp-text-xs:       10px;
+  --pp-text-sm:       12px;
+  --pp-text-base:     14px;
+  --pp-text-md:       16px;
+  --pp-text-lg:       20px;
+  --pp-text-xl:       28px;
+  --pp-leading-tight: 1.35;
+  --pp-leading:       1.45;
+  --pp-leading-loose: 1.6;
+  --pp-weight-regular: 400;
+  --pp-weight-semibold: 600;
+  --pp-weight-bold:   700;
+
+  /* --- Elevation ------------------------------------------------- */
+  --pp-shadow-card:   0 1px 2px rgba(0, 0, 0, 0.14), 0 0 2px rgba(0, 0, 0, 0.12);
+  --pp-shadow-raised: 0 4px 8px rgba(0, 0, 0, 0.14), 0 0 2px rgba(0, 0, 0, 0.12);
+  --pp-shadow-dialog: 0 32px 64px rgba(0, 0, 0, 0.22), 0 0 8px rgba(0, 0, 0, 0.18);
+
+  /* --- Canvas geometry ------------------------------------------- */
+  --pp-hero-top:      145px;  /* hero-to-page-card gap = 18.7% of canvas height */
+  --pp-chrome-tabs:   44px;
+  --pp-chrome-bar:    36px;
+  --pp-suite-h:       48px;
+}
+
+/* =====================================================================
+   Host page furniture (the markup the mount task puts around the canvas)
+   ===================================================================== */
+
+.pp-intro,
+.pp-controls {
+  font-family: var(--pp-font);
+  color: var(--pp-ink);
+}
+
+.pp-eyebrow {
+  font-size: var(--pp-text-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pp-ink-3);
+  margin-bottom: var(--pp-space-2);
+}
+
+.pp-lede {
+  color: var(--pp-ink-2);
+  max-width: 60ch;
+}
+
+.pp-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  flex-wrap: wrap;
+  margin: var(--pp-space-6) 0 var(--pp-space-4);
+}
+
+.pp-tabs {
+  display: flex;
+  gap: var(--pp-space-2);
+  margin-right: auto;
+}
+
+.pp-controls button,
+.pp-tabs button {
+  font: inherit;
+  font-size: var(--pp-text-base);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  color: var(--pp-ink);
+  cursor: pointer;
+}
+
+.pp-controls button:hover,
+.pp-tabs button:hover { background: var(--pp-surface-sunk); }
+
+.pp-tabs button[aria-selected='true'] {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+  color: var(--pp-surface);
+}
+
+.pp-controls .pp-step {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+  margin: 0;
+}
+
+.pp-viewport {
+  overflow: hidden;
+  background: var(--pp-bg);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg);
+  /* The canvas is a fixed 1920px box scaled by a transform. Centring it as a
+     flex item puts its transform-origin (top center) on the viewport's own
+     centre line, so the scaled result lands flush inside — no horizontal
+     scrollbar at any window width. */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* The completion state. The scenario's last frame is terminal by design, so
+   the page says so and offers the way back rather than going dead. */
+.pp-complete {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  margin: 0 0 var(--pp-space-4);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  border: 1px solid var(--pp-border);
+  border-left: 3px solid var(--pp-spot);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  font-family: var(--pp-font);
+  color: var(--pp-ink);
+}
+
+.pp-complete[hidden] { display: none; }
+
+.pp-complete-text {
+  margin: 0;
+  font-size: var(--pp-text-base);
+}
+
+.pp-complete button {
+  font: inherit;
+  font-size: var(--pp-text-base);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border: 1px solid var(--pp-accent);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-accent);
+  color: var(--pp-surface);
+  cursor: pointer;
+}
+
+.pp-controls button[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* =====================================================================
+   Canvas — the design's true size; a transform scales it to fit.
+   ===================================================================== */
+
+.pp-canvas {
+  flex: 0 0 auto;
+  width: 1920px;
+  height: 1080px;
+  transform: scale(var(--pp-scale, 1));
+  transform-origin: top center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--pp-bg);
+  font-family: var(--pp-font);
+  font-size: var(--pp-text-base);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.pp-canvas *,
+.pp-canvas *::before,
+.pp-canvas *::after { box-sizing: border-box; }
+
+.pp-canvas p,
+.pp-canvas h1,
+.pp-canvas h2,
+.pp-canvas h3,
+.pp-canvas ul,
+.pp-canvas ol,
+.pp-canvas li { margin: 0; padding: 0; }
+
+.pp-canvas ul,
+.pp-canvas ol { list-style: none; }
+
+/* The UA's `[hidden] { display: none }` is a bare attribute selector, so any
+   class rule setting `display` beats it. `.pp-bubble-assistant` does exactly
+   that — which meant `thinkFor` setting `held.hidden = true` silently failed
+   and the answer stayed on screen through its own latency card. Scoped to the
+   canvas and specific enough to win without !important. */
+.pp-canvas [hidden] { display: none; }
+
+.pp-glyph { flex: none; display: block; }
+
+.pp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =====================================================================
+   Browser chrome
+   ===================================================================== */
+
+.pp-browser {
+  flex: none;
+  background: var(--pp-surface-sunk);
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-browser-tabs {
+  height: var(--pp-chrome-tabs);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--pp-space-2);
+  padding: 0 var(--pp-space-3) 0 var(--pp-space-2);
+}
+
+.pp-browser-collections {
+  width: 22px;
+  height: 22px;
+  margin-bottom: var(--pp-space-2);
+  border: 1.5px solid var(--pp-ink-4);
+  border-radius: var(--pp-radius-xs);
+}
+
+.pp-browser-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  height: 34px;
+  min-width: 240px;
+  padding: 0 var(--pp-space-3);
+  background: var(--pp-surface);
+  border-radius: var(--pp-radius-md) var(--pp-radius-md) 0 0;
+}
+
+.pp-browser-tab-title {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink);
+  white-space: nowrap;
+}
+
+/* Microsoft favicon — four flat squares, drawn not exported. */
+.pp-favicon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  background:
+    linear-gradient(to right, var(--pp-ms-red) 0 46%, transparent 46% 54%, var(--pp-ms-green) 54% 100%) top / 100% 46% no-repeat,
+    linear-gradient(to right, var(--pp-ms-blue) 0 46%, transparent 46% 54%, var(--pp-ms-yellow) 54% 100%) bottom / 100% 46% no-repeat;
+}
+
+.pp-browser-newtab {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink-3);
+  margin-bottom: var(--pp-space-2);
+}
+
+.pp-window-controls {
+  margin-left: auto;
+  margin-bottom: var(--pp-space-3);
+  width: 92px;
+  height: 10px;
+  background:
+    linear-gradient(var(--pp-ink-3), var(--pp-ink-3)) 8px 50% / 11px 1px no-repeat,
+    linear-gradient(var(--pp-ink-3), var(--pp-ink-3)) 42px 50% / 10px 10px no-repeat,
+    linear-gradient(var(--pp-ink-3), var(--pp-ink-3)) 76px 50% / 11px 1px no-repeat;
+}
+
+.pp-browser-bar {
+  height: var(--pp-chrome-bar);
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: 0 var(--pp-space-4);
+}
+
+.pp-browser-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+  color: var(--pp-ink-3);
+}
+
+.pp-address {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  height: 26px;
+  padding: 0 var(--pp-space-3);
+  background: var(--pp-surface);
+  border-radius: var(--pp-radius-pill);
+  color: var(--pp-ink-4);
+}
+
+.pp-address-url {
+  font-size: var(--pp-text-sm);
+  letter-spacing: 0.01em;
+}
+
+.pp-address-dim  { color: var(--pp-ink-4); }
+.pp-address-host { color: var(--pp-ink); }
+
+.pp-browser-actions {
+  width: 150px;
+  height: 14px;
+  background:
+    radial-gradient(circle 2px at 10px 50%, var(--pp-border-strong) 99%, transparent) no-repeat,
+    radial-gradient(circle 2px at 42px 50%, var(--pp-border-strong) 99%, transparent) no-repeat,
+    radial-gradient(circle 2px at 74px 50%, var(--pp-border-strong) 99%, transparent) no-repeat,
+    radial-gradient(circle 2px at 106px 50%, var(--pp-border-strong) 99%, transparent) no-repeat,
+    radial-gradient(circle 2px at 138px 50%, var(--pp-border-strong) 99%, transparent) no-repeat;
+}
+
+/* =====================================================================
+   Priva suite header
+   ===================================================================== */
+
+.pp-suite {
+  flex: none;
+  height: var(--pp-suite-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pp-space-5) 0 var(--pp-space-3);
+  background: var(--pp-header);
+  color: var(--pp-surface);
+}
+
+.pp-suite-left,
+.pp-suite-right {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+}
+
+.pp-suite-right { gap: var(--pp-space-5); }
+
+.pp-suite-title {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-suite-icon {
+  color: var(--pp-surface);
+  background: none;
+  border: 0;
+  padding: var(--pp-space-1);
+  display: flex;
+}
+
+.pp-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--pp-radius-pill);
+  background: radial-gradient(circle at 50% 34%, var(--pp-surface-sel) 0 32%, transparent 33%),
+              radial-gradient(ellipse 60% 44% at 50% 104%, var(--pp-surface-sel) 0 70%, transparent 71%),
+              var(--pp-accent-hover);
+  border: 2px solid var(--pp-header);
+  box-shadow: 0 0 0 1px var(--pp-accent-hover);
+}
+
+/* =====================================================================
+   Shared primitives
+   ===================================================================== */
+
+.pp-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 var(--pp-space-2);
+  border-radius: var(--pp-radius-pill);
+  font-size: var(--pp-text-xs);
+  font-weight: var(--pp-weight-semibold);
+  letter-spacing: 0.02em;
+}
+
+.pp-pill-preview {
+  background: var(--pp-on-header-bg);
+  border: 1px solid var(--pp-on-header-stroke);
+  color: inherit;
+}
+
+.pp-dialog-brand .pp-pill-preview {
+  background: var(--pp-surface-sunk);
+  border-color: var(--pp-border);
+  color: var(--pp-ink-3);
+  font-weight: var(--pp-weight-regular);
+}
+
+.pp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pp-space-2);
+  min-height: 30px;
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  border: 1px solid var(--pp-border);
+  background: var(--pp-surface);
+  color: var(--pp-ink);
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  line-height: var(--pp-leading-tight);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pp-button-secondary:hover { background: var(--pp-surface-sunk); }
+
+.pp-button-primary {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+  color: var(--pp-surface);
+}
+
+.pp-button-primary:hover { background: var(--pp-accent-hover); border-color: var(--pp-accent-hover); }
+
+.pp-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pp-radius-sm);
+  background: none;
+  color: var(--pp-ink-3);
+  cursor: default;
+}
+
+.pp-icon-button-lg { width: 32px; height: 32px; color: var(--pp-ink-2); }
+
+.pp-link-button,
+.pp-link-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  color: var(--pp-link);
+  cursor: default;
+}
+
+.pp-link-inline {
+  gap: var(--pp-space-1);
+  vertical-align: baseline;
+}
+
+.pp-backrow .pp-link-button { color: var(--pp-ink); }
+
+/* Inert affordances: present and legible, but never armed by the flow. */
+.is-inert { cursor: default; }
+
+.pp-disclaimer {
+  font-size: var(--pp-text-sm);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink-4);
+  max-width: 62ch;
+}
+
+.pp-disclaimer-tight { font-size: var(--pp-text-sm); }
+
+.pp-paragraph + .pp-paragraph,
+.pp-bullets + .pp-paragraph,
+.pp-paragraph + .pp-bullets { margin-top: var(--pp-space-4); }
+
+.pp-bullets li {
+  position: relative;
+  padding-left: var(--pp-space-5);
+  margin-bottom: var(--pp-space-1);
+}
+
+.pp-bullets li::before {
+  content: '';
+  position: absolute;
+  left: var(--pp-space-2);
+  top: 0.65em;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-ink-2);
+}
+
+.pp-copilot-mark { display: block; flex: none; }
+.pp-copilot-mark-sm { width: 20px; height: 20px; }
+.pp-copilot-mark-md { width: 28px; height: 28px; }
+
+/* =====================================================================
+   Stage + page surface
+   ===================================================================== */
+
+.pp-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: var(--pp-space-3) var(--pp-space-4) 0;
+}
+
+.pp-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg) var(--pp-radius-lg) 0 0;
+  overflow: hidden;
+}
+
+.pp-backrow {
+  flex: none;
+  padding: var(--pp-space-5) var(--pp-space-6) 0;
+}
+
+/* =====================================================================
+   View: home
+   ===================================================================== */
+
+.pp-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--pp-hero-top) var(--pp-space-6) var(--pp-space-6);
+}
+
+.pp-hero-title {
+  font-size: var(--pp-text-xl);
+  font-weight: var(--pp-weight-semibold);
+  line-height: var(--pp-leading-tight);
+  color: var(--pp-ink);
+}
+
+.pp-hero-sub {
+  margin-top: var(--pp-space-3);
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+  text-align: center;
+}
+
+.pp-prompt-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  width: 620px;
+  margin-top: var(--pp-space-6);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-card);
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  text-align: left;
+  color: var(--pp-ink);
+  cursor: pointer;
+}
+
+.pp-prompt-bar:hover { border-color: var(--pp-accent-hover); }
+
+.pp-prompt-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pp-prompt-text.is-placeholder { color: var(--pp-ink-4); }
+
+.pp-prompt-bar .pp-glyph { color: var(--pp-link); }
+
+/* The decorative "Bento" wash behind the suggestion cards. */
+.pp-bento {
+  display: grid;
+  grid-template-columns: repeat(6, 132px);
+  gap: var(--pp-space-4);
+  width: 940px;
+  margin-top: var(--pp-space-8);
+  padding: var(--pp-space-7);
+  border-radius: var(--pp-radius-xl);
+  background:
+    radial-gradient(70% 90% at 8% 14%, var(--pp-bento-rose) 0%, var(--pp-bento-fade) 68%),
+    radial-gradient(70% 90% at 94% 10%, var(--pp-bento-indigo) 0%, var(--pp-bento-fade) 68%),
+    radial-gradient(80% 100% at 46% 110%, var(--pp-bento-amber) 0%, var(--pp-bento-fade) 70%),
+    var(--pp-surface-alt);
+}
+
+.pp-suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-4);
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-suggestion:nth-child(1) { grid-column: span 3; }
+.pp-suggestion:nth-child(2) { grid-column: span 3; }
+.pp-suggestion:nth-child(3),
+.pp-suggestion:nth-child(4),
+.pp-suggestion:nth-child(5) { grid-column: span 2; }
+
+.pp-suggestion-category {
+  font-size: var(--pp-text-base);
+  color: var(--pp-link);
+}
+
+.pp-suggestion-text {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+  line-height: var(--pp-leading);
+}
+
+.pp-page-home .pp-disclaimer {
+  margin-top: var(--pp-space-4);
+  text-align: center;
+}
+
+/* =====================================================================
+   View: answer
+   ===================================================================== */
+
+.pp-page-header {
+  flex: none;
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-page-header-main {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-2) var(--pp-space-6) var(--pp-space-5);
+}
+
+.pp-page-title {
+  font-size: var(--pp-text-xl);
+  font-weight: var(--pp-weight-regular);
+  line-height: var(--pp-leading-tight);
+}
+
+.pp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  justify-self: center;
+}
+
+.pp-breadcrumb-text {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink);
+}
+
+.pp-page-header-trailing {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+}
+
+.pp-columns {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 317px;
+  gap: var(--pp-space-7);
+  padding: var(--pp-space-6);
+  overflow: hidden;
+}
+
+/* --- Table of contents ------------------------------------------- */
+
+.pp-toc {
+  border-right: 1px solid var(--pp-border-subtle);
+  padding-right: var(--pp-space-5);
+}
+
+.pp-toc-heading {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+  margin-bottom: var(--pp-space-4);
+}
+
+.pp-toc-list { display: flex; flex-direction: column; gap: var(--pp-space-1); }
+
+.pp-toc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  border-left: 3px solid transparent;
+  color: var(--pp-ink-2);
+}
+
+.pp-toc-item .pp-glyph { color: var(--pp-ink-4); }
+
+.pp-toc-item.is-selected {
+  background: var(--pp-surface-sunk);
+  border-left-color: var(--pp-accent);
+  color: var(--pp-ink);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-toc-item.is-add { color: var(--pp-link); }
+
+/* --- Answer body -------------------------------------------------- */
+
+.pp-chat,
+.pp-answer-region {
+  min-width: 0;
+  overflow: hidden;
+  padding-right: var(--pp-space-3);
+}
+
+.pp-answer + .pp-answer { margin-top: var(--pp-space-7); }
+
+.pp-answer-heading {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  margin-bottom: var(--pp-space-3);
+}
+
+.pp-prompt-row {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  margin-bottom: var(--pp-space-5);
+  color: var(--pp-ink-2);
+}
+
+.pp-prompt-row > .pp-glyph { color: var(--pp-ai-solid); }
+
+.pp-prompt-row-text { font-size: var(--pp-text-base); }
+
+.pp-sources { margin-bottom: var(--pp-space-5); }
+
+.pp-sources-label {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+  margin-bottom: var(--pp-space-2);
+}
+
+.pp-citations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pp-space-2);
+}
+
+.pp-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-citation-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 var(--pp-space-1);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-xs);
+  font-size: var(--pp-text-xs);
+  color: var(--pp-ink-3);
+}
+
+.pp-citation .pp-glyph { color: var(--pp-ink-3); }
+
+.pp-answer-body {
+  font-size: var(--pp-text-md);
+  line-height: var(--pp-leading-loose);
+  color: var(--pp-ink);
+  max-width: 78ch;
+}
+
+/* --- Suggested actions column ------------------------------------- */
+
+.pp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+}
+
+.pp-actions-label {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+}
+
+.pp-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-5);
+  background-color: var(--pp-surface);
+  background-image: var(--pp-ai);
+  border-radius: var(--pp-radius-lg);
+}
+
+.pp-action-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  color: var(--pp-link);
+}
+
+.pp-action-card-title {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-action-card-body {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+  line-height: var(--pp-leading);
+}
+
+.pp-action-card-buttons {
+  display: flex;
+  gap: var(--pp-space-2);
+  flex-wrap: wrap;
+}
+
+.pp-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-success-bg);
+  border: 1px solid var(--pp-success);
+  color: var(--pp-success);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-solution-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: var(--pp-space-1);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-accent);
+  color: var(--pp-surface);
+}
+
+/* --- Answer footer ------------------------------------------------ */
+
+.pp-answer-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pp-space-3) var(--pp-space-6);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-answer-footer .pp-link-button { color: var(--pp-ink-2); }
+
+.pp-feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-feedback-label {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+/* =====================================================================
+   Dialog (frames 4-8)
+   ===================================================================== */
+
+.pp-page-answer.is-backdrop { filter: saturate(0.9); }
+
+.pp-scrim {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pp-scrim);
+}
+
+.pp-dialog {
+  width: 1368px;
+  height: 836px;
+  display: flex;
+  flex-direction: column;
+  background: var(--pp-surface);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-dialog);
+  overflow: hidden;
+}
+
+.pp-dialog-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-4) var(--pp-space-4) var(--pp-space-4) var(--pp-space-5);
+}
+
+.pp-dialog-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-dialog-title {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-dialog-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+}
+
+.pp-dialog-actions .pp-link-button { color: var(--pp-ink); }
+
+.pp-dialog-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--pp-space-5);
+  padding: 0 var(--pp-space-5) var(--pp-space-5);
+}
+
+/* --- Chat pane ---------------------------------------------------- */
+
+.pp-chat-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pp-chat-pane .pp-chat {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  padding: 0;
+}
+
+.pp-bubble {
+  border-radius: var(--pp-radius-lg);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  font-size: var(--pp-text-base);
+  line-height: var(--pp-leading);
+}
+
+.pp-bubble-user {
+  align-self: stretch;
+  background: var(--pp-brand-bg);
+  color: var(--pp-ink);
+}
+
+.pp-bubble-assistant {
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border-subtle);
+  box-shadow: var(--pp-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  align-items: flex-start;
+}
+
+.pp-bubble-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+}
+
+.pp-bubble-bullets li {
+  position: relative;
+  padding-left: var(--pp-space-4);
+}
+
+.pp-bubble-bullets li::before {
+  content: '';
+  position: absolute;
+  left: var(--pp-space-1);
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-ink-2);
+}
+
+.pp-bubble-bullets strong { font-weight: var(--pp-weight-semibold); }
+
+.pp-bubble-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  width: 100%;
+}
+
+.pp-bubble-disclaimer {
+  font-size: var(--pp-text-xs);
+  color: var(--pp-ink-4);
+}
+
+.pp-bubble .pp-link-button {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+/* --- Composer ----------------------------------------------------- */
+
+.pp-composer {
+  flex: none;
+  margin-top: var(--pp-space-4);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg);
+  background: var(--pp-surface);
+  padding: var(--pp-space-3);
+}
+
+.pp-chat-input {
+  display: block;
+  width: 100%;
+  border: 0;
+  resize: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+}
+
+.pp-chat-input::placeholder { color: var(--pp-ink-4); }
+.pp-chat-input:focus { outline: none; }
+
+.pp-composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--pp-space-1);
+}
+
+/* =====================================================================
+   Wizard
+   ===================================================================== */
+
+.pp-wizard {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-card);
+  overflow: hidden;
+}
+
+.pp-wizard-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-5) var(--pp-space-6);
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-wizard-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+}
+
+.pp-wizard-identity > .pp-glyph { color: var(--pp-link); }
+
+.pp-wizard-title {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  line-height: var(--pp-leading-tight);
+}
+
+.pp-wizard-subtitle {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-3);
+}
+
+/* --- Stepper (pure CSS: dots, numbers, ticks, connectors) ---------- */
+
+.pp-stepper {
+  display: flex;
+  align-items: center;
+}
+
+.pp-stepper-item {
+  display: flex;
+  align-items: center;
+}
+
+.pp-stepper-item + .pp-stepper-item::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--pp-border);
+}
+
+.pp-stepper-item.is-done + .pp-stepper-item::before,
+.pp-stepper-item.is-current + .pp-stepper-item::before { background: var(--pp-accent); }
+
+.pp-stepper-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--pp-radius-pill);
+  border: 1px solid var(--pp-border-strong);
+  background: var(--pp-surface);
+  color: var(--pp-ink-3);
+}
+
+.pp-stepper-number {
+  font-size: var(--pp-text-sm);
+  line-height: 1;
+}
+
+.pp-stepper-item.is-current .pp-stepper-dot,
+.pp-stepper-item.is-done .pp-stepper-dot {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+  color: var(--pp-surface);
+}
+
+.pp-stepper-item.is-current .pp-stepper-dot {
+  box-shadow: 0 0 0 3px var(--pp-brand-bg);
+}
+
+/* --- Wizard body -------------------------------------------------- */
+
+.pp-wizard-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--pp-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+}
+
+.pp-wizard-heading {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-wizard-intro {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+}
+
+.pp-wizard-fields {
+  flex: 1;
+  min-height: 0;
+  margin-top: var(--pp-space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+}
+
+.pp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  padding-top: var(--pp-space-2);
+}
+
+.pp-subheading {
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-subintro {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+  margin-top: calc(var(--pp-space-2) * -1);
+}
+
+/* --- Fields ------------------------------------------------------- */
+
+.pp-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+  max-width: 660px;
+}
+
+.pp-field-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pp-space-1);
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-field-label-text { font-weight: var(--pp-weight-semibold); }
+
+.pp-required { color: var(--pp-danger); }
+
+.pp-field-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pp-space-3);
+}
+
+.pp-field-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  min-height: 32px;
+  padding: 0 var(--pp-space-3);
+  border: 1px solid var(--pp-border);
+  border-bottom-color: var(--pp-ink-4);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+}
+
+.pp-field-unit { flex: 0 0 200px; }
+
+.pp-input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  resize: vertical;
+  padding: var(--pp-space-1) 0;
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+}
+
+.pp-input::placeholder { color: var(--pp-ink-4); }
+.pp-input:focus { outline: none; }
+
+.pp-field-box:focus-within {
+  border-color: var(--pp-accent);
+  box-shadow: inset 0 -1px 0 0 var(--pp-accent);
+}
+
+.pp-field-box .pp-glyph { color: var(--pp-ink-3); }
+
+.pp-field-note {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+/* --- The AI affordance: what Copilot filled in, and that it is yours
+       to change. Badged from data-source alone, no JS required. ----- */
+
+.pp-field[data-source='ai'][data-suggested='true'] .pp-field-box {
+  background-image: var(--pp-ai);
+  border-color: var(--pp-ai-stroke);
+}
+
+.pp-field[data-source='ai'][data-suggested='true'] .pp-field-attribution {
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-regular);
+  color: var(--pp-ink-3);
+}
+
+/* Once a human edits a field the engine flips its source to "user"; the
+   tint and the attribution go with it. */
+.pp-field[data-source='user'] .pp-field-attribution { display: none; }
+
+.pp-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-ai-badge .pp-glyph { color: var(--pp-ai-solid); }
+
+/* --- Layout step (the one place exported artwork is used) --------- */
+
+.pp-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--pp-space-4);
+  align-items: start;
+}
+
+.pp-layout-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-4);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg);
+  background: var(--pp-surface);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-layout-card[data-source='ai'][data-suggested='true'] {
+  border-color: var(--pp-ai-stroke);
+  background-image: var(--pp-ai);
+}
+
+.pp-suggestion-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-2);
+  width: 100%;
+}
+
+.pp-layout-note {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-layout-thumb {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-layout-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.pp-layout-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  width: 100%;
+}
+
+.pp-layout-title {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-radio {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--pp-accent);
+}
+
+.pp-layout-desc {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+  line-height: var(--pp-leading);
+}
+
+/* --- Preview step: a mocked-up consumer banner, every string of it a
+       real editable control. ------------------------------------- */
+
+.pp-preview {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-3);
+  min-height: 0;
+}
+
+.pp-preview-browser {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-md);
+  background: var(--pp-surface);
+  overflow: hidden;
+}
+
+.pp-preview-tabs {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  height: 30px;
+  padding: 0 var(--pp-space-3);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-preview-tab-title {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-preview-window {
+  margin-left: auto;
+  width: 70px;
+  height: 8px;
+  background:
+    linear-gradient(var(--pp-ink-4), var(--pp-ink-4)) 4px 50% / 9px 1px no-repeat,
+    linear-gradient(var(--pp-ink-4), var(--pp-ink-4)) 31px 50% / 8px 8px no-repeat,
+    linear-gradient(var(--pp-ink-4), var(--pp-ink-4)) 58px 50% / 9px 1px no-repeat;
+}
+
+.pp-preview-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  height: 32px;
+  padding: 0 var(--pp-space-3);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  color: var(--pp-ink-3);
+}
+
+.pp-preview-address {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  height: 22px;
+  padding: 0 var(--pp-space-3);
+  background: var(--pp-surface-sunk);
+  border-radius: var(--pp-radius-pill);
+  font-size: var(--pp-text-sm);
+}
+
+.pp-preview-url {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink);
+}
+
+.pp-preview-url:focus { outline: 1px solid var(--pp-accent); outline-offset: 2px; }
+
+.pp-preview-stage {
+  flex: 1;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-5) var(--pp-space-6);
+  background: var(--pp-surface);
+}
+
+.pp-preview-block {
+  flex: 1;
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-preview-block-hero { flex: 3; }
+
+.pp-preview-strip {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--pp-space-3);
+}
+
+.pp-cookie-banner {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-3) var(--pp-space-6);
+  background: var(--pp-surface);
+  border-top: 1px solid var(--pp-border);
+}
+
+.pp-cookie-text {
+  width: 100%;
+  border: 0;
+  resize: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+}
+
+.pp-cookie-text:focus,
+.pp-cookie-button-input:focus,
+.pp-cookie-manage-input:focus { outline: 1px solid var(--pp-accent); outline-offset: 2px; }
+
+.pp-cookie-links .pp-link-inline {
+  font-size: var(--pp-text-sm);
+  text-decoration: underline;
+}
+
+.pp-cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+}
+
+.pp-cookie-button {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-surface);
+}
+
+.pp-cookie-button.is-primary {
+  background: var(--pp-accent);
+  border-color: var(--pp-accent);
+}
+
+.pp-cookie-button-input {
+  width: 6.5em;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  text-align: center;
+  color: var(--pp-ink);
+}
+
+.pp-cookie-button.is-primary .pp-cookie-button-input { color: var(--pp-surface); }
+
+.pp-cookie-manage-input {
+  width: 12em;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  color: var(--pp-link);
+  text-decoration: underline;
+}
+
+/* --- Wizard footer ------------------------------------------------ */
+
+.pp-wizard-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-4) var(--pp-space-6);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-wizard-footer-left,
+.pp-wizard-footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+/* =====================================================================
+   Latency card + progress bar (built by the mount task; styled here)
+   ===================================================================== */
+
+.pp-latency {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+  align-items: flex-start;
+  padding: var(--pp-space-4);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-lg);
+  background: var(--pp-surface);
+  box-shadow: var(--pp-shadow-card);
+  overflow: hidden;
+}
+
+.pp-latency-heading {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+/* B6: the in-dialog wait. Same card, chat-bubble scale — the pane is 320px
+   wide, so the page-level type size and padding do not belong here. */
+.pp-latency-inline {
+  /* `flex: none` because the chat log is a flex column with a fixed height:
+     without it the card is the flex item that shrinks, and it collapses to a
+     sliver instead of pushing older turns up. */
+  flex: none;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  align-self: stretch;
+}
+
+.pp-latency-inline .pp-latency-heading {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-regular);
+  color: var(--pp-ink-2);
+}
+
+/* Held back behind the latency card: present in the state, not yet revealed. */
+.pp-actions.is-pending { visibility: hidden; }
+
+/* The typing caret, shown only while mount.js is animating text in. */
+.pp-prompt-bar.is-typing .pp-prompt-text::after,
+.pp-chat-input.is-typing { caret-color: var(--pp-accent); }
+
+.pp-prompt-bar.is-typing .pp-prompt-text::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--pp-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pp-prompt-bar.is-typing .pp-prompt-text::after { animation: pp-caret 1s steps(1) infinite; }
+}
+
+@keyframes pp-caret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.pp-latency-text {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+}
+
+.pp-progress {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-surface-sunk);
+  overflow: hidden;
+}
+
+.pp-progress-bar {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: var(--pp-radius-pill);
+  background: linear-gradient(90deg, var(--pp-ai-from) 0%, var(--pp-ai-to) 100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pp-progress-bar { animation: pp-progress-slide 1.4s ease-in-out infinite; }
+}
+
+@keyframes pp-progress-slide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+/* =====================================================================
+   The spotlight — this prototype's guidance layer, not the product's.
+
+   Two signals, never one: a ring in the portfolio's own accent, and a
+   "Click" tag. The element keeps its own visible label underneath.
+   ===================================================================== */
+
+.is-spotlit {
+  position: relative;
+  z-index: 3;
+  border-radius: var(--pp-radius-sm);
+  box-shadow:
+    0 0 0 3px var(--pp-spot),
+    0 0 0 9px var(--pp-spot-glow);
+}
+
+.pp-prompt-bar.is-spotlit { border-radius: var(--pp-radius-lg); }
+
+.is-spotlit::after {
+  content: 'Click';
+  position: absolute;
+  top: -11px;
+  right: -12px;
+  padding: 1px var(--pp-space-2);
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-spot);
+  color: var(--pp-spot-ink);
+  font-family: var(--pp-font);
+  font-size: var(--pp-text-xs);
+  font-weight: var(--pp-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 16px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-spotlit { animation: pp-spot-pulse 2s ease-in-out infinite; }
+}
+
+@keyframes pp-spot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--pp-spot), 0 0 0 9px var(--pp-spot-glow); }
+  50%      { box-shadow: 0 0 0 3px var(--pp-spot), 0 0 0 14px transparent; }
+}
+
+.pp-canvas :focus-visible {
+  outline: 2px solid var(--pp-spot);
+  outline-offset: 2px;
+}
+
+/* =====================================================================
+   Remaining leaf classes the shell emits
+   ===================================================================== */
+
+.pp-btn-label { display: inline-block; }
+
+.pp-wizard-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pp-toc-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pp-citation-label { white-space: nowrap; }
+
+.pp-bubble-text { color: var(--pp-ink); }
+
+.pp-cookie-manage { display: inline-flex; align-items: center; }
+
+.pp-strong { font-weight: var(--pp-weight-semibold); }
+
+/* =====================================================================
+   Scenario 2.1 — SRR top compliance issues
+
+   Everything below serves frames 1:67165, 1:67788, 1:67810-1:67859 and
+   1:92886. Same rule as the rest of this file: no colour literals, only
+   tokens from the block at the top.
+   ===================================================================== */
+
+/* --- View: risks (Frame 1:67165) --------------------------------- */
+
+.pp-page-risks { overflow-y: auto; }
+
+.pp-hero-compact {
+  flex: none;
+  padding-top: var(--pp-space-7);
+  padding-bottom: var(--pp-space-7);
+}
+
+.pp-hero-compact .pp-prompt-bar {
+  margin-top: var(--pp-space-4);
+  width: 703px;
+  cursor: default;
+}
+
+.pp-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pp-space-2);
+  margin-top: var(--pp-space-3);
+}
+
+.pp-chip-row-centred { justify-content: center; }
+
+.pp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  max-width: 288px;
+  padding: var(--pp-space-1) var(--pp-space-2);
+  border: 1px solid var(--pp-brand-stroke);
+  border-radius: var(--pp-radius-lg);
+  background: var(--pp-surface);
+  font-family: inherit;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-chip.is-inert { cursor: default; }
+.pp-chip:not(.is-inert):hover { border-color: var(--pp-accent-hover); }
+
+.pp-section-heading {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-risk-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  gap: var(--pp-space-6);
+  padding: 0 var(--pp-space-7) var(--pp-space-7);
+}
+
+.pp-risk-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  min-width: 0;
+}
+
+.pp-risk-cards {
+  display: grid;
+  grid-template-columns: 514px minmax(0, 1fr);
+  gap: var(--pp-space-6);
+  align-items: start;
+}
+
+.pp-card {
+  background: var(--pp-surface);
+  border-radius: var(--pp-radius-lg);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-risk-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-6);
+}
+
+.pp-risk-row-title {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-accent-hover);
+}
+
+.pp-risk-hero-headline {
+  font-size: var(--pp-text-lg);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+/* The pie is four flat wedges — a conic-gradient, not exported artwork.
+   The wedge percentages are computed from the data in shell.js. */
+.pp-pie-wrap {
+  position: relative;
+  align-self: center;
+  width: 420px;
+  height: 260px;
+}
+
+.pp-pie {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 186px;
+  height: 186px;
+  margin: -93px 0 0 -93px;
+  border-radius: 50%;
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-pie-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink-2);
+  white-space: nowrap;
+}
+
+.pp-pie-label-1 { right: 0;   top: 44%; }
+.pp-pie-label-2 { left: 34%;  bottom: 0; }
+.pp-pie-label-3 { left: 0;    top: 48%; text-align: right; }
+.pp-pie-label-4 { left: 24%;  top: 0; }
+
+.pp-pie-label-name { color: var(--pp-ink); }
+.pp-pie-label-note { color: var(--pp-ink-3); }
+
+.pp-risk-list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--pp-space-6);
+}
+
+.pp-risk-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-2);
+  width: 100%;
+  padding: var(--pp-space-4);
+  border: 0;
+  border-bottom: 1px solid var(--pp-border-subtle);
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-risk-list > .pp-risk-row:last-child { border-bottom: 0; }
+.pp-risk-row.is-inert { cursor: default; }
+.pp-risk-row:not(.is-inert):hover { background: var(--pp-surface-alt); }
+
+.pp-risk-row-text {
+  font-size: var(--pp-text-md);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink);
+}
+
+.pp-recent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  min-width: 0;
+}
+
+.pp-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+}
+
+.pp-recent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-radius: var(--pp-radius-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-recent-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pp-recent-query { color: var(--pp-ink-2); }
+
+.pp-recent-meta {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-4);
+}
+
+/* --- Data tables (Frames 1:67788 and 1:67810) --------------------- */
+
+.pp-table-wrap {
+  width: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-table th {
+  padding: var(--pp-space-2);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  font-weight: var(--pp-weight-semibold);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pp-table td {
+  padding: var(--pp-space-2);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  vertical-align: middle;
+}
+
+.pp-table th .pp-glyph { color: var(--pp-ink-3); }
+
+.pp-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  min-width: 0;
+}
+
+.pp-cell-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A filled status disc with an optional white glyph, exactly as the Fluent
+   status icons draw it. The colour bucket comes from the data. */
+.pp-status-dot {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: var(--pp-surface);
+  background: var(--pp-ink-4);
+}
+
+.pp-status-dot[data-status='info']    { background: var(--pp-accent-hover); }
+.pp-status-dot[data-status='success'] { background: var(--pp-success); }
+.pp-status-dot[data-status='danger']  { background: var(--pp-danger); }
+
+/* Initials monogram. The design mixes these with stock portraits; the
+   prototype uses one monogram for everybody — see the inventory. */
+.pp-mono {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pp-surface-sel);
+  font-size: var(--pp-text-xs);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-cell-number { text-align: left; }
+
+/* --- List panel: the dialog's right half in scenario 2.1 ---------- */
+
+.pp-panel .pp-wizard-body {
+  gap: var(--pp-space-4);
+  overflow: hidden;
+}
+
+.pp-panel .pp-table-wrap { flex: 1; }
+
+.pp-panel-toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-4);
+}
+
+.pp-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  padding: var(--pp-space-1) var(--pp-space-3);
+  border: 0;
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-brand-bg);
+  font-family: inherit;
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+}
+
+.pp-filter-value { font-weight: var(--pp-weight-semibold); }
+
+.pp-panel-toolbar-trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+}
+
+.pp-panel-count {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink-2);
+  white-space: nowrap;
+}
+
+.pp-panel-search {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  width: 220px;
+  padding: var(--pp-space-1) var(--pp-space-2);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  color: var(--pp-ink-3);
+}
+
+.pp-panel-search .pp-input {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+
+/* --- Chat pane additions (Frames 1:67810 and 1:67859) ------------- */
+
+.pp-bubble-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  margin-top: var(--pp-space-2);
+  padding-left: var(--pp-space-5);
+  list-style: decimal;
+  color: var(--pp-ink);
+}
+
+.pp-bubble-steps li { list-style: decimal; }
+
+.pp-chat-pane > .pp-chip-row {
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0;
+  margin-bottom: var(--pp-space-2);
+}
+
+.pp-email-tile {
+  width: 100%;
+  margin-top: var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  overflow: hidden;
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-email-tile-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 132px;
+  background: var(--pp-brand-bg-2);
+  color: var(--pp-accent-hover);
+}
+
+.pp-email-tile-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-surface);
+}
+
+.pp-email-tile-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pp-email-tile-title {
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-email-tile-subtitle {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-tile-open { color: var(--pp-ink-2); }
+
+/* --- View: email (Frame 1:92886) ---------------------------------- */
+
+.pp-desktop {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--pp-space-6) var(--pp-space-6) 0;
+  background: var(--pp-surface-sel);
+}
+
+.pp-compose {
+  display: flex;
+  flex-direction: column;
+  width: 1080px;
+  height: 100%;
+  background: var(--pp-surface);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-lg) var(--pp-radius-lg) 0 0;
+  box-shadow: var(--pp-shadow-dialog);
+  overflow: hidden;
+}
+
+.pp-compose-titlebar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-compose-title {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-tabs {
+  flex: none;
+  display: flex;
+  gap: var(--pp-space-5);
+  padding: 0 var(--pp-space-4);
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-compose-tab {
+  padding: var(--pp-space-2) 0;
+  border-bottom: 2px solid transparent;
+  color: var(--pp-ink-2);
+}
+
+.pp-compose-tab.is-selected {
+  border-bottom-color: var(--pp-accent-hover);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-ribbon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-bottom: 1px solid var(--pp-border-subtle);
+  color: var(--pp-ink-2);
+}
+
+.pp-compose-font {
+  min-width: 96px;
+  padding: 2px var(--pp-space-2);
+  border: 1px solid var(--pp-border);
+  border-radius: var(--pp-radius-sm);
+  font-size: var(--pp-text-sm);
+}
+
+.pp-compose-font-size { min-width: 44px; }
+
+.pp-compose-send {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-3) var(--pp-space-4);
+}
+
+.pp-compose-from { color: var(--pp-ink-2); }
+
+.pp-compose-field {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-compose-field-label {
+  padding: 2px var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface-sunk);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-compose-field-value { flex: 1; }
+
+.pp-compose-copies {
+  display: flex;
+  gap: var(--pp-space-3);
+  color: var(--pp-ink-3);
+}
+
+.pp-compose-subject {
+  flex: 1;
+  color: var(--pp-ink-4);
+}
+
+.pp-compose-saved {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-email-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-5) var(--pp-space-7) var(--pp-space-7);
+  border-top: 1px solid var(--pp-border-subtle);
+}
+
+.pp-ms-lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-ms-wordmark {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  background: var(--pp-brand-bg);
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-email-strip .pp-glyph { color: var(--pp-accent-hover); }
+
+.pp-email-heading {
+  font-size: var(--pp-text-xl);
+  font-weight: var(--pp-weight-bold);
+  line-height: var(--pp-leading-tight);
+  color: var(--pp-ink);
+}
+
+/* Literal authoring placeholder — styled as unfinished copy, never
+   replaced with anything invented. See Reword note R3. */
+.pp-email-placeholder { color: var(--pp-ink-3); }
+
+.pp-email-table th[scope='colgroup'] {
+  padding-top: var(--pp-space-4);
+  border-bottom: 0;
+  font-weight: var(--pp-weight-semibold);
+}
+
+.pp-email-cta {
+  align-self: flex-start;
+  padding: var(--pp-space-3) var(--pp-space-6);
+  border: 0;
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-accent-hover);
+  font-weight: var(--pp-weight-bold);
+  color: var(--pp-spot-ink);
+}
+
+.pp-email-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pp-space-3);
+  margin-top: var(--pp-space-4);
+  padding: var(--pp-space-5) var(--pp-space-6);
+  background: var(--pp-surface-sunk);
+}
+
+.pp-email-footer-text {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+/* The chat pane is anchored to its newest turn. Frames 1:67834 and 1:67859
+   both draw the log scrolled to the bottom with the oldest turns clipped off
+   the top, and the guided click-through needs the same: the hotspot always
+   lives in the newest message, so it must never fall below the fold. */
+.pp-chat-pane .pp-chat { justify-content: flex-end; }
+
+/* =====================================================================
+   Scenario 2.2 — Tracker Scanning (Frames 1:67517, 1:67388, 1:67487,
+   1:67427, 1:67457). Everything below is CSS-drawn; the scenario's one
+   exported asset is the Teams product mark on the output card.
+   ===================================================================== */
+
+/* --- Chat pane: a turn made of several output cards --------------- */
+
+/* Frame 1:67487 answers one prompt with three stacked cards. */
+.pp-bubble-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+}
+
+/* The detected XPath, quoted inside the first card. */
+.pp-bubble-value {
+  width: 100%;
+  font-size: var(--pp-text-sm);
+  line-height: var(--pp-leading);
+  color: var(--pp-ink-4);
+  overflow-wrap: anywhere;
+}
+
+.pp-bubble-value-actions { display: flex; }
+
+/* The small bordered "Hide value" button under it. */
+.pp-button-tiny {
+  min-height: 24px;
+  padding: 0 var(--pp-space-2);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-regular);
+}
+
+/* --- Output card: the Teams variant of the shared tile ------------ */
+
+.pp-email-tile-art-teams { background: var(--pp-cornflower-bg); }
+
+.pp-teams-mark {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+/* --- Scan configuration panel: the dialog's third right-half type -- */
+
+/* The list panel clips its body (its table scrolls instead); this one
+   scrolls as a whole, because the object grid runs past the fold exactly
+   as it does in the frames. */
+.pp-scan-panel .pp-wizard-body {
+  gap: var(--pp-space-4);
+  overflow-y: auto;
+}
+
+.pp-scan-panel .pp-wizard-header { padding: var(--pp-space-4) var(--pp-space-6); }
+
+.pp-scan-tabs {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  gap: var(--pp-space-6);
+  margin: 0;
+  padding: 0 0 var(--pp-space-1);
+  list-style: decimal;
+  border-bottom: 1px solid var(--pp-border-subtle);
+}
+
+.pp-scan-tabs li {
+  list-style-position: inside;
+  color: var(--pp-ink-2);
+  font-size: var(--pp-text-base);
+}
+
+.pp-scan-tab {
+  display: inline-block;
+  padding-bottom: var(--pp-space-2);
+}
+
+.pp-scan-tab.is-selected {
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+  box-shadow: inset 0 -2px 0 0 var(--pp-accent-hover);
+}
+
+.pp-scan-tabs li:has(.is-selected) { color: var(--pp-ink); font-weight: var(--pp-weight-semibold); }
+
+.pp-scan-intro {
+  font-size: var(--pp-text-md);
+  color: var(--pp-ink);
+}
+
+.pp-scan-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-1);
+}
+
+.pp-scan-section-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  font-size: var(--pp-text-md);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-scan-section-text {
+  font-size: var(--pp-text-base);
+  color: var(--pp-ink);
+  max-width: 62ch;
+}
+
+.pp-scan-add {
+  align-self: flex-start;
+  color: var(--pp-ink);
+}
+
+.pp-scan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pp-space-4);
+  align-items: start;
+}
+
+.pp-scan-object {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-4);
+  border: 1px solid var(--pp-border-subtle);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+}
+
+/* The one card carrying a Copilot suggestion is drawn lifted and
+   brand-outlined, the same affordance the wizard's suggested fields use. */
+.pp-scan-object.is-highlight {
+  border-color: var(--pp-ai-stroke);
+  box-shadow: var(--pp-shadow-card);
+}
+
+.pp-scan-object-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+}
+
+.pp-scan-object-label {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink);
+}
+
+.pp-checkbox {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--pp-ink-3);
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-surface);
+}
+
+.pp-checkbox.is-checked {
+  border-color: var(--pp-accent-hover);
+  background: var(--pp-accent-hover);
+  color: var(--pp-spot-ink);
+}
+
+.pp-scan-field-label {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-2);
+}
+
+.pp-scan-input {
+  flex: none;
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border: 1px solid var(--pp-border);
+  border-bottom-color: var(--pp-ink-4);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-surface);
+  font-size: var(--pp-text-sm);
+}
+
+.pp-scan-detected-label {
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-scan-detected-value {
+  padding: var(--pp-space-2) var(--pp-space-3);
+  border-radius: var(--pp-radius-sm);
+  background: var(--pp-ai);
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink);
+  overflow-wrap: anywhere;
+}
+
+.pp-scan-note {
+  font-size: var(--pp-text-sm);
+  color: var(--pp-ink-3);
+}
+
+.pp-scan-object .pp-bubble-footer { margin-top: var(--pp-space-1); }
+
+/* =====================================================================
+   Scenario 3 — the RoPA report panel (Frame 1:67629)
+
+   Two columns inside the dialog's right half: a subway rail naming the
+   nine steps the design draws, and the generated blocks beside it. The
+   rail scrolls with the panel rather than independently — the design
+   shows both moving together.
+   ===================================================================== */
+
+.pp-report-panel .pp-wizard-header { padding: var(--pp-space-4) var(--pp-space-6); }
+
+.pp-report-panel .pp-wizard-title {
+  text-align: center;
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-report-body {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--pp-space-6);
+  padding: var(--pp-space-6) var(--pp-space-4);
+}
+
+/* --- Subway rail --------------------------------------------------- */
+
+.pp-subway {
+  flex: none;
+  width: 212px;
+  margin: 0;
+  padding: 0 0 0 var(--pp-space-4);
+  list-style: none;
+  font-size: var(--pp-text-sm);
+  line-height: 16px;
+  color: var(--pp-ink);
+}
+
+.pp-subway-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  min-height: 42px;
+}
+
+.pp-subway-marker {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--pp-success);
+}
+
+/* The connector runs from one marker to the next, so it is drawn on every
+   item but the last. 7px centres a 2px line under a 16px marker. */
+.pp-subway-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: calc(50% + 8px);
+  height: calc(100% - 16px);
+  width: 2px;
+  border-radius: var(--pp-radius-xs);
+  background: var(--pp-ink-3);
+}
+
+.pp-subway-label { min-width: 0; }
+
+/* --- Generated blocks ---------------------------------------------- */
+
+.pp-report-blocks {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-left: var(--pp-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-space-3);
+}
+
+/* `.pp-canvas ol { list-style: none }` is the reset, and it outranks a bare
+   class selector — so the marker goes on the li, the same way
+   `.pp-bubble-steps li` does. */
+.pp-report-blocks li { list-style: decimal; }
+
+.pp-report-block::marker {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  color: var(--pp-ink-2);
+}
+
+.pp-report-block {
+  background: var(--pp-surface-alt);
+  border-radius: var(--pp-radius-lg);
+  padding: var(--pp-space-4);
+}
+
+.pp-report-heading {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-semibold);
+  line-height: 20px;
+  color: var(--pp-ink-2);
+  padding-bottom: var(--pp-space-3);
+  border-bottom: 1px solid var(--pp-border);
+}
+
+.pp-report-answer {
+  padding: var(--pp-space-3) 0;
+  font-size: var(--pp-text-md);
+  line-height: 22px;
+  color: var(--pp-ink);
+}
+
+/* --- Risk pill ------------------------------------------------------ */
+
+.pp-risk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 var(--pp-space-2);
+  border-radius: 16px;
+  background: rgba(159, 216, 159, 0.2);
+  border: 1px solid rgba(14, 112, 14, 0.6);
+  font-size: var(--pp-text-sm);
+  font-weight: var(--pp-weight-semibold);
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.pp-risk-pill-label { color: var(--pp-ink-3); }
+.pp-risk-pill-value { color: var(--pp-success); }
+
+/* --- A topic rail item that is also a hotspot -----------------------
+   `.pp-toc-item` is normally a <div>; scenario 3 renders one of them as a
+   real <button>, so the button's own chrome has to be cleared or it picks
+   up the UA's background, border, centring and font. */
+
+button.pp-toc-item {
+  width: 100%;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.pp-toc-item:not(.is-inert):hover { background: var(--pp-surface-alt); }
+button.pp-toc-item.is-inert { cursor: default; }
+
+/* =====================================================================
+   Mobile reflow — below 768px
+
+   Above this width the canvas is a fixed 1920x1080 box shrunk by a
+   transform, which is fine on a laptop and unreadable on a phone. Below
+   it the transform is abandoned and the canvas becomes an ordinary
+   responsive column: every multi-column grid collapses to one, the
+   browser chrome goes (it is set dressing, and it costs vertical space
+   that the actual product UI needs), and the dialog becomes full-screen
+   rather than a floating panel over a scrim.
+
+   `mount.js` removes the inline `--pp-scale` and viewport height at the
+   same breakpoint — MOBILE_W there must stay in step with the 767px here.
+   ===================================================================== */
+
+@media (max-width: 767px) {
+
+  /* --- Release the canvas ------------------------------------------ */
+
+  .pp-viewport {
+    overflow: visible;
+    border-radius: var(--pp-radius-md);
+  }
+
+  .pp-canvas {
+    width: 100%;
+    height: auto;
+    transform: none;
+    overflow: visible;
+  }
+
+  /* Set dressing that costs more vertical space than it earns on a phone. */
+  .pp-browser { display: none; }
+
+  .pp-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  .pp-stage { min-height: 0; }
+
+  /* --- One column everywhere --------------------------------------- */
+
+  .pp-columns,
+  .pp-dialog-body,
+  .pp-page-header-main,
+  .pp-layout-grid,
+  .pp-preview-strip,
+  .pp-risk-board,
+  .pp-risk-cards,
+  .pp-scan-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pp-columns {
+    gap: var(--pp-space-5);
+    padding: var(--pp-space-4);
+    overflow: visible;
+  }
+
+  .pp-risk-board { padding: 0 var(--pp-space-4) var(--pp-space-5); }
+
+  /* The rail reads as a band above the answer rather than a sidebar. */
+  .pp-toc {
+    border-right: none;
+    border-bottom: 1px solid var(--pp-border-subtle);
+    padding-right: 0;
+    padding-bottom: var(--pp-space-4);
+  }
+
+  .pp-chat,
+  .pp-answer-region {
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  /* --- Home ---------------------------------------------------------- */
+
+  .pp-hero { padding: var(--pp-space-6) var(--pp-space-4); }
+  .pp-hero-title { font-size: var(--pp-text-lg); }
+
+  .pp-bento {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: var(--pp-space-5);
+    padding: var(--pp-space-4);
+  }
+
+  /* --- Dialog becomes full-screen ----------------------------------- */
+
+  /* The backdrop is already aria-hidden; on a phone it is also a second
+     full page of content behind a translucent sheet, so it is dropped and
+     the scrim returns to normal flow. */
+  .pp-page-answer.is-backdrop { display: none; }
+
+  .pp-scrim {
+    position: static;
+    display: block;
+    background: none;
+  }
+
+  .pp-dialog {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .pp-dialog-body {
+    gap: var(--pp-space-5);
+    padding: 0 var(--pp-space-4) var(--pp-space-4);
+  }
+
+  /* Stacked in DOM order — chat first, then the panel. Deliberately NOT a
+     sticky bottom sheet: the armed hotspot is inside the panel in three of
+     the four scenarios (#wizard-next, #wizard-save-close, #email-card-open),
+     and a pinned sheet would sit on top of exactly the thing the visitor is
+     being told to press. */
+  .pp-chat-pane,
+  .pp-chat-pane .pp-chat {
+    overflow: visible;
+    min-height: 0;
+  }
+
+  .pp-wizard-body,
+  .pp-report-body {
+    overflow: visible;
+  }
+
+  /* --- Report panel -------------------------------------------------- */
+
+  .pp-report-body { flex-direction: column; }
+
+  .pp-subway {
+    width: 100%;
+    padding-left: var(--pp-space-2);
+  }
+
+  .pp-report-blocks { padding-left: var(--pp-space-5); }
+
+  /* --- Tables scroll rather than squeeze ----------------------------- */
+
+  .pp-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pp-table { min-width: 560px; }
+
+  /* --- Touch targets -------------------------------------------------
+     44px is the floor; the design's buttons are 32px tall. Padding does the
+     work so the label keeps its own size and nothing needs re-centring. */
+
+  .pp-button,
+  .pp-chip,
+  .pp-icon-button,
+  .pp-toc-item,
+  .pp-risk-row {
+    min-height: 44px;
+  }
+
+  .pp-icon-button { min-width: 44px; }
+
+  /* --- Legibility at 1x ----------------------------------------------
+     These sizes were drawn to be read on a 1920px canvas. Unscaled on a
+     phone the body copy is fine, but the design's 10px captions are not. */
+
+  .pp-canvas {
+    --pp-text-xs: 12px;
+    --pp-text-sm: 13px;
+  }
+
+  /* --- Page chrome ----------------------------------------------------
+     The four scenario tabs sit on one unwrapped row, 438px of it, and that
+     was the whole horizontal-scroll problem: the row widened the layout
+     viewport, and the fixed nav then stretched to the wider viewport and
+     looked like the culprit. Tabs wrap to one per row here, which also
+     gives each a full-width tap target. */
+
+  .pp-controls {
+    gap: var(--pp-space-2);
+    margin: var(--pp-space-4) 0 var(--pp-space-3);
+  }
+
+  .pp-tabs {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .pp-tabs button { flex: 1 1 100%; text-align: left; }
+
+  .pp-controls button,
+  .pp-tabs button,
+  .pp-complete button,
+  .pp-filter-pill { min-height: 44px; }
+
+  .pp-controls .pp-step { width: 100%; }
+
+  /* --- Release the fixed pixel widths -------------------------------
+     These are drawn against a 1920px canvas. Unscaled on a phone each one
+     is wider than the whole viewport, and every one of them was pushing the
+     document past its own width. */
+
+  .pp-prompt-bar,
+  .pp-hero-compact .pp-prompt-bar,
+  .pp-pie-wrap,
+  .pp-panel-search,
+  .pp-compose {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pp-pie { width: min(186px, 60%); }
+
+  /* --- Suite header ---------------------------------------------------
+     Six inert glyphs and an avatar do not fit beside the product name at
+     this width, and they are chrome rather than content. The avatar stays
+     because it is the only one that reads as a person rather than as a
+     toolbar. */
+
+  .pp-suite { padding: 0 var(--pp-space-3); }
+  .pp-suite-icon { display: none; }
+  .pp-suite-right { gap: var(--pp-space-3); }
+
+  /* `.pp-link-button` is always a standalone control on its own line — the
+     dialog header's "Open in ...", the page's "Back", the footer's "Show
+     process". Links set inside prose are `.pp-link-inline`, which is left
+     alone so it keeps its line box. */
+  .pp-link-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* --- Rows that must wrap rather than clip --------------------------
+     Each of these is `display: flex` with `justify-content: space-between`
+     and no wrap: at 1920px the two ends sit comfortably apart, at 364px the
+     trailing end runs off the edge and is silently cut. The page itself does
+     not scroll — an ancestor clips — so the content simply disappears, which
+     is the worst of the three possible outcomes. */
+
+  .pp-wizard-header,
+  .pp-wizard-footer,
+  .pp-panel-toolbar,
+  .pp-dialog-actions,
+  .pp-cookie-actions,
+  .pp-filters {
+    flex-wrap: wrap;
+  }
+
+  .pp-wizard-header,
+  .pp-wizard-footer {
+    gap: var(--pp-space-3);
+    padding: var(--pp-space-4);
+  }
+
+  /* "Open in Subject Rights Requests" beside a close button leaves the label
+     about 90px, which wraps it to three lines and pushes the header tall.
+     Letting it take the full row keeps it on one or two. */
+  .pp-dialog-header { flex-wrap: wrap; }
+  .pp-dialog-actions { width: 100%; justify-content: space-between; }
+
+  /* The cookie-banner mock inside the preview step: three buttons and a
+     "Manage preferences" link on one row, the last of which was cut. */
+  .pp-cookie-banner { padding: var(--pp-space-3) var(--pp-space-4); }
+
+  /* A table wide enough to need its own scroller should say so. */
+  .pp-table-wrap { scrollbar-width: thin; }
+
+  /* The email draft's table is three narrow columns (Owner / Tasks left /
+     Deadline) and it is NOT inside a `.pp-table-wrap`, so the 560px floor
+     above would push it straight off the compose window with nothing to
+     scroll it. It fits at this width; let it. */
+  .pp-email-table { min-width: 0; }
+
+  /* The compose ribbon's font, size and format controls run off the right
+     edge otherwise, taking the last glyph with them. */
+  .pp-compose-ribbon,
+  .pp-compose-tabs { flex-wrap: wrap; }
+
+  /* `.pp-link-inline` is exempt from the touch-target floor where it really
+     is inline in a sentence ("Learn more", "Privacy Statement", a linked
+     table cell) — WCAG 2.5.8 excludes targets constrained by surrounding
+     text. The layout step's "Preview" is not that: it is a standalone
+     control sitting alone in a card, so it gets a real target. */
+  .pp-layout-card .pp-link-inline {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The spotlight ring sits outside the element; at the screen edge its
+     glow would be clipped by the viewport, so pull the whole canvas in. */
+  .pp-stage { padding: 0 2px; }
+}

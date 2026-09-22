@@ -1,1 +1,6 @@
 .DS_Store
+
+# Working notes for the prototype build live on `copilot-prototype` only.
+# This repo is public AND is the Pages deploy source with Jekyll disabled, so
+# anything committed here is served at mehvash.com. Keep the notes off main.
+docs/superpowers/

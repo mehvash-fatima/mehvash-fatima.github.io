@@ -219,6 +219,31 @@
     margin-top: 3px;
   }
 
+  /* Marks the one project that has a clickable prototype behind it. A dot
+     rather than a ring: the prototype's gold spotlight is the loud version of
+     this and belongs on the case study's own call-to-action, not repeated in
+     every nav menu. Not a nested link — the row is already an <a>, and an <a>
+     inside an <a> is invalid; the case study carries the actual link. */
+  .nav-dropdown-menu .proj-flag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .nav-dropdown-menu .proj-flag::before {
+    content: '';
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
   /* ── HERO ── */
   .hero {
     padding: 160px 60px 100px;
@@ -1462,6 +1487,141 @@
   .sidebar-img-real img,
   .about-photo-frame img { cursor: zoom-in; }
 
+
+  /* ── INTERACTIVE PROTOTYPE BAND ──
+     The band quotes the thing it links to. The prototype guides you by
+     ringing one control in gold and tagging it "Click"; the target below
+     wears that same ring, and its gold is literally the same value — the
+     prototype's --pp-spot is #7d6428, this page's --accent is #7D6428. So
+     the motion is not decoration: it is the page showing you the interaction
+     before you get there. That is the one loud element here; everything
+     around it stays as quiet as the rest of the case study. */
+
+  .cs-proto {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    /* Declared, not implicit, so the target's `grid-row: 1 / -1` has real
+       row lines to resolve against. The compact variant redeclares two rows
+       because it carries no note; without that it would span into an empty
+       third row and pad itself out. */
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    gap: 16px 40px;
+    padding: 30px 32px;
+    margin-bottom: 48px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cs-proto:hover { border-color: var(--frame-dash); }
+
+  .cs-proto-label {
+    grid-column: 1;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .cs-proto-title {
+    grid-column: 1;
+    font-family: var(--serif);
+    font-size: 25px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-top: 10px;
+  }
+
+  .cs-proto-note {
+    grid-column: 1;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 10px;
+    max-width: 52ch;
+  }
+
+  /* The spotlight target, lifted from the prototype's .is-spotlit. */
+  .cs-proto-target {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    position: relative;
+    justify-self: end;
+    padding: 11px 20px;
+    border-radius: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    white-space: nowrap;
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 0 0 9px rgba(125, 100, 40, 0.18);
+  }
+
+  .cs-proto-target::after {
+    content: 'Click';
+    position: absolute;
+    top: -11px;
+    right: -12px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #FFFFFF;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 16px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-proto-target { animation: cs-proto-pulse 2s ease-in-out infinite; }
+  }
+
+  @keyframes cs-proto-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9px rgba(125, 100, 40, 0.18); }
+    50%      { box-shadow: 0 0 0 3px var(--accent), 0 0 0 14px rgba(125, 100, 40, 0); }
+  }
+
+  /* Second appearance, after the carousel: same motif, one row, no note. */
+  .cs-proto.is-compact {
+    grid-template-rows: auto auto;
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 22px 32px;
+  }
+
+  .cs-proto.is-compact .cs-proto-title {
+    font-size: 19px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 760px) {
+    .cs-proto {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      padding: 24px 22px;
+    }
+
+    .cs-proto.is-compact { grid-template-rows: auto; }
+
+    .cs-proto-target {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: start;
+      margin-top: 22px;
+    }
+
+    .cs-proto-title { font-size: 21px; }
+    .cs-proto.is-compact { margin: 32px 20px 0; padding: 24px 22px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1495,6 +1655,7 @@
           <span class="proj-content">
             <span class="proj-title">AI-Powered Privacy Manager</span>
             <span class="proj-meta">2023 – 2024 · Copilot Integration · IAPP Demo</span>
+            <span class="proj-flag">Interactive prototype</span>
           </span>
         </a>
         <a href="case-study-03-priva.html">
@@ -1589,6 +1750,13 @@
         <p>Two constraints shaped everything: <strong>AI suggestions had to be attributable, editable, and interruptible</strong>, and we would not recreate product UI inside Copilot. A task that previously took manual research and form-filling was <strong>reduced to a review-and-confirm</strong>.</p>
         <p>The prototype was <strong>demoed live at the IAPP Global Summit in April 2024</strong> and became an internal blueprint — interaction patterns from it closely resemble what shipped later in Microsoft's Security Copilot roadmap.</p>
       </div>
+
+      <a class="cs-proto" href="prototype-copilot.html">
+        <span class="cs-proto-label">Interactive prototype</span>
+        <span class="cs-proto-title">Walk all four Copilot scenarios yourself</span>
+        <span class="cs-proto-note">Rebuilt in code from the original Figma files — real DOM, not a video or a click-through of screenshots. Follow the highlighted step.</span>
+        <span class="cs-proto-target">Open the prototype</span>
+      </a>
 
     </div>
     <div class="cs-sidebar">
@@ -1750,6 +1918,12 @@
     </div>
   </section>
 </div>
+
+<a class="cs-proto is-compact" href="prototype-copilot.html">
+  <span class="cs-proto-label">Interactive prototype</span>
+  <span class="cs-proto-title">See these four flows running, not described</span>
+  <span class="cs-proto-target">Open the prototype</span>
+</a>
 
 <div style="max-width:1100px; margin:0 auto; padding:56px 60px 0; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); margin-top:40px; padding-top:40px;">
   <a href="case-study-01-dspm.html" style="font-family:var(--mono); font-size:12px; color:var(--muted); text-decoration:none;">&larr; Purview DSPM & AI Observability</a>

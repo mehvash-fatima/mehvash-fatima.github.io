@@ -213,6 +213,31 @@
     margin-top: 3px;
   }
 
+  /* Marks the one project that has a clickable prototype behind it. A dot
+     rather than a ring: the prototype's gold spotlight is the loud version of
+     this and belongs on the case study's own call-to-action, not repeated in
+     every nav menu. Not a nested link — the row is already an <a>, and an <a>
+     inside an <a> is invalid; the case study carries the actual link. */
+  .nav-dropdown-menu .proj-flag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .nav-dropdown-menu .proj-flag::before {
+    content: '';
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
   /* ── HERO ── */
   /* Two columns on desktop: copy on the left, polaroid on the right. The photo
      column is sized in ch-free absolutes because the polaroid is a fixed piece
@@ -437,6 +462,33 @@
     font-family: var(--mono);
     font-size: 11px;
     color: var(--muted);
+  }
+
+  /* The one project with a clickable prototype behind it. Same dot-and-label
+     as the nav dropdown so the two read as the same signal, sized for this
+     list's larger type. Deliberately quiet: the case study's own band is
+     where the prototype is actually sold. */
+  .toc-flag {
+    /* `flex`, not `inline-flex`: the meta above is an inline span, so an
+       inline box would flow onto the end of it and read as one more
+       middle-dot item instead of a separate signal. */
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .toc-flag::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
   }
 
   /* ── CASE STUDY ── */
@@ -1248,6 +1300,7 @@
           <span class="proj-content">
             <span class="proj-title">AI-Powered Privacy Manager</span>
             <span class="proj-meta">2023 – 2024 · Copilot Integration · IAPP Demo</span>
+            <span class="proj-flag">Interactive prototype</span>
           </span>
         </a>
         <a href="case-study-03-priva.html">
@@ -1363,6 +1416,7 @@
       <div class="toc-item-content">
         <span class="toc-item-title">AI-Powered Privacy Manager</span>
         <span class="toc-item-meta">2023 – 2024 · Copilot Integration · IAPP Demo</span>
+        <span class="toc-flag">Interactive prototype</span>
       </div>
     </a>
     <a href="case-study-03-priva.html" class="toc-item">
