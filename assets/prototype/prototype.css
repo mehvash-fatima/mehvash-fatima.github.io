@@ -293,6 +293,13 @@
 .pp-canvas ul,
 .pp-canvas ol { list-style: none; }
 
+/* The UA's `[hidden] { display: none }` is a bare attribute selector, so any
+   class rule setting `display` beats it. `.pp-bubble-assistant` does exactly
+   that — which meant `thinkFor` setting `held.hidden = true` silently failed
+   and the answer stayed on screen through its own latency card. Scoped to the
+   canvas and specific enough to win without !important. */
+.pp-canvas [hidden] { display: none; }
+
 .pp-glyph { flex: none; display: block; }
 
 .pp-sr-only {
@@ -1728,6 +1735,24 @@
   font-size: var(--pp-text-lg);
   font-weight: var(--pp-weight-semibold);
   color: var(--pp-ink);
+}
+
+/* B6: the in-dialog wait. Same card, chat-bubble scale — the pane is 320px
+   wide, so the page-level type size and padding do not belong here. */
+.pp-latency-inline {
+  /* `flex: none` because the chat log is a flex column with a fixed height:
+     without it the card is the flex item that shrinks, and it collapses to a
+     sliver instead of pushing older turns up. */
+  flex: none;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  align-self: stretch;
+}
+
+.pp-latency-inline .pp-latency-heading {
+  font-size: var(--pp-text-base);
+  font-weight: var(--pp-weight-regular);
+  color: var(--pp-ink-2);
 }
 
 /* Held back behind the latency card: present in the state, not yet revealed. */

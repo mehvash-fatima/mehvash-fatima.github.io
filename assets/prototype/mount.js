@@ -41,7 +41,13 @@ const MOBILE_W = 768;
  */
 const LOADING = {
   heading: 'Generating response...',
-  body: 'Copilot is searching across Priva solutions to generate a response and suggest questions to help you get started. '
+  body: 'Copilot is searching across Priva solutions to generate a response and suggest questions to help you get started. ',
+  // The design has TWO latency patterns, not one (ambiguity B6 in
+  // docs/superpowers/notes/figma-scenario-2-1.md). The full-page card above
+  // is what a page-level answer loads behind; inside the Copilot dialog the
+  // chat pane gets a much smaller card reading just this.
+  inlineBody: 'OK...',
+  stop: 'Stop generating'
 };
 
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -67,26 +73,55 @@ function writeTyped(target, text) {
   slot.textContent = text;
 }
 
-function latencyCard() {
+/**
+ * B6: the design draws the wait two ways. A page-level answer loads behind
+ * the full "Generating response..." card; a pause inside the Copilot dialog
+ * gets a small card in the chat pane reading "OK...". Which one to draw is
+ * not a new thing for a beat to declare — it follows from where the pause
+ * happens, so it is read off the settled view and cannot be set wrong.
+ */
+function latencyCard({ inline = false } = {}) {
   const card = document.createElement('div');
-  card.className = 'pp-latency';
+  card.className = inline ? 'pp-latency pp-latency-inline' : 'pp-latency';
   card.setAttribute('role', 'status');
 
-  const heading = document.createElement('p');
-  heading.className = 'pp-latency-heading';
-  heading.textContent = LOADING.heading;
+  if (inline) {
+    const body = document.createElement('p');
+    body.className = 'pp-latency-heading';
+    body.textContent = LOADING.inlineBody;
+    card.append(body);
+  } else {
+    const heading = document.createElement('p');
+    heading.className = 'pp-latency-heading';
+    heading.textContent = LOADING.heading;
 
-  const body = document.createElement('p');
-  body.className = 'pp-latency-text';
-  body.textContent = LOADING.body;
+    const body = document.createElement('p');
+    body.className = 'pp-latency-text';
+    body.textContent = LOADING.body;
+    card.append(heading, body);
+  }
 
   const track = document.createElement('div');
   track.className = 'pp-progress';
   const bar = document.createElement('div');
   bar.className = 'pp-progress-bar';
   track.append(bar);
+  card.append(track);
 
-  card.append(heading, body, track);
+  // Both frames put a "Stop generating" button under the card. No frame gives
+  // it a destination, so it is inert — the same treatment every other
+  // no-destination control in the prototype gets. Kept out of the tab order
+  // rather than merely disabled: it exists for about a second, and a control
+  // that flashes through the tab sequence is worse than one that never
+  // enters it.
+  const stop = document.createElement('button');
+  stop.type = 'button';
+  stop.className = 'pp-button pp-button-tiny is-inert';
+  stop.textContent = LOADING.stop;
+  stop.setAttribute('aria-disabled', 'true');
+  stop.setAttribute('tabindex', '-1');
+  card.append(stop);
+
   return card;
 }
 
@@ -267,7 +302,7 @@ export function mount(root) {
     const actions = root.querySelector('.pp-actions');
     if (held) held.hidden = true;
     if (actions) actions.classList.add('is-pending');
-    const card = latencyCard();
+    const card = latencyCard({ inline: state.view === 'dialog' });
     if (chat) chat.append(card);
 
     const finish = () => {
