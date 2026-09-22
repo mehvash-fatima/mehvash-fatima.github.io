@@ -7,12 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  /* This page deliberately sits out the site's display typography. The
-     prototype reproduces Microsoft Priva's own UI, so the canvas has to stay
-     on the product's type (--pp-font, Segoe UI) to remain faithful to the
-     Figma frames — and a hand-lettered page title above a pixel-accurate
-     product screenshot would fight it. Only DM Sans and DM Mono are loaded
-     here; neither Reenie Beanie nor the old Playfair is used.
+  /* Typography here differs from the rest of the site in two deliberate ways.
+     The page title sets in DM Mono rather than the hand face the case studies
+     use, so Reenie Beanie is not loaded at all. And everything inside #pp-root
+     stays on the product's own type (--pp-font, Segoe UI): the prototype
+     reproduces Microsoft Priva's UI and has to match the Figma frames. The
+     line between page and prototype is the viewport element, not the
+     stylesheet.
 
      Site chrome only. Everything inside #pp-root is styled by
      assets/prototype/prototype.css; the rules below are the nav, footer,
@@ -239,6 +240,36 @@
        under test; the others want the same change. */
     .nav-dropdown-trigger { min-height: 44px; }
     body > footer { padding: 40px 16px; flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+
+  /* The intro block. These override prototype.css, which styles .pp-intro as
+     page furniture — everything inside #pp-root is untouched.
+
+     The back link and the eyebrow were running together 8px apart; the link is
+     a separate navigational thing from the page's own label, so it gets real
+     space. */
+  .pp-intro {
+    margin-top: 34px;
+  }
+
+  /* Matched to .cs-eyebrow on the case studies, so both pages label
+     themselves the same way. */
+  .pp-intro .pp-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .pp-intro h1 {
+    font-family: var(--mono);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
   }
 
   .pp-backlink {
