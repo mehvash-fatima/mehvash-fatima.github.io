@@ -351,20 +351,29 @@ export function mount(root) {
     }
 
     if (type && type.when === 'after') {
-      // The bubble for this text is already on screen: `type` pushes it as a
-      // user turn and the draw above rendered it. So hold it back, play the
-      // typing into the composer, then clear the composer and reveal the
-      // bubble — which is the order sending a message actually happens in.
-      // Without this the settled frame shows the same sentence twice, once
-      // in the transcript and once still sitting in the input.
+      // This turn is already on screen: `type` pushed the user's text and the
+      // draw above rendered it, along with any reply the beat pushed with it.
+      // Hold all of that back, play the typing into the composer, then clear
+      // the composer and reveal — which is the order sending a message
+      // actually happens in. Without it the settled frame shows the same
+      // sentence twice, once in the transcript and once still in the input.
+      //
+      // Count what the beat added rather than taking the last child: a beat
+      // that both types and pushes ends with the REPLY, so hiding one node
+      // hides the wrong one and leaves the duplicate on screen. A beat typing
+      // with `when: 'after'` sends from the composer, so both its user turn
+      // and its reply belong to the pane.
+      const added = 1 + (then.push && then.push.chat ? 1 : 0);
       const pane = root.querySelector('.pp-chat');
-      const sent = pane ? pane.lastElementChild : null;
-      if (sent) sent.hidden = true;
+      const held = pane ? Array.from(pane.children).slice(-added) : [];
+      for (const node of held) node.hidden = true;
+      const reveal = () => { for (const node of held) node.hidden = false; };
+
       await typeInto(type.into, type.text);
-      if (token !== runToken) { if (sent) sent.hidden = false; return; }
+      if (token !== runToken) { reveal(); return; }
       const composer = root.querySelector(type.into);
       if (composer) writeTyped(composer, '');
-      if (sent) sent.hidden = false;
+      reveal();
     }
 
     running = false;
