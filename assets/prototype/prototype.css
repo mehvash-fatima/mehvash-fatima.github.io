@@ -159,7 +159,10 @@
 
 .pp-lede {
   color: var(--pp-ink-2);
-  max-width: 60ch;
+  /* Deliberately uncapped. At 60ch this one-sentence line broke mid-sentence
+     on a 1400px page for no reason — a measure limit earns its place on
+     paragraphs of body copy, not on a single lede that fits. It wraps on its
+     own when the viewport actually makes it necessary. */
 }
 
 .pp-controls {
@@ -316,13 +319,14 @@
 .pp-canvas *::before,
 .pp-canvas *::after { box-sizing: border-box; }
 
-.pp-canvas p,
-.pp-canvas h1,
-.pp-canvas h2,
-.pp-canvas h3,
-.pp-canvas ul,
-.pp-canvas ol,
-.pp-canvas li { margin: 0; padding: 0; }
+/* Zero-specificity reset. Written as `.pp-canvas h2` this was (0,1,1) and
+   therefore outranked every single-class rule below it, so `.pp-toc-heading
+   { margin-bottom: 16px }` and six others silently computed to 0 — the
+   heading sat flush against its list with no way to tell from the source
+   that the rule was being ignored. `:where()` contributes nothing to
+   specificity, so this behaves as a reset should: any class rule beats it,
+   whatever the order. */
+:where(.pp-canvas) :where(p, h1, h2, h3, ul, ol, li) { margin: 0; padding: 0; }
 
 .pp-canvas ul,
 .pp-canvas ol { list-style: none; }
