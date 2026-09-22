@@ -118,3 +118,18 @@ git push
 Not currently configured. To use one, add a `CNAME` file at the repo root
 containing the domain (e.g. `www.example.com`) — or set it via **Settings →
 Pages** — and point the domain's DNS at GitHub Pages at your registrar.
+
+## Why `.nojekyll`
+
+GitHub Pages runs this repo through Jekyll by default. This site is hand-written
+HTML, not a Jekyll project, so the empty `.nojekyll` file at the root switches
+that build off and publishes the tree as-is.
+
+It matters for one specific reason: Jekyll silently drops any file or directory
+whose name begins with `_`. A future `_partial.js` or `_draft.html` would vanish
+from the deployed site with no error anywhere. Turning Jekyll off removes that
+whole class of problem, and the build is a little faster.
+
+The trade-off: with Jekyll off there is no `exclude:` mechanism, so **everything
+on the deploy branch is served**. Keep anything that should not be public off
+that branch rather than trying to hide it by filename.
