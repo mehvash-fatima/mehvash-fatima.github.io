@@ -18,7 +18,7 @@ across data governance, privacy, and AI-powered security tooling.
 ├── assets/
 │   ├── prototype/                # The prototype's modules, CSS and tests
 │   └── …                         # Image files referenced by the pages
-└── docs/superpowers/             # Design notes, plan and Figma inventories
+└── prototype-copilot.html        # (see above)
 ```
 
 Each page is self-contained HTML with its CSS and JavaScript inlined — no build
@@ -97,9 +97,14 @@ its `*.test.js` naming, not by directory.
 The suite validates data. It has nothing to say about layout, contrast, focus
 order, or whether a card is clipped — every visual defect found while building
 this came from driving a real browser and comparing against the Figma frame.
-`docs/superpowers/tools/walk-prototype.mjs` walks a scenario in headless Chrome
-over CDP (no dependencies) and reports the settled state after each beat; its
-header has the usage. Screenshot and compare for anything it cannot assert.
+A headless-Chrome walk harness (`tools/walk-prototype.mjs` on the
+`copilot-prototype` branch) drives a scenario over CDP and reports the settled
+state after each beat. Screenshot and compare for anything it cannot assert.
+
+The prototype's build notes — the plan, the Figma inventories and the record of
+which source-design slips were corrected and which were deliberately left alone
+— are kept on the `copilot-prototype` branch rather than here, because this
+branch is the Pages deploy source and everything on it is served publicly.
 
 ## Deploying
 
