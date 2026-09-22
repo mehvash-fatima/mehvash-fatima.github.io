@@ -5,6 +5,11 @@
  * Source: docs/superpowers/notes/figma-scenario-1.md (verbatim transcription
  * of Figma frames 1-9, scenario "Summarize Consent Laws + Create Draft Model").
  * Corrections applied per project-owner rulings are called out inline below.
+ *
+ * Comments below cite `docs/superpowers/notes/figma-scenario-*.md`. Those notes
+ * are kept on the `copilot-prototype` branch, not here — this branch is the
+ * Pages deploy source and everything on it is served publicly. The citations
+ * are still the right way to find the reasoning; check out that branch.
  */
 
 export const CONTENT = {

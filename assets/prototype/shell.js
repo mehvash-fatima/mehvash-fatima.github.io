@@ -12,6 +12,11 @@
  * CONTENT is imported for one reason only: `state.actionCard` is a
  * presentational content key ('action-card-pending' / 'action-card-completed')
  * rather than content, so the card's copy has to be looked up here.
+ *
+ * Comments below cite `docs/superpowers/notes/figma-scenario-*.md`. Those notes
+ * are kept on the `copilot-prototype` branch, not here — this branch is the
+ * Pages deploy source and everything on it is served publicly. The citations
+ * are still the right way to find the reasoning; check out that branch.
  */
 import { CONTENT } from './scenarios.js';
 
