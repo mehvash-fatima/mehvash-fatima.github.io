@@ -15,10 +15,9 @@ across data governance, privacy, and AI-powered security tooling.
 ├── case-study-03-priva.html      # Microsoft Priva – Privacy Management
 ├── case-study-04-babylon.html    # Project Babylon — Azure Purview
 ├── prototype-copilot.html        # Interactive prototype for case study 02
-├── assets/
-│   ├── prototype/                # The prototype's modules, CSS and tests
-│   └── …                         # Image files referenced by the pages
-└── prototype-copilot.html        # (see above)
+└── assets/
+    ├── prototype/                # The prototype's modules, CSS and tests
+    └── …                         # Image files referenced by the pages
 ```
 
 Each page is self-contained HTML with its CSS and JavaScript inlined — no build
