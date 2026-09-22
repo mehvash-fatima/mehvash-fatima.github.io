@@ -1,6 +1,6 @@
 # Copilot Privacy Manager prototype — handoff
 
-**Last session ended:** 2026-09-18, after Task 7c.
+**Last session ended:** 2026-09-22, after Task 10's automatable parts.
 **Branch:** `copilot-prototype` (local only, never pushed). 25 commits ahead of `main`.
 **Spec:** `docs/superpowers/specs/2026-09-15-copilot-prototype-design.md`
 **Plan:** `docs/superpowers/plans/2026-09-15-copilot-prototype.md`
@@ -32,9 +32,9 @@ may be gone; everything load-bearing from it is reproduced below.
 | 7a — SRR scenario (2.1) | Complete, reviewed. 4 beats. Plus two correction commits |
 | 7b — Tracker Scanning (2.2) | Complete. Browser-walked; found and fixed a hotspot-disarm bug |
 | 7c — RoPA / Privacy Assessments (3) | Complete. 3 beats. Browser-walked and screenshot-compared |
-| 8 — Mobile reflow below 768px | Not started |
-| 9 — CTA band in case study 02 | Not started |
-| 10 — Accessibility + cross-browser + README | Not started |
+| 8 — Mobile reflow below 768px | Complete. Verified 360–1600px |
+| 9 — CTA band in case study 02 | Complete. Two bands, carousel unaffected |
+| 10 — Accessibility + cross-browser + README | **Mostly complete — two legs need a human, see below** |
 
 ### What works today
 
@@ -137,10 +137,46 @@ All four items closed in `01bcd03`:
     refused — `/opt/homebrew` is not writable by this user and the fix needs
     `sudo chown -R`, which was not run.
 
+## Task 10: what is verified and what is not
+
+**Done and evidenced:**
+
+- **Keyboard.** All four scenarios: the armed spotlight is Tab-reachable (11 stops from
+  the top of the page), shows `:focus-visible`, Enter *and* Space advance, focus lands on
+  the newly armed hotspot after each beat, and focus escapes the canvas afterwards — no
+  trap. Note for whoever re-runs this: dispatch CDP `keyDown` **with `text`**, not
+  `rawKeyDown`. `rawKeyDown` suppresses the default action, so a real `<button>` never
+  gets the browser's synthesized click and Enter/Space look broken when they are fine.
+- **Reduced motion.** Exactly one click per beat with nothing merged or skipped, no
+  animation state at any point, settles in ~120ms. The case study's CTA band reports
+  `animationName: none` and zero running animations under `reduce` — absent, not stilled.
+- **Contrast.** "(Copilot suggestion)" attribution 6.19:1; AI-filled field values ~14:1
+  against both stops of the tint gradient. The spotlight is not colour-only — the armed
+  control carries a literal "Click" pill, and 24 other hotspots are `aria-disabled`.
+- **ARIA structure.** Two live regions (`#pp-step` polite/atomic, `.pp-chat`
+  polite/non-atomic), dialog with `role`/`aria-modal`/`aria-label`, and no button
+  anywhere without an accessible name.
+- **Chrome.** All four scenarios walk end to end at desktop and at 390px.
+
+**Not done — both need a person at the machine:**
+
+1. **VoiceOver.** The ARIA structure above is verified programmatically, which is not the
+   same as listening to it. Worth checking specifically: that a pushed answer is actually
+   announced from `.pp-chat`, and that the step counter's re-announcement on every beat is
+   helpful rather than chatty.
+2. **Safari and a real phone.** `safaridriver` is installed but refuses to start a session
+   until **Safari → Settings → Developer → Allow Remote Automation** is ticked (or
+   `safaridriver --enable`, which prompts for admin). A static portability audit found
+   nothing at risk: the only notable features are `:has()`, `structuredClone`,
+   `replaceChildren` and `scrollbar-width`, all supported well below the installed Safari
+   26.5 — `scrollbar-width` needs 18.2 and degrades to a default scrollbar otherwise.
+
 ## Known open items
 
-- **B6** — the design shows a small in-pane latency card; the prototype shows the
-  full-page one. Needs `mount.js`; deferred to Task 10.
+- ~~**B6**~~ — resolved (`5944ecd`). Both latency patterns are drawn, chosen from the
+  settled view rather than a flag. Implementing it uncovered a live defect: the pause was
+  not holding anything back in the dialog, because `[hidden]` is a bare attribute selector
+  and `.pp-bubble-assistant { display: flex }` outranked it.
 - **Deferred minor** — `textControl` (`shell.js`) and `previewControl` are near
   duplicates; collapse in a cleanup pass.
 - **Deferred minor** — `let focusOnArm` is declared mid-file at `mount.js:168` rather
