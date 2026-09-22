@@ -225,14 +225,21 @@
      every nav menu. Not a nested link — the row is already an <a>, and an <a>
      inside an <a> is invalid; the case study carries the actual link. */
   .nav-dropdown-menu .proj-flag {
+    /* `flex` keeps it on its own line; `fit-content` stops the highlight
+       stretching the full width of the row and reading as a banner. Radius
+       2px is the site's chip radius, from .tag. */
     display: flex;
+    width: fit-content;
     align-items: center;
     gap: 6px;
-    margin-top: 5px;
+    margin-top: 6px;
+    padding: 3px 7px;
+    background: rgba(125, 100, 40, 0.09);
+    border-radius: 2px;
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.06em;
-    color: var(--accent);
+    color: var(--highlight);
   }
 
   .nav-dropdown-menu .proj-flag::before {
@@ -241,7 +248,7 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--highlight);
   }
 
   /* ── HERO ── */
