@@ -43,10 +43,6 @@
     --wash-1:    #C8B89A;
     --wash-2:    #E8D5B0;
     --wash-3:    #C8A870;
-    /* This project's header wash — darkest; widest at the top, tapering left. Every tint in the ladder keeps
-       --muted above 4.5:1 for the 15px subtitle, which is what stopped it
-       going darker still. */
-    --cs-wash:   #D9CCB2;
     --hand:      'Reenie Beanie', 'Segoe Script', cursive;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
@@ -454,72 +450,7 @@
     font-weight: 400;
   }
 
-  .cs-header {
-    position: relative;
-    /* Room for the slanted edges to run without touching the content, and a
-       bounded bleed past the text column so the shape reads as a torn sheet
-       laid under the page rather than a box drawn around it. .case-study
-       keeps 60px of side padding at every width, so this can never reach the
-       viewport edge. */
-    padding: 38px 40px 46px;
-    margin-left: calc(-1 * min(28px, 3.5vw));
-    margin-right: calc(-1 * min(28px, 3.5vw));
-  }
-
-  /* The project's wash — clipped at the top right and raked left, the steepest of the four. Angular on purpose, like the homepage
-     hero, and each one cuts a different corner so the four read as
-     siblings rather than one shape recoloured. The taper crosses the tag
-     row: numeral, title and subtitle sit on the sheet, the end of the
-     tags does not. */
-  .cs-header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: var(--cs-wash);
-    clip-path: polygon(0% 7%, 92% 0%, 76% 100%, 3% 93%);
-  }
-
-  /* These proportions are tuned to a wide, short header. On a phone the block
-     runs past 700px tall and the same percentages rake it into a
-     parallelogram, so it flattens to a subtle torn edge and nothing spills —
-     on a single narrow column, content running off the sheet just reads as
-     broken. */
-  @media (max-width: 860px) {
-    .cs-header {
-      padding: 28px 24px 32px;
-    }
-
-    /* The mobile eyebrow is inside .cs-header, so it is on the sheet now too
-       and needs the same treatment its desktop twin got — --accent reads
-       3.4:1 on the mid tint at 11px. */
-    .cs-eyebrow-mobile {
-      color: var(--highlight);
-    }
-
-    .cs-header::before {
-      clip-path: polygon(0% 1.5%, 98% 0%, 100% 97%, 2.5% 100%);
-    }
-  }
-
-  .cs-header > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* --accent reads 3.9:1 on the mid tint and 2.8:1 on the darkest;
-     --highlight holds 5.3:1 at the worst of them. The mobile eyebrow sits
-     outside the shape and keeps --accent. */
-  .cs-header-content .cs-eyebrow {
-    color: var(--highlight);
-  }
-
-  /* The numeral is on the sheet now. --numeral-display drops to 2.2:1 on the
-     darkest tint; --numeral clears the 3:1 bar for 56px text on all four,
-     though only by 0.09 at #D9CCB2 — worth re-measuring if the tints move. */
-  .cs-header .cs-number {
-    color: var(--numeral);
-  }
+  .cs-header-content {}
 
   .cs-eyebrow {
     font-family: var(--mono);
