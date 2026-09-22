@@ -30,6 +30,9 @@ const IDLE_MS = 90_000;
 const TYPE_MS = 26;        // per character
 const CANVAS_W = 1920;
 const CANVAS_H = 1080;
+// Kept in step with the `@media (max-width: 767px)` block in prototype.css —
+// below this the canvas reflows instead of scaling.
+const MOBILE_W = 768;
 
 /**
  * Frame 2's loading copy, verbatim from
@@ -122,9 +125,23 @@ export function mount(root) {
   };
 
   /* --- viewport ---------------------------------------------------- */
+  /**
+   * Above the breakpoint the canvas stays a 1920x1080 box scaled by a
+   * transform, and the viewport is given the scaled height so the page below
+   * it sits flush. Below the breakpoint that scaling is abandoned entirely:
+   * a phone shrinking a desktop layout is unreadable, so the CSS reflows the
+   * canvas at its natural size instead. Both inline properties are REMOVED
+   * rather than overridden, because an inline style beats the stylesheet and
+   * would pin a 1080px-tall box under a reflowed canvas.
+   */
   const fitCanvas = () => {
     const canvas = root.querySelector('.pp-canvas');
     if (!canvas) return;
+    if (window.innerWidth < MOBILE_W) {
+      canvas.style.removeProperty('--pp-scale');
+      root.style.removeProperty('height');
+      return;
+    }
     const scale = Math.min(1, root.clientWidth / CANVAS_W);
     canvas.style.setProperty('--pp-scale', String(scale));
     root.style.height = `${Math.round(CANVAS_H * scale)}px`;

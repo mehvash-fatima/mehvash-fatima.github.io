@@ -2855,3 +2855,300 @@ button.pp-toc-item {
 
 button.pp-toc-item:not(.is-inert):hover { background: var(--pp-surface-alt); }
 button.pp-toc-item.is-inert { cursor: default; }
+
+/* =====================================================================
+   Mobile reflow — below 768px
+
+   Above this width the canvas is a fixed 1920x1080 box shrunk by a
+   transform, which is fine on a laptop and unreadable on a phone. Below
+   it the transform is abandoned and the canvas becomes an ordinary
+   responsive column: every multi-column grid collapses to one, the
+   browser chrome goes (it is set dressing, and it costs vertical space
+   that the actual product UI needs), and the dialog becomes full-screen
+   rather than a floating panel over a scrim.
+
+   `mount.js` removes the inline `--pp-scale` and viewport height at the
+   same breakpoint — MOBILE_W there must stay in step with the 767px here.
+   ===================================================================== */
+
+@media (max-width: 767px) {
+
+  /* --- Release the canvas ------------------------------------------ */
+
+  .pp-viewport {
+    overflow: visible;
+    border-radius: var(--pp-radius-md);
+  }
+
+  .pp-canvas {
+    width: 100%;
+    height: auto;
+    transform: none;
+    overflow: visible;
+  }
+
+  /* Set dressing that costs more vertical space than it earns on a phone. */
+  .pp-browser { display: none; }
+
+  .pp-page {
+    height: auto;
+    overflow: visible;
+  }
+
+  .pp-stage { min-height: 0; }
+
+  /* --- One column everywhere --------------------------------------- */
+
+  .pp-columns,
+  .pp-dialog-body,
+  .pp-page-header-main,
+  .pp-layout-grid,
+  .pp-preview-strip,
+  .pp-risk-board,
+  .pp-risk-cards,
+  .pp-scan-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pp-columns {
+    gap: var(--pp-space-5);
+    padding: var(--pp-space-4);
+    overflow: visible;
+  }
+
+  .pp-risk-board { padding: 0 var(--pp-space-4) var(--pp-space-5); }
+
+  /* The rail reads as a band above the answer rather than a sidebar. */
+  .pp-toc {
+    border-right: none;
+    border-bottom: 1px solid var(--pp-border-subtle);
+    padding-right: 0;
+    padding-bottom: var(--pp-space-4);
+  }
+
+  .pp-chat,
+  .pp-answer-region {
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  /* --- Home ---------------------------------------------------------- */
+
+  .pp-hero { padding: var(--pp-space-6) var(--pp-space-4); }
+  .pp-hero-title { font-size: var(--pp-text-lg); }
+
+  .pp-bento {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: var(--pp-space-5);
+    padding: var(--pp-space-4);
+  }
+
+  /* --- Dialog becomes full-screen ----------------------------------- */
+
+  /* The backdrop is already aria-hidden; on a phone it is also a second
+     full page of content behind a translucent sheet, so it is dropped and
+     the scrim returns to normal flow. */
+  .pp-page-answer.is-backdrop { display: none; }
+
+  .pp-scrim {
+    position: static;
+    display: block;
+    background: none;
+  }
+
+  .pp-dialog {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .pp-dialog-body {
+    gap: var(--pp-space-5);
+    padding: 0 var(--pp-space-4) var(--pp-space-4);
+  }
+
+  /* Stacked in DOM order — chat first, then the panel. Deliberately NOT a
+     sticky bottom sheet: the armed hotspot is inside the panel in three of
+     the four scenarios (#wizard-next, #wizard-save-close, #email-card-open),
+     and a pinned sheet would sit on top of exactly the thing the visitor is
+     being told to press. */
+  .pp-chat-pane,
+  .pp-chat-pane .pp-chat {
+    overflow: visible;
+    min-height: 0;
+  }
+
+  .pp-wizard-body,
+  .pp-report-body {
+    overflow: visible;
+  }
+
+  /* --- Report panel -------------------------------------------------- */
+
+  .pp-report-body { flex-direction: column; }
+
+  .pp-subway {
+    width: 100%;
+    padding-left: var(--pp-space-2);
+  }
+
+  .pp-report-blocks { padding-left: var(--pp-space-5); }
+
+  /* --- Tables scroll rather than squeeze ----------------------------- */
+
+  .pp-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pp-table { min-width: 560px; }
+
+  /* --- Touch targets -------------------------------------------------
+     44px is the floor; the design's buttons are 32px tall. Padding does the
+     work so the label keeps its own size and nothing needs re-centring. */
+
+  .pp-button,
+  .pp-chip,
+  .pp-icon-button,
+  .pp-toc-item,
+  .pp-risk-row {
+    min-height: 44px;
+  }
+
+  .pp-icon-button { min-width: 44px; }
+
+  /* --- Legibility at 1x ----------------------------------------------
+     These sizes were drawn to be read on a 1920px canvas. Unscaled on a
+     phone the body copy is fine, but the design's 10px captions are not. */
+
+  .pp-canvas {
+    --pp-text-xs: 12px;
+    --pp-text-sm: 13px;
+  }
+
+  /* --- Page chrome ----------------------------------------------------
+     The four scenario tabs sit on one unwrapped row, 438px of it, and that
+     was the whole horizontal-scroll problem: the row widened the layout
+     viewport, and the fixed nav then stretched to the wider viewport and
+     looked like the culprit. Tabs wrap to one per row here, which also
+     gives each a full-width tap target. */
+
+  .pp-controls {
+    gap: var(--pp-space-2);
+    margin: var(--pp-space-4) 0 var(--pp-space-3);
+  }
+
+  .pp-tabs {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .pp-tabs button { flex: 1 1 100%; text-align: left; }
+
+  .pp-controls button,
+  .pp-tabs button,
+  .pp-complete button,
+  .pp-filter-pill { min-height: 44px; }
+
+  .pp-controls .pp-step { width: 100%; }
+
+  /* --- Release the fixed pixel widths -------------------------------
+     These are drawn against a 1920px canvas. Unscaled on a phone each one
+     is wider than the whole viewport, and every one of them was pushing the
+     document past its own width. */
+
+  .pp-prompt-bar,
+  .pp-hero-compact .pp-prompt-bar,
+  .pp-pie-wrap,
+  .pp-panel-search,
+  .pp-compose {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pp-pie { width: min(186px, 60%); }
+
+  /* --- Suite header ---------------------------------------------------
+     Six inert glyphs and an avatar do not fit beside the product name at
+     this width, and they are chrome rather than content. The avatar stays
+     because it is the only one that reads as a person rather than as a
+     toolbar. */
+
+  .pp-suite { padding: 0 var(--pp-space-3); }
+  .pp-suite-icon { display: none; }
+  .pp-suite-right { gap: var(--pp-space-3); }
+
+  /* `.pp-link-button` is always a standalone control on its own line — the
+     dialog header's "Open in ...", the page's "Back", the footer's "Show
+     process". Links set inside prose are `.pp-link-inline`, which is left
+     alone so it keeps its line box. */
+  .pp-link-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* --- Rows that must wrap rather than clip --------------------------
+     Each of these is `display: flex` with `justify-content: space-between`
+     and no wrap: at 1920px the two ends sit comfortably apart, at 364px the
+     trailing end runs off the edge and is silently cut. The page itself does
+     not scroll — an ancestor clips — so the content simply disappears, which
+     is the worst of the three possible outcomes. */
+
+  .pp-wizard-header,
+  .pp-wizard-footer,
+  .pp-panel-toolbar,
+  .pp-dialog-actions,
+  .pp-cookie-actions,
+  .pp-filters {
+    flex-wrap: wrap;
+  }
+
+  .pp-wizard-header,
+  .pp-wizard-footer {
+    gap: var(--pp-space-3);
+    padding: var(--pp-space-4);
+  }
+
+  /* "Open in Subject Rights Requests" beside a close button leaves the label
+     about 90px, which wraps it to three lines and pushes the header tall.
+     Letting it take the full row keeps it on one or two. */
+  .pp-dialog-header { flex-wrap: wrap; }
+  .pp-dialog-actions { width: 100%; justify-content: space-between; }
+
+  /* The cookie-banner mock inside the preview step: three buttons and a
+     "Manage preferences" link on one row, the last of which was cut. */
+  .pp-cookie-banner { padding: var(--pp-space-3) var(--pp-space-4); }
+
+  /* A table wide enough to need its own scroller should say so. */
+  .pp-table-wrap { scrollbar-width: thin; }
+
+  /* The email draft's table is three narrow columns (Owner / Tasks left /
+     Deadline) and it is NOT inside a `.pp-table-wrap`, so the 560px floor
+     above would push it straight off the compose window with nothing to
+     scroll it. It fits at this width; let it. */
+  .pp-email-table { min-width: 0; }
+
+  /* The compose ribbon's font, size and format controls run off the right
+     edge otherwise, taking the last glyph with them. */
+  .pp-compose-ribbon,
+  .pp-compose-tabs { flex-wrap: wrap; }
+
+  /* `.pp-link-inline` is exempt from the touch-target floor where it really
+     is inline in a sentence ("Learn more", "Privacy Statement", a linked
+     table cell) — WCAG 2.5.8 excludes targets constrained by surrounding
+     text. The layout step's "Preview" is not that: it is a standalone
+     control sitting alone in a card, so it gets a real target. */
+  .pp-layout-card .pp-link-inline {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The spotlight ring sits outside the element; at the screen edge its
+     glow would be clipped by the viewport, so pull the whole canvas in. */
+  .pp-stage { padding: 0 2px; }
+}

@@ -196,6 +196,20 @@
     padding: 120px 40px 40px;
   }
 
+  /* Below the prototype's own breakpoint the canvas reflows at its natural
+     size instead of being scaled, so every pixel of page padding comes
+     straight off the width it has to lay out in. 40px a side was taking an
+     eighth of a 390px phone. */
+  @media (max-width: 767px) {
+    .pp-shell { padding: 88px 12px 32px; }
+    body > nav { padding: 0 16px; }
+    /* 14px tall as drawn. The same trigger is on all four case-study pages
+       and is undersized there too — fixed here because this is the page
+       under test; the others want the same change. */
+    .nav-dropdown-trigger { min-height: 44px; }
+    body > footer { padding: 40px 16px; flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+
   .pp-backlink {
     font-family: var(--mono);
     font-size: 11px;
