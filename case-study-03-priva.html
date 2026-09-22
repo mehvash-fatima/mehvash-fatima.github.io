@@ -40,6 +40,10 @@
     --wash-1:    #C8B89A;
     --wash-2:    #E8D5B0;
     --wash-3:    #C8A870;
+    /* This project's header wash — darker again; shallower tilt, pinched on the right. Every tint in the ladder keeps
+       --muted above 4.5:1 for the 15px subtitle, which is what stopped it
+       going darker still. */
+    --cs-wash:   #E3D6BD;
     --hand:      'Reenie Beanie', 'Segoe Script', cursive;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
@@ -447,7 +451,45 @@
     font-weight: 400;
   }
 
-  .cs-header-content {}
+  .cs-header-content {
+    position: relative;
+    padding: 30px 34px 34px;
+  }
+
+  /* Torn-paper wash behind the header, same device as the homepage hero.
+     It covers the content column only — the ghosted numeral sits outside it,
+     because --numeral-display lands under 3:1 on any of these tints and
+     dropping it onto the wash would have meant darkening it into something
+     that no longer reads as ghosted. */
+  .cs-header-content::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    bottom: 0;
+    /* Bounded bleed. .case-study keeps 60px of side padding at every width,
+       so 24px can never reach the viewport edge and start a scrollbar. */
+    left: calc(-1 * min(24px, 3vw));
+    right: calc(-1 * min(24px, 3vw));
+    background: var(--cs-wash);
+    /* Vertical offsets in px, not %. As percentages the warp scales with the
+       block's height — harmless at 260px on a desktop header, but the same
+       shape on a phone, where the block runs past 1400px tall, leaned like a
+       parallelogram. Pinned in px it stays the same torn edge at any height. */
+    clip-path: polygon(0% 8px, 98.4% 0%, 100% calc(100% - 17px), 1.2% 100%);
+  }
+
+  .cs-header-content > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --accent drops to 3.9:1 or worse on these tints; --highlight holds 5.3:1
+     at the darkest. The mobile eyebrow sits outside the wash and keeps
+     --accent. */
+  .cs-header-content .cs-eyebrow {
+    color: var(--highlight);
+  }
 
   .cs-eyebrow {
     font-family: var(--mono);
