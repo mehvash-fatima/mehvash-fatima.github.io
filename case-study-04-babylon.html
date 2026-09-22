@@ -222,6 +222,31 @@
     margin-top: 3px;
   }
 
+  /* Marks the one project that has a clickable prototype behind it. A dot
+     rather than a ring: the prototype's gold spotlight is the loud version of
+     this and belongs on the case study's own call-to-action, not repeated in
+     every nav menu. Not a nested link — the row is already an <a>, and an <a>
+     inside an <a> is invalid; the case study carries the actual link. */
+  .nav-dropdown-menu .proj-flag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .nav-dropdown-menu .proj-flag::before {
+    content: '';
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
   /* ── HERO ── */
   .hero {
     padding: 160px 60px 100px;
@@ -1573,6 +1598,7 @@
           <span class="proj-content">
             <span class="proj-title">AI-Powered Privacy Manager</span>
             <span class="proj-meta">2023 – 2024 · Copilot Integration · IAPP Demo</span>
+            <span class="proj-flag">Interactive prototype</span>
           </span>
         </a>
         <a href="case-study-03-priva.html">
