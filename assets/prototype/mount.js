@@ -625,7 +625,16 @@ export function mount(root) {
   bind('pp-complete-close', () => {
     completeDismissed = true;
     const card = el('pp-complete');
+    const dismissing = card && card.contains(document.activeElement);
     if (card) card.hidden = true;
+    // Hiding the card destroys nothing, but focus was on a control that is
+    // now invisible, and leaving it there strands a keyboard visitor on an
+    // element they cannot see. Reset is the nearest thing still on screen
+    // that does something — and at the terminal beat it is the only one.
+    if (dismissing) {
+      const fallback = el('pp-reset');
+      if (fallback) fallback.focus();
+    }
     // The card was covering the cue's decision; nothing is armed at the
     // terminal beat, so this settles it back to hidden either way.
     scheduleCue();
