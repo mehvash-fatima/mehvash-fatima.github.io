@@ -72,10 +72,35 @@
   --pp-ai-solid:      #7279f8;
   --pp-ai-stroke:     var(--pp-brand-stroke);
 
+  /* --- The portfolio's own palette -------------------------------
+     Straight from the :root block in the case-study pages. Every piece
+     of furniture OUTSIDE the canvas — tabs, step counter, reset, the
+     scroll cue, the completion card — is drawn from these and never
+     from the --pp-* product tokens above. That line is the whole point:
+     Microsoft's blue means "this is the product", so anything the
+     portfolio says for itself has to be unmistakably not blue.
+
+     The two type faces are loaded by prototype-copilot.html, which is
+     the only page that links this stylesheet. */
+  --pp-site-accent:   #7d6428;   /* --accent    */
+  --pp-site-deep:     #5e4a1c;   /* --highlight */
+  --pp-site-bg:       #fbfaf8;   /* --bg        */
+  --pp-site-surface:  #f5f1ea;   /* --surface   */
+  --pp-site-card:     #ffffff;   /* --card      */
+  --pp-site-border:   #e3dcce;   /* --border    */
+  --pp-site-ink:      #3a3a3a;   /* --ink       */
+  --pp-site-muted:    #5c554f;   /* --muted     */
+  --pp-site-tint:     rgba(125, 100, 40, 0.09);  /* .proj-flag's wash */
+  --pp-site-scrim:    rgba(251, 250, 248, 0.6);
+  --pp-site-shadow:   0 18px 40px rgba(58, 48, 26, 0.16), 0 2px 6px rgba(58, 48, 26, 0.08);
+  --pp-site-radius:   3px;       /* the site's card/skip-link radius */
+  --pp-site-sans:     'DM Sans', sans-serif;
+  --pp-site-mono:     'DM Mono', monospace;
+
   /* --- Guidance layer (this prototype's own, not Microsoft's) ----
-     Borrowed from the portfolio's accent so the "click here" ring
-     reads as the case study speaking, never as product chrome.     */
-  --pp-spot:          #7d6428;
+     The "click here" ring is the portfolio's accent, so it reads as the
+     case study speaking, never as product chrome.                  */
+  --pp-spot:          var(--pp-site-accent);
   --pp-spot-glow:     rgba(125, 100, 40, 0.18);
   --pp-spot-ink:      #ffffff;
 
@@ -181,39 +206,52 @@
 
 /* Scenario tabs. Sized down from the body scale: there are four of them
    carrying long labels, and they are a picker rather than the thing you came
-   to press. */
+   to press.
+
+   The selected tab used to be filled with --pp-accent, the product's royal
+   blue. That put the page's own "you are here" marker in exactly the colour
+   the canvas underneath uses for its primary buttons, so the picker read as
+   part of the product rather than as the portfolio's chrome. It is drawn in
+   the site's gold now — the same accent as the spotlight ring and the case
+   study's own headings — and no blue survives above the canvas. */
 .pp-tabs button {
   font: inherit;
   font-size: var(--pp-text-sm);
   padding: var(--pp-space-1) var(--pp-space-3);
-  border: 1px solid var(--pp-border);
-  border-radius: var(--pp-radius-sm);
-  background: var(--pp-surface);
-  color: var(--pp-ink-2);
+  border: 1px solid var(--pp-site-border);
+  border-radius: var(--pp-site-radius);
+  background: var(--pp-site-bg);
+  color: var(--pp-site-muted);
   cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.pp-tabs button:hover { background: var(--pp-surface-sunk); }
+.pp-tabs button:hover {
+  background: var(--pp-site-tint);
+  border-color: var(--pp-site-accent);
+  color: var(--pp-site-deep);
+}
 
 .pp-tabs button[aria-selected='true'] {
-  background: var(--pp-accent);
-  border-color: var(--pp-accent);
-  color: var(--pp-surface);
+  background: var(--pp-site-accent);
+  border-color: var(--pp-site-accent);
+  color: var(--pp-site-card);
 }
 
 /* Step counter and Reset travel together on the right, reading as one
    status-and-action pair rather than as two more buttons in the row. */
 .pp-controls .pp-step {
   font-size: var(--pp-text-sm);
-  color: var(--pp-ink-3);
+  color: var(--pp-site-muted);
   margin: 0 var(--pp-space-1) 0 0;
 }
 
-/* Reset is the only control here that DOES something to the demo, so it is
-   shaped unlike the tabs on purpose: a pill rather than a rectangle, drawn in
-   the spotlight's gold rather than the tabs' neutral grey. It is not filled —
-   the selected tab already owns the one solid accent block in this row, and
-   two of them would compete. */
+/* Reset is shaped unlike the tabs on purpose: a pill rather than a rectangle.
+   It used to be the row's one gold thing, back when the selected tab was
+   blue. Now that the tab owns the gold — it is the state you are always
+   looking at, where Reset is a control you reach for occasionally — Reset
+   sits quiet in the site's warm neutrals and only comes up gold on hover.
+   Two solid gold blocks in one short row competed. */
 .pp-reset {
   display: inline-flex;
   align-items: center;
@@ -221,12 +259,12 @@
   font: inherit;
   font-size: var(--pp-text-sm);
   padding: var(--pp-space-1) var(--pp-space-3);
-  border: 1px solid var(--pp-spot);
+  border: 1px solid var(--pp-site-border);
   border-radius: var(--pp-radius-pill);
   background: transparent;
-  color: var(--pp-spot);
+  color: var(--pp-site-muted);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .pp-reset svg {
@@ -236,9 +274,15 @@
 }
 
 .pp-reset:hover {
-  background: var(--pp-spot);
-  color: var(--pp-spot-ink);
+  background: var(--pp-site-tint);
+  border-color: var(--pp-site-accent);
+  color: var(--pp-site-deep);
 }
+
+/* The stage is the viewport and the completion card that overlays it. It
+   exists purely as their shared positioning box — mount.js replaces every
+   child of .pp-viewport on each draw, so the card cannot live inside it. */
+.pp-stage { position: relative; }
 
 .pp-viewport {
   overflow: hidden;
@@ -254,43 +298,274 @@
   align-items: flex-start;
 }
 
-/* The completion state. The scenario's last frame is terminal by design, so
-   the page says so and offers the way back rather than going dead. */
+/* =====================================================================
+   The completion state.
+
+   The scenario's last frame is terminal by design. This used to be a thin
+   bar above the canvas reading "Scenario complete." — easy to miss, and it
+   never said what the scenario had actually achieved, which is the whole
+   point of walking it. It is a card laid over the finished frame now: it
+   names the task, says in a line or two what Copilot did, and offers the
+   two onward moves (dismiss and look at the frame, or go on).
+
+   Everything here is drawn in the portfolio's palette and type — DM Mono
+   over DM Sans, warm paper, gold — with not one --pp-* product token in
+   sight. A visitor must never mistake this for another Microsoft dialog
+   appearing on top of the last one.
+   ===================================================================== */
+
 .pp-complete {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
-  gap: var(--pp-space-3);
-  margin: 0 0 var(--pp-space-4);
-  padding: var(--pp-space-3) var(--pp-space-4);
-  border: 1px solid var(--pp-border);
-  border-left: 3px solid var(--pp-spot);
-  border-radius: var(--pp-radius-sm);
-  background: var(--pp-surface);
-  font-family: var(--pp-font);
-  color: var(--pp-ink);
+  justify-content: center;
+  padding: var(--pp-space-6);
+  /* Warm paper rather than a neutral black scrim: the canvas has to recede
+     behind the portfolio's own colour, not behind a product overlay. */
+  background: var(--pp-site-scrim);
+  /* Enough to push the frame back without erasing it — the finished screen
+     is the evidence for what the card claims, so it has to stay readable. */
+  backdrop-filter: blur(1.5px);
 }
 
 .pp-complete[hidden] { display: none; }
 
-.pp-complete-text {
-  margin: 0;
-  font-size: var(--pp-text-base);
+.pp-complete-card {
+  width: 100%;
+  max-width: 460px;
+  padding: var(--pp-space-7) var(--pp-space-7) var(--pp-space-6);
+  background: var(--pp-site-card);
+  border: 1px solid var(--pp-site-border);
+  border-radius: var(--pp-site-radius);
+  box-shadow: var(--pp-site-shadow);
+  color: var(--pp-site-ink);
+  text-align: left;
 }
 
-.pp-complete button {
-  font: inherit;
-  font-size: var(--pp-text-base);
-  padding: var(--pp-space-2) var(--pp-space-4);
-  border: 1px solid var(--pp-accent);
-  border-radius: var(--pp-radius-sm);
-  background: var(--pp-accent);
-  color: var(--pp-surface);
-  cursor: pointer;
+@media (prefers-reduced-motion: no-preference) {
+  .pp-complete-card { animation: pp-complete-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
 }
+
+@keyframes pp-complete-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Matched to .pp-eyebrow on the page above and .cs-eyebrow on the case
+   studies, so the card labels itself the way every other section does. */
+.pp-complete-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  margin: 0 0 var(--pp-space-3);
+  font-family: var(--pp-site-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-site-accent);
+}
+
+/* A drawn tick rather than an emoji or an icon font: one more file to load
+   for six pixels of line is not worth it, and an emoji renders differently
+   on every platform. */
+.pp-complete-eyebrow svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.pp-complete-title {
+  margin: 0 0 var(--pp-space-3);
+  font-family: var(--pp-site-mono);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--pp-site-ink);
+}
+
+.pp-complete-summary {
+  margin: 0 0 var(--pp-space-6);
+  max-width: 44ch;
+  font-family: var(--pp-site-sans);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--pp-site-muted);
+}
+
+.pp-complete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pp-space-2);
+}
+
+.pp-complete-actions button,
+.pp-complete-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px var(--pp-space-4);
+  border-radius: var(--pp-site-radius);
+  font-family: var(--pp-site-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.pp-complete-primary {
+  border: 1px solid var(--pp-site-accent);
+  background: var(--pp-site-accent);
+  color: var(--pp-site-card);
+}
+
+.pp-complete-primary:hover {
+  background: var(--pp-site-deep);
+  border-color: var(--pp-site-deep);
+}
+
+.pp-complete-secondary {
+  border: 1px solid var(--pp-site-border);
+  background: transparent;
+  color: var(--pp-site-muted);
+}
+
+.pp-complete-secondary:hover {
+  background: var(--pp-site-tint);
+  border-color: var(--pp-site-accent);
+  color: var(--pp-site-deep);
+}
+
+.pp-complete [hidden] { display: none; }
 
 .pp-controls button[disabled] {
   opacity: 0.45;
   cursor: default;
+}
+
+/* =====================================================================
+   Scroll cue.
+
+   The canvas is taller than most windows, so the armed hotspot is often
+   off screen and the visitor is left looking at a frame with no visible
+   "Click" tag anywhere on it. When that happens a band shimmers at the
+   edge of the window the step lies past, with a chip naming the way to
+   scroll. mount.js decides whether it shows and which way it points; the
+   whole thing is inert to the pointer so it can never eat a click meant
+   for the canvas underneath.
+   ===================================================================== */
+
+.pp-scroll-cue {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 108px;
+  /* Under the site nav, which is z-index 100. */
+  z-index: 90;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pp-scroll-cue[hidden] { display: none; }
+
+.pp-scroll-cue[data-direction='down'] {
+  bottom: 0;
+  align-items: flex-end;
+  padding-bottom: 16px;
+  background: linear-gradient(to top, var(--pp-site-tint), transparent 88%);
+}
+
+/* Starts below the fixed nav so the band never sits half behind it. */
+.pp-scroll-cue[data-direction='up'] {
+  top: 60px;
+  align-items: flex-start;
+  padding-top: 16px;
+  background: linear-gradient(to bottom, var(--pp-site-tint), transparent 88%);
+}
+
+/* The shimmer: a soft gold light travelling across the band. Separate from
+   the band's own gradient so the wash stays put when motion is reduced and
+   only the movement is dropped. */
+.pp-scroll-cue::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(125, 100, 40, 0.14) 50%,
+    transparent 70%);
+  background-size: 260% 100%;
+  background-position: 130% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pp-scroll-cue::before { animation: pp-shimmer 2.8s linear infinite; }
+}
+
+@keyframes pp-shimmer {
+  from { background-position: 130% 0; }
+  to   { background-position: -130% 0; }
+}
+
+.pp-scroll-cue-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  max-width: calc(100vw - 32px);
+  padding: 7px 14px;
+  border: 1px solid var(--pp-site-border);
+  border-radius: var(--pp-radius-pill);
+  background: var(--pp-site-bg);
+  box-shadow: 0 4px 14px rgba(58, 48, 26, 0.1);
+  font-family: var(--pp-site-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pp-site-deep);
+  white-space: nowrap;
+}
+
+.pp-scroll-cue-chip svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  color: var(--pp-site-accent);
+}
+
+/* One arrow asset, flipped for the upward cue. */
+.pp-scroll-cue[data-direction='up'] .pp-scroll-cue-chip svg { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .pp-scroll-cue-chip svg { animation: pp-cue-nudge 1.6s ease-in-out infinite; }
+}
+
+@keyframes pp-cue-nudge {
+  0%, 100% { transform: translateY(-1px); }
+  50%      { transform: translateY(2px); }
+}
+
+/* The nudge is written as a plain transform, so the flipped arrow needs its
+   own keyframes rather than inheriting one that would undo the rotation. */
+@media (prefers-reduced-motion: no-preference) {
+  .pp-scroll-cue[data-direction='up'] .pp-scroll-cue-chip svg {
+    animation: pp-cue-nudge-up 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes pp-cue-nudge-up {
+  0%, 100% { transform: rotate(180deg) translateY(-1px); }
+  50%      { transform: rotate(180deg) translateY(2px); }
 }
 
 /* =====================================================================
@@ -3113,10 +3388,21 @@ button.pp-toc-item.is-inert { cursor: default; }
 
   .pp-tabs button,
   .pp-reset,
-  .pp-complete button,
+  .pp-complete-actions button,
+  .pp-complete-actions a,
   .pp-filter-pill { min-height: 44px; }
 
   .pp-reset { flex: none; }
+
+  /* The card's desktop padding takes a third of a 360px screen. */
+  .pp-complete { padding: var(--pp-space-4); }
+
+  .pp-complete-card {
+    padding: var(--pp-space-6) var(--pp-space-5) var(--pp-space-5);
+  }
+
+  .pp-complete-actions button,
+  .pp-complete-actions a { flex: 1 1 100%; }
 
   /* Step and Reset share the row under the stacked tabs, so the pair stays a
      pair. `flex: 1` on the counter pushes Reset to the far edge without

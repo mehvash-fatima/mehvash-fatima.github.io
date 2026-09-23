@@ -22,6 +22,27 @@ test('every scenario has the required fields', () => {
     assert.ok(scenario.label, `${scenario.id} needs a label`);
     assert.ok(scenario.initial && scenario.initial.view, `${scenario.id} needs an initial view`);
     assert.ok(scenario.beats.length > 0, `${scenario.id} has no beats`);
+    assert.ok(scenario.product, `${scenario.id} needs a product name`);
+  }
+});
+
+/* The completion card is filled straight from this copy and has no fallback
+   worth shipping — an empty summary would leave the visitor staring at a
+   card that congratulates them for nothing. */
+test('every scenario says what finishing it accomplished', () => {
+  for (const scenario of SCENARIOS) {
+    const done = scenario.completion;
+    assert.ok(done, `${scenario.id} needs a completion block`);
+    assert.ok(done.title, `${scenario.id} needs a completion title`);
+    assert.match(
+      done.title,
+      /complete$/,
+      `${scenario.id}'s completion title should name the task and end in "complete"`
+    );
+    assert.ok(
+      done.summary && done.summary.length > 60,
+      `${scenario.id} needs a completion summary saying what was produced`
+    );
   }
 });
 

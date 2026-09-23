@@ -146,6 +146,8 @@ export function mount(root) {
   let inFlight = null;
   let running = false;
   let runToken = 0;
+  // Closed by hand, so later draws do not put the completion card back.
+  let completeDismissed = false;
 
   const el = id => document.getElementById(id);
   const nextBeat = () => scenario.beats[state.beatIndex + 1];
@@ -205,10 +207,79 @@ export function mount(root) {
         node.setAttribute('tabindex', '-1');
       }
     }
-    return beat ? root.querySelector(beat.spotlight) : null;
+    // The cue watches whatever is armed, including nothing: at the terminal
+    // beat, and through a thinking pause, `beat` is null and the cue goes
+    // away with it.
+    cueTarget = beat ? root.querySelector(beat.spotlight) : null;
+    scheduleCue();
+    return cueTarget;
   };
 
   /* --- host chrome ------------------------------------------------- */
+  /**
+   * Set by `draw` for the length of one `announce` call: true when focus was
+   * inside the canvas before the redraw. At the terminal beat there is no
+   * armed button left to hand it back to, so the completion card takes it
+   * instead — otherwise a keyboard visitor's focus lands on <body> and the
+   * card they just earned is unreachable without tabbing from the top.
+   */
+  let handOffFocus = false;
+
+  /**
+   * The completion card, laid over the finished frame.
+   *
+   * Shown at the terminal beat and only until the visitor closes it:
+   * `completeDismissed` has to survive the draws that happen afterwards
+   * (a resize, an edit in a wizard field) or Close would not stick. The two
+   * things that genuinely start a run over — Reset and picking another
+   * scenario — both go through `reset`, which clears it.
+   */
+  const syncComplete = hasNext => {
+    const card = el('pp-complete');
+    if (!card) return;
+    const show = !hasNext && !completeDismissed;
+    const wasHidden = card.hidden;
+    card.hidden = !show;
+    if (!show) return;
+
+    const copy = scenario.completion || {};
+    const title = el('pp-complete-title');
+    const summary = el('pp-complete-summary');
+    if (title) title.textContent = copy.title || 'Scenario complete';
+    if (summary) summary.textContent = copy.summary || '';
+
+    // The onward move. Mid-list it is the next scenario; after the last one
+    // there is nowhere further to go inside the prototype, so the link back
+    // to the case study takes the primary slot. These are two elements that
+    // take turns rather than one whose tag changes: a <button> that
+    // navigates and an <a> that does not are both the wrong element, and
+    // rewriting the tag at runtime is worse than rendering the right one.
+    const upcoming = SCENARIOS[SCENARIOS.indexOf(scenario) + 1];
+    const next = el('pp-complete-next');
+    const exit = el('pp-complete-exit');
+    if (next) {
+      next.hidden = !upcoming;
+      // The scenario's product, not its label: the labels run to forty
+      // characters and wrap this button onto three lines.
+      if (upcoming) next.textContent = `Next: ${upcoming.product}`;
+    }
+    if (exit) exit.hidden = Boolean(upcoming);
+
+    if (!wasHidden) return;
+    const onward = next && !next.hidden ? next : exit;
+    if (handOffFocus && onward) onward.focus({ preventScroll: true });
+    // The viewport is usually taller than the window, so the card can open
+    // off screen — the same problem the scroll cue exists for, except here
+    // the page can simply go there.
+    const body = card.querySelector('.pp-complete-card');
+    if (body) {
+      body.scrollIntoView({
+        block: 'center',
+        behavior: reduceMotion() ? 'auto' : 'smooth'
+      });
+    }
+  };
+
   const announce = () => {
     const total = scenario.beats.length;
     const beat = nextBeat();
@@ -216,8 +287,71 @@ export function mount(root) {
     if (step) {
       step.textContent = `Step ${Math.min(state.beatIndex + 2, total)} of ${total}`;
     }
+    syncComplete(Boolean(beat));
+  };
+
+  /* --- scroll cue --------------------------------------------------- */
+  /**
+   * The canvas is a good deal taller than most windows, so the armed hotspot
+   * is regularly past the bottom of the screen and the visitor is left
+   * looking at a frame with no "Click" tag anywhere on it. When that happens
+   * a band shimmers along the edge the step lies past. It is measured, not
+   * guessed: the armed node's own rect against the window.
+   */
+  // The site nav is fixed and 60px tall (prototype-copilot.html). The strip
+  // behind it is not visible, so the cue does not count it as visible.
+  const NAV_H = 60;
+  // The spotlight ring and its "Click" tag stand proud of the button's own
+  // box, so the box is inflated before it is measured — a hotspot whose ring
+  // is cut off is still a hotspot you cannot see properly.
+  const RING = 14;
+  // Slack, so a hairline clip does not flash the cue on and off while the
+  // page settles.
+  const CUE_SLACK = 8;
+
+  let cueTarget = null;
+  let cueFrame = 0;
+
+  const updateCue = () => {
+    cueFrame = 0;
+    const cue = el('pp-scroll-cue');
+    if (!cue) return;
+
     const complete = el('pp-complete');
-    if (complete) complete.hidden = Boolean(beat);
+    const blocked = !cueTarget || !cueTarget.isConnected ||
+      Boolean(complete && !complete.hidden);
+    if (blocked) { cue.hidden = true; return; }
+
+    const rect = cueTarget.getBoundingClientRect();
+    if (!rect.width && !rect.height) { cue.hidden = true; return; }
+
+    const above = rect.top - RING < NAV_H - CUE_SLACK;
+    const below = rect.bottom + RING > window.innerHeight + CUE_SLACK;
+
+    // Clipped at BOTH ends means the hotspot is taller than the window and
+    // is plainly on screen already; there is nowhere useful to send anyone.
+    let direction = null;
+    if (above && below) direction = null;
+    else if (below) direction = 'down';
+    else if (above) direction = 'up';
+
+    if (!direction) { cue.hidden = true; return; }
+
+    cue.dataset.direction = direction;
+    const label = el('pp-scroll-cue-label');
+    if (label) {
+      label.textContent = direction === 'down'
+        ? 'Scroll down to the next step'
+        : 'Scroll up to the next step';
+    }
+    cue.hidden = false;
+  };
+
+  // Scroll fires far faster than the cue can usefully change, and every run
+  // reads layout. One measurement per frame is plenty.
+  const scheduleCue = () => {
+    if (cueFrame) return;
+    cueFrame = requestAnimationFrame(updateCue);
   };
 
   /* --- draw -------------------------------------------------------- */
@@ -240,7 +374,9 @@ export function mount(root) {
     root.replaceChildren(render(state));
     fitCanvas();
     const armed = armSpotlight(arm);
+    handOffFocus = hadFocus;
     announce();
+    handOffFocus = false;
     focusOnArm = hadFocus && !arm;
     if (hadFocus && armed) armed.focus();
   };
@@ -392,6 +528,9 @@ export function mount(root) {
   const reset = () => {
     cancel();
     state = initialState(scenario);
+    // Reset and switching scenario both route through here, and both are a
+    // run starting over — so the completion card is owed again at the end.
+    completeDismissed = false;
     draw();
   };
 
@@ -445,13 +584,6 @@ export function mount(root) {
   root.addEventListener('keydown', bumpIdle);
   document.addEventListener('visibilitychange', bumpIdle);
 
-  const bind = (id, handler) => {
-    const node = el(id);
-    if (node) node.addEventListener('click', handler);
-  };
-  bind('pp-reset', () => { reset(); bumpIdle(); });
-  bind('pp-restart', () => { reset(); bumpIdle(); });
-
   /* --- scenario tabs ------------------------------------------------ */
   const tabs = document.querySelector('.pp-tabs');
   const syncTabs = () => {
@@ -460,6 +592,16 @@ export function mount(root) {
       tab.setAttribute('aria-selected', String(tab.dataset.scenarioId === scenario.id));
     }
   };
+
+  /** The one way the running scenario changes — the tabs and the completion
+   *  card's "Next" button both come through here. */
+  const selectScenario = item => {
+    scenario = item;          // reset() cancels every in-flight timer first
+    reset();
+    syncTabs();
+    bumpIdle();
+  };
+
   if (tabs) {
     tabs.replaceChildren();
     for (const item of SCENARIOS) {
@@ -468,18 +610,35 @@ export function mount(root) {
       tab.setAttribute('role', 'tab');
       tab.dataset.scenarioId = item.id;
       tab.textContent = item.label;
-      tab.addEventListener('click', () => {
-        scenario = item;      // reset() cancels every in-flight timer first
-        reset();
-        syncTabs();
-        bumpIdle();
-      });
+      tab.addEventListener('click', () => selectScenario(item));
       tabs.append(tab);
     }
     syncTabs();
   }
 
-  addEventListener('resize', fitCanvas);
+  const bind = (id, handler) => {
+    const node = el(id);
+    if (node) node.addEventListener('click', handler);
+  };
+  bind('pp-reset', () => { reset(); bumpIdle(); });
+
+  bind('pp-complete-close', () => {
+    completeDismissed = true;
+    const card = el('pp-complete');
+    if (card) card.hidden = true;
+    // The card was covering the cue's decision; nothing is armed at the
+    // terminal beat, so this settles it back to hidden either way.
+    scheduleCue();
+    bumpIdle();
+  });
+
+  bind('pp-complete-next', () => {
+    const upcoming = SCENARIOS[SCENARIOS.indexOf(scenario) + 1];
+    if (upcoming) selectScenario(upcoming);
+  });
+
+  addEventListener('resize', () => { fitCanvas(); scheduleCue(); });
+  addEventListener('scroll', scheduleCue, { passive: true });
 
   draw();
   bumpIdle();

@@ -423,12 +423,47 @@
       </button>
     </div>
 
-    <div id="pp-complete" class="pp-complete" role="status" hidden>
-      <p class="pp-complete-text">Scenario complete.</p>
-      <button type="button" id="pp-restart">Start over</button>
+    <!-- mount.js owns #pp-root and replaces its children on every draw, so
+         the completion card has to be its SIBLING, not its child. .pp-stage
+         exists only to give the two a shared positioning box. -->
+    <div class="pp-stage">
+      <div id="pp-root" class="pp-viewport"></div>
+
+      <!-- The completion card, laid over the finished frame. mount.js fills
+           the copy, picks which onward control to show, and toggles
+           `hidden`. `role="status"` rather than `role="dialog"`: nothing
+           behind it is still interactive at this point, so trapping focus
+           would cost more than it buys. -->
+      <div id="pp-complete" class="pp-complete" role="status" hidden>
+        <div class="pp-complete-card">
+          <p class="pp-complete-eyebrow">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M5 8.2 7.1 10.3 11 5.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Task complete
+          </p>
+          <h2 class="pp-complete-title" id="pp-complete-title"></h2>
+          <p class="pp-complete-summary" id="pp-complete-summary"></p>
+          <div class="pp-complete-actions">
+            <button type="button" id="pp-complete-next" class="pp-complete-primary"></button>
+            <a id="pp-complete-exit" class="pp-complete-primary" href="case-study-02-copilot.html" hidden>Back to the case study</a>
+            <button type="button" id="pp-complete-close" class="pp-complete-secondary">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div id="pp-root" class="pp-viewport"></div>
+    <!-- The scroll cue. Fixed to the window, so it sits outside the viewport
+         and outside the page frame. -->
+    <div id="pp-scroll-cue" class="pp-scroll-cue" data-direction="down" aria-hidden="true" hidden>
+      <span class="pp-scroll-cue-chip">
+        <svg viewBox="0 0 12 14" fill="none" aria-hidden="true" focusable="false">
+          <path d="M6 1v11M1.6 7.8 6 12.2l4.4-4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="pp-scroll-cue-label">Scroll down to the next step</span>
+      </span>
+    </div>
   </div>
 </main>
 

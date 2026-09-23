@@ -796,6 +796,14 @@ export const SCENARIOS = [
     id: 'consent',
     label: '1 — Summarize consent laws + create draft model',
     product: 'Consent Management',
+    // What the page says once the last beat has run. The title names the
+    // task the way the scenario label does; the summary reports what the
+    // walkthrough actually produced, in the portfolio's voice rather than
+    // the product's.
+    completion: {
+      title: 'Consent model draft complete',
+      summary: 'Copilot summarized California’s website consent requirements, then pre-filled a five-step consent model — details, layout, link and preferences — and saved the draft back to Consent Management.'
+    },
     initial: { view: 'home' },
     beats: [
       // Frames 1 -> 2 -> 3. RULING 3: no Frame 1 chip matches Frame 2's
@@ -867,6 +875,10 @@ export const SCENARIOS = [
     id: 'srr',
     label: '2.1 — SRR top compliance issues',
     product: 'Subject Rights Requests',
+    completion: {
+      title: 'SRR summary email complete',
+      summary: 'Copilot traced the top subject-rights risk down to 15 incomplete tasks on requests expiring soon, then drafted a summary email to the owners of those tasks and opened it in Outlook.'
+    },
     initial: { view: 'risks' },
     beats: [
       // Frames 1:67165 -> 1:67371 -> 1:67788. The flow opens by drilling into
@@ -926,6 +938,10 @@ export const SCENARIOS = [
     id: 'tracker',
     label: '2.2 — Tracker Scanning top compliance issues',
     product: 'Tracker Scanning',
+    completion: {
+      title: 'Tracker scan review complete',
+      summary: 'Copilot explained why Contoso.com’s second scan was flagged, opened the scan configuration for review, and drafted a Teams message telling the website owners what needs fixing.'
+    },
     initial: { view: 'risks' },
     beats: [
       // Frames 1:67517 -> 1:67388. Drilling into the "Tracker Scanning" risk
@@ -981,6 +997,10 @@ export const SCENARIOS = [
     id: 'ropa',
     label: '3 \u2014 Generate data inventory / RoPA',
     product: 'Privacy Assessments',
+    completion: {
+      title: 'Processing activity summary complete',
+      summary: 'Copilot answered how personal data has to be documented in France, then assembled an EU-GDPR record of processing activities for April 2024 out of the existing privacy assessments.'
+    },
     initial: { view: 'home' },
     beats: [
       // Frames 1:67565 -> 1:67584 -> 1:67760. The entry is the PROMPT BAR,
