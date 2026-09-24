@@ -1462,8 +1462,11 @@
     line-height: 0;
   }
 
-  /* These two contexts size their image to the full column, so the wrapper has
-     to stop shrink-wrapping and fill it too. */
+  /* These contexts size their image to the full column, so the wrapper has to
+     stop shrink-wrapping and fill it too. Without this the hero — whose image
+     is `width: 100%` of a shrink-to-fit inline-block — would collapse to its
+     own intrinsic width and the page would reflow around it. */
+  .cs-hero-image .zoom-wrap,
   .cs-slide-stack .zoom-wrap,
   .cs-slide-annot .zoom-wrap {
     display: block;

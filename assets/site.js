@@ -89,8 +89,14 @@ if (lightboxOverlay && lightboxImg && lightboxCaption && lightboxClose) {
   // zoom into, so it stays a plain image with no control affordances.
   // :not([alt=""]) skips decorative art — the persona-map avatar is already
   // described by the diagram around it and is nothing to enlarge.
+  //
+  // .cs-hero-image was an oversight rather than a decision. Every case study
+  // opens on a 2600px-wide shipped-product screenshot displayed at 1100px, so
+  // it is the image on the page with the MOST detail held back — and it was
+  // the one image a reader could not open. It is a screenshot on exactly the
+  // terms the figures below it are.
   document.querySelectorAll(
-    '.cs-figure img, .sidebar-img-real img, .cs-slide-figure img:not([alt=""]), .cs-slide-annot img'
+    '.cs-hero-image img, .cs-figure img, .sidebar-img-real img, .cs-slide-figure img:not([alt=""]), .cs-slide-annot img'
   ).forEach(img => {
     // These images are controls, not decoration: give them a role, put them in
     // the tab order, and name them. Done here rather than in the markup so the
