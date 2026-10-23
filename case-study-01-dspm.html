@@ -1568,7 +1568,7 @@
       <h1 class="cs-title">Purview DSPM &<br>AI Observability</h1>
       <p class="cs-subtitle">Microsoft Purview · Data Security Posture Management for AI · Microsoft Ignite 2025</p>
       <div class="cs-tags">
-        <span class="tag">Co-Design Partnership</span>
+        <span class="tag">Co-Lead Designer</span>
         <span class="tag">Enterprise Security UX</span>
         <span class="tag">AI Agent Governance</span>
         <span class="tag">Data Visualisation</span>
@@ -1594,7 +1594,7 @@
       </div>
 <div class="sidebar-block">
         <p class="sidebar-label">Team</p>
-        <p class="sidebar-value">Co-design partnership<br>Product management (early collaboration)</p>
+        <p class="sidebar-value">Co-lead designer (owned alert model + Agent Details)<br>Product management (early collaboration)</p>
       </div>
 <div class="sidebar-block">
         <p class="sidebar-label">Tools</p>
@@ -1618,7 +1618,7 @@
       <div class="cs-section">
         <h2 class="cs-section-label">TL;DR</h2>
         <p><strong>By 2024, Purview already had a lot of the signal it needed to police AI agents</strong> — Copilot instances, third-party bots, automated pipelines were touching sensitive data across the enterprise, and the underlying governance data was largely already being captured. <strong>What didn't exist yet was a way to turn that signal into real agent accountability</strong>.</p>
-        <p>I worked closely with another designer and our PMs to propose that governance experience, <strong>building directly off raw customer findings rather than a synthesized brief</strong>. Our first version was ambitious: full activity logs and audit trails, tracing every flagged interaction down to the individual step.</p>
+        <p>I co-led this work with another designer and partnered with PM from the first customer findings to propose that governance experience, <strong>building directly off raw customer findings rather than a synthesized brief</strong>. Our first version was ambitious: full activity logs and audit trails, tracing every flagged interaction down to the individual step.</p>
         <p>That direction landed well, but wasn't feasible to build at that scope. We pivoted — scoping down to detailed agent logs that flag the interactions actually worth a security admin's attention, paired with an in-depth Agent Details experience covering access, owner, connected tools, and risk.</p>
         <p>The hardest part of the project wasn't the original idea, it was <strong>cutting real, valuable scope down to something buildable without losing what made it worth pursuing in the first place</strong>.</p>
         <p>DSPM for AI shipped at Microsoft Ignite 2025, carrying that scoped-down direction forward.</p>
@@ -1640,7 +1640,7 @@
       </div>
       <div class="sidebar-block">
         <p class="sidebar-label">Team</p>
-        <p class="sidebar-value">Co-design partnership<br>Product management (early collaboration)</p>
+        <p class="sidebar-value">Co-lead designer (owned alert model + Agent Details)<br>Product management (early collaboration)</p>
       </div>
       <div class="sidebar-block">
         <p class="sidebar-label">Tools</p>
@@ -1712,9 +1712,9 @@
         <div class="cs-slide-overlay">
           <h3>Decisions</h3>
           <div>
-            <p><strong>That full activity-log-and-audit-trail proposal landed well — but wasn't feasible to build</strong> at that scope in the time we had. Rather than shelve the ambition, we scoped it down: instead of an exhaustive log of everything an agent did, we <strong>designed detailed agent logs that specifically flag the interactions worth a security admin's attention</strong>, paired with an <strong>in-depth Agent Details experience covering access scope, owner, connected tools, and risk.</strong></p>
-            <p><strong>That scoping decision was the hardest part of the project.</strong> It meant deciding, feature by feature, what could be cut without cutting the thing that made the idea worth building — and then <strong>redesigning around that smaller footprint so it still felt like the best possible version of the experience, not a compromise.</strong></p>
-            <p>We kept alerts scoped to a specific agent rather than grouped generically by alert type, <strong>so an admin investigating one agent could see everything relevant to it in one place</strong> — consistent with the smaller, agent-centered shape the project ended up taking.</p>
+            <p><strong>That full activity-log-and-audit-trail proposal landed well — but wasn't feasible to build</strong> at that scope in the time we had. When full audit trails proved unbuildable for launch, I made the case for scoping down rather than shelving it: instead of an exhaustive log of everything an agent did, I <strong>designed detailed agent logs that specifically flag the interactions worth a security admin's attention</strong>, paired with an <strong>in-depth Agent Details experience covering access scope, owner, connected tools, and risk.</strong></p>
+            <p><strong>That scoping decision was the hardest part of the project.</strong> I worked feature by feature with PM to decide what could be cut without cutting the thing that made the idea worth building — then <strong>redesigned around the smaller footprint so it felt intentional, not like a compromise.</strong></p>
+            <p>I structured alerts around the agent rather than the alert type, <strong>so one investigation happens in one place</strong> — consistent with the smaller, agent-centered shape the project ended up taking.</p>
           </div>
         </div>
       </div>
