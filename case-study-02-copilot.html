@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI-Powered Privacy Manager · Mehvash Fatima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=Reenie+Beanie&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@400&family=Reenie+Beanie&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,14 +13,30 @@
     /* Light palette. Every ink/accent value below clears WCAG AA (4.5:1) on the
        darkest surface it can land on (--tag-bg), not just on --bg. */
     --bg:        #FBFAF8;
+    /* The page itself, nav and footer sit on pure white; --bg stays the
+       off-white for panes and image wells that sit inside the page. */
+    --page:      #FFFFFF;
     --surface:   #F5F1EA;
     --border:    #E3DCCE;
     --card:      #FFFFFF;
     --ink:       #3A3A3A;
     --muted:     #5C554F;
-    --accent:    #7D6428;
-    --highlight: #5E4A1C;
-    --tag-bg:    #F0EAE0;
+    --accent:    #46531A;
+    --highlight: #294905;
+    --tag-bg:    #F3F9E3;
+    --tag-border: #B6C684;
+    /* The artwork side of a carousel slide: a light neutral gray so the white
+       screenshots and the white sidebar both read against it. */
+    --canvas:    #F1F1EF;
+    /* Dark grey for outlines and dashed lines: 5.7:1 on white, 5.0:1 on the
+       slide canvas, so the edges they draw are clearly visible (WCAG 1.4.11). */
+    --outline:   #666666;
+    /* Body copy in the TL;DR, from the design. */
+    --ink-body:  #2E2E2E;
+    /* "The Details" carousel panel: the olive the slides sit on. */
+    --track:     #606D35;
+    --track-edge: #294905;
+    --serif:     'Playfair Display', Georgia, serif;
     /* Ghosted numerals. Light enough to stay background texture, dark
        enough to pass: --numeral 4.69:1 for 11px text, --numeral-display
        3.40:1 which clears large-text AA at 72px. Previously both used
@@ -29,17 +45,18 @@
     --numeral-display: #8E8780;
     --final-tag: #A9C9A4;
     /* "The Details" carousel. --ink-strong is the near-black the slide
-       headings use; --frame is the picture-frame border around slide
-       screenshots, --frame-dash the dashed annotation boxes. */
+       headings use; --frame-dash is the dashed annotation boxes. */
     --ink-strong:   #161616;
-    --frame:        #F2EDE4;
-    --frame-dash:   #CBBEA3;
+    /* Images are separated from their surroundings by a soft shadow rather
+       than an outline. */
+    --img-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    --frame-dash:   #666666;
     /* Angular "torn paper" fills. --wash backs the hero headline; the
        numbered three back the process principles. */
-    --wash:      #E8D5B0;
-    --wash-1:    #C8B89A;
-    --wash-2:    #E8D5B0;
-    --wash-3:    #C8A870;
+    --wash:      #C9D3AA;
+    --wash-1:    #B6C684;
+    --wash-2:    #C9D3AA;
+    --wash-3:    #A9BB74;
     --hand:      'Reenie Beanie', 'Segoe Script', cursive;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
@@ -51,7 +68,8 @@
   }
 
   body {
-    background: var(--bg);
+    position: relative;
+    background: var(--page);
     color: var(--ink);
     font-family: var(--sans);
     font-weight: 300;
@@ -59,14 +77,27 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Dotted-grid texture from the design. A pseudo-element rather than the body
+     background so its strength can be set on its own: at full strength the
+     darkest dot is #B9B9B9 and --muted text crossing it falls to 3.7:1; at half
+     it is #DCDCDC and everything holds AA. Decorative only. */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: url("assets/dot-grid.jpg") 0 0 / 400px 400px repeat;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   /* ── NAV ── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(251,250,248,0.92);
+    background: rgba(255,255,255,0.92);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
     padding: 0 60px;
     height: 60px;
     display: flex;
@@ -78,7 +109,7 @@
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.12em;
-    color: var(--accent);
+    color: #000;
     text-transform: uppercase;
     text-decoration: none;
   }
@@ -116,7 +147,7 @@
     cursor: pointer;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--muted);
+    color: #000;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transition: color 0.2s;
@@ -125,7 +156,7 @@
 
   .nav-dropdown-trigger:hover,
   .nav-dropdown.open .nav-dropdown-trigger {
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .nav-dropdown-trigger svg {
@@ -234,7 +265,8 @@
     gap: 6px;
     margin-top: 6px;
     padding: 3px 7px;
-    background: rgba(125, 100, 40, 0.09);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
     border-radius: 2px;
     font-family: var(--mono);
     font-size: 10px;
@@ -394,7 +426,8 @@
   .case-study {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 100px 60px;
+    /* Top is 52px because the back link above already clears the 60px fixed nav. */
+    padding: 52px 60px 100px;
     /* Entrance animation only. The resting state is visible: opacity 0 lives
        inside the keyframe, never on the element, so nothing has to run for the
        article to render. */
@@ -407,7 +440,7 @@
 
   .cs-header {
     display: grid;
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: minmax(0, 860px);
     gap: 0 40px;
     margin-bottom: 64px;
     align-items: start;
@@ -460,7 +493,7 @@
 
   .cs-title {
     font-family: var(--hand);
-    font-size: clamp(44px, 5.8vw, 70px);
+    font-size: clamp(44px, 5.8vw, 64px);
     font-weight: 400;
     line-height: 0.95;
     color: var(--ink);
@@ -469,7 +502,7 @@
 
   .cs-subtitle {
     font-size: 15px;
-    color: var(--muted);
+    color: var(--ink-strong);
     margin-bottom: 28px;
     font-family: var(--mono);
   }
@@ -482,8 +515,8 @@
 
   .tag {
     background: var(--tag-bg);
-    border: 1px solid var(--border);
-    color: var(--muted);
+    border: 1px solid var(--tag-border);
+    color: var(--ink-strong);
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.08em;
@@ -523,20 +556,21 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--border);
+    background: var(--accent);
   }
 
   .cs-section p {
     font-size: 15.5px;
     line-height: 1.8;
-    color: var(--muted);
+    color: var(--ink-body);
     margin-bottom: 16px;
   }
 
   .cs-section p:last-child { margin-bottom: 0; }
 
+  /* Emphasis is weight only in the design; the colour is the paragraph's. */
   .cs-section strong {
-    color: var(--ink);
+    color: inherit;
     font-weight: 500;
   }
 
@@ -564,8 +598,8 @@
   }
 
   .sidebar-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
     border-radius: 4px;
     padding: 24px;
     margin-bottom: 16px;
@@ -593,9 +627,9 @@
     }
 
     .cs-sidebar-mobile .cs-sidebar-details {
-      border: 1px solid var(--border);
+      border: 1px solid var(--tag-border);
       border-radius: 4px;
-      background: var(--surface);
+      background: var(--tag-bg);
       overflow: hidden;
     }
 
@@ -639,7 +673,7 @@
     .cs-sidebar-mobile .sidebar-block {
       background: none;
       border: none;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--tag-border);
       border-radius: 0;
       padding: 20px 0;
       margin-bottom: 0;
@@ -655,28 +689,28 @@
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.12em;
-    color: var(--muted);
+    color: var(--highlight);
     text-transform: uppercase;
     margin-bottom: 12px;
   }
 
   .sidebar-value {
     font-size: 14px;
-    color: var(--ink);
+    color: var(--ink-strong);
     line-height: 1.6;
   }
 
   .sidebar-value.large {
-    font-family: var(--mono);
+    font-family: var(--serif);
     font-size: 27px;
-    color: var(--highlight);
+    color: var(--ink-strong);
     line-height: 1;
     margin-bottom: 6px;
   }
 
   .sidebar-value.large + .sidebar-sub {
     font-size: 12px;
-    color: var(--muted);
+    color: var(--ink-strong);
     line-height: 1.5;
   }
 
@@ -690,8 +724,8 @@
 
   .role-pill {
     display: inline-block;
-    background: rgba(125,100,40,0.07);
-    border: 1px solid rgba(125,100,40,0.28);
+    background: rgba(70, 83, 26,0.07);
+    border: 1px solid rgba(70, 83, 26,0.28);
     color: var(--accent);
     font-family: var(--mono);
     font-size: 11px;
@@ -713,13 +747,19 @@
   footer p {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--muted);
+    color: #000;
   }
 
   footer a {
-    color: var(--accent);
-    text-decoration: none;
+    color: #000;
+    /* Links and their surrounding text are both black here, so colour cannot
+       tell them apart; the underline does (WCAG 1.4.1). */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
+
+  footer a:hover { color: var(--accent); }
 
   /* ── SCROLL ANIMATION ── */
   @keyframes fadeUp {
@@ -804,7 +844,7 @@
     width: 100%;
     display: block;
     border-radius: 4px;
-    border: 1px solid var(--border);
+    box-shadow: var(--img-shadow);
     background: var(--surface);
   }
 
@@ -840,7 +880,6 @@
     width: 100%;
     display: block;
     border-radius: 5px;
-    border: 1px solid var(--border);
     box-shadow: 0 18px 44px rgba(60,50,35,0.13);
   }
 
@@ -861,7 +900,7 @@
     width: 100%;
     display: block;
     border-radius: 4px;
-    border: 1px solid var(--border);
+    box-shadow: var(--img-shadow);
     margin-bottom: 10px;
   }
 
@@ -964,6 +1003,10 @@
        The script derives its step from the slide pitch, so this stays in sync. */
     padding: 8px 0;
     gap: 16px;
+    /* The olive panel the slides sit on in the design. */
+    background: var(--track);
+    border: 1px solid var(--track-edge);
+    border-radius: 8px;
   }
 
   /* The scrollbar is the only affordance until the script arrives, so it is
@@ -1003,7 +1046,7 @@
     gap: 12px;
     min-width: 0;
     padding: 28px 24px;
-    background: var(--bg);
+    background: var(--canvas);
     border-radius: 10px 0 0 10px;
   }
 
@@ -1014,14 +1057,14 @@
     gap: 16px;
     min-width: 0;
     padding: 32px 26px 32px 28px;
-    background: var(--surface);
-    border-left: 1px dashed var(--border);
+    background: var(--card);
+    border-left: 1px dashed var(--outline);
     border-radius: 0 10px 10px 0;
   }
 
   .cs-slide-overlay h3 {
-    font-family: var(--mono);
-    font-size: 17px;
+    font-family: var(--serif);
+    font-size: 21px;
     font-weight: 400;
     line-height: 1.25;
     color: var(--ink-strong);
@@ -1033,12 +1076,13 @@
   .cs-slide-overlay li {
     font-size: 13px;
     line-height: 1.75;
-    color: var(--muted);
+    color: var(--ink-body);
   }
 
   .cs-slide-overlay p + p { margin-top: 14px; }
 
-  .cs-slide-overlay strong { color: var(--ink); font-weight: 500; }
+  /* Emphasis is weight only; the colour is the paragraph's, as in the design. */
+  .cs-slide-overlay strong { color: inherit; font-weight: 500; }
 
   .cs-slide-overlay ul {
     margin-left: 18px;
@@ -1075,8 +1119,8 @@
     display: block;
     max-width: 100%;
     height: auto;
-    border: 5px solid var(--frame);
     border-radius: 5px;
+    box-shadow: var(--img-shadow);
     background: var(--card);
   }
 
@@ -1100,7 +1144,7 @@
   }
 
   .cs-slide-collage > * + * {
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--outline);
     padding-left: 28px;
   }
 
@@ -1269,7 +1313,7 @@
 
     .cs-slide-overlay {
       border-left: none;
-      border-top: 1px dashed var(--border);
+      border-top: 1px dashed var(--outline);
       border-radius: 0 0 10px 10px;
       padding: 26px 22px 30px;
     }
@@ -1307,7 +1351,7 @@
 
     .cs-slide-collage > * + * {
       border-left: none;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--outline);
       padding-left: 0;
       padding-top: 22px;
     }
@@ -1413,7 +1457,7 @@
     justify-content: center;
     border-radius: 4px;
     background: rgba(251,250,248,0.92);
-    border: 1px solid var(--border);
+    border: 1px solid var(--outline);
     color: var(--muted);
     /* The image is the control; this must never swallow the tap. */
     pointer-events: none;
@@ -1501,9 +1545,9 @@
 
   /* ── INTERACTIVE PROTOTYPE BAND ──
      The band quotes the thing it links to. The prototype guides you by
-     ringing one control in gold and tagging it "Click"; the target below
-     wears that same ring, and its gold is literally the same value — the
-     prototype's --pp-spot is #7d6428, this page's --accent is #7D6428. So
+     ringing one control in olive and tagging it "Click"; the target below
+     wears that same ring, and its olive is literally the same value — the
+     prototype's --pp-spot is #46531a, this page's --accent is #46531A. So
      the motion is not decoration: it is the page showing you the interaction
      before you get there. That is the one loud element here; everything
      around it stays as quiet as the rest of the case study. */
@@ -1572,7 +1616,7 @@
     white-space: nowrap;
     box-shadow:
       0 0 0 3px var(--accent),
-      0 0 0 9px rgba(125, 100, 40, 0.18);
+      0 0 0 9px rgba(70, 83, 26, 0.18);
   }
 
   .cs-proto-target::after {
@@ -1596,8 +1640,8 @@
   }
 
   @keyframes cs-proto-pulse {
-    0%, 100% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9px rgba(125, 100, 40, 0.18); }
-    50%      { box-shadow: 0 0 0 3px var(--accent), 0 0 0 14px rgba(125, 100, 40, 0); }
+    0%, 100% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9px rgba(70, 83, 26, 0.18); }
+    50%      { box-shadow: 0 0 0 3px var(--accent), 0 0 0 14px rgba(70, 83, 26, 0); }
   }
 
   /* Second appearance, after the carousel: same motif, one row, no note. */
@@ -1690,14 +1734,13 @@
 
 <main id="main" tabindex="-1">
 
-<div style="max-width:1100px; margin:0 auto; padding:32px 60px 0;">
+<div style="max-width:1100px; margin:0 auto; padding:80px 60px 0;">
   <a href="index.html" style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); text-decoration:none;">&larr; All Projects</a>
 </div>
 
 <div class="case-study" id="cs-2">
   <div class="cs-header">
     <p class="cs-eyebrow-mobile">2023 – 2024 · Microsoft Priva</p>
-    <div class="cs-number">02</div>
     <div class="cs-header-content">
       <p class="cs-eyebrow">2023 – 2024 · Microsoft Priva</p>
       <h1 class="cs-title">AI-Powered Privacy<br>Manager (Copilot)</h1>
@@ -1726,7 +1769,7 @@
             <p class="sidebar-sub">form fields pre-populated by AI — hours of manual work reduced to minutes</p>
           </div>
           <div class="stat-item">
-            <p class="sidebar-value large" style="font-size:22px; line-height:1.3;">Live IAPP demo</p>
+            <p class="sidebar-value large" style="font-size:20px; line-height:1.43;">Live IAPP demo</p>
             <p class="sidebar-sub">generative AI applied to privacy compliance, demoed live to industry professionals</p>
           </div>
         </div>
@@ -1741,7 +1784,7 @@
       </div>
 <div class="sidebar-block">
         <p class="sidebar-label">Note</p>
-        <p class="sidebar-value" style="font-size:12px; color: var(--muted);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
+        <p class="sidebar-value" style="font-size:12px; color: var(--ink-strong);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
       </div>
         </div>
       </details>
@@ -1782,7 +1825,7 @@
             <p class="sidebar-sub">form fields pre-populated by AI — hours of manual work reduced to minutes</p>
           </div>
           <div class="stat-item">
-            <p class="sidebar-value large" style="font-size:22px; line-height:1.3;">Live IAPP demo</p>
+            <p class="sidebar-value large" style="font-size:20px; line-height:1.43;">Live IAPP demo</p>
             <p class="sidebar-sub">generative AI applied to privacy compliance, demoed live to industry professionals</p>
           </div>
         </div>
@@ -1797,7 +1840,7 @@
       </div>
       <div class="sidebar-block">
         <p class="sidebar-label">Note</p>
-        <p class="sidebar-value" style="font-size:12px; color: var(--muted);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
+        <p class="sidebar-value" style="font-size:12px; color: var(--ink-strong);">Screens shown reflect the design as prototyped and demoed at IAPP (2023–2024).</p>
       </div>
     </div>
       </details>
@@ -1936,9 +1979,9 @@
   <span class="cs-proto-target">Open the prototype</span>
 </a>
 
-<div style="max-width:1100px; margin:0 auto; padding:56px 60px 0; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); margin-top:40px; padding-top:40px;">
-  <a href="case-study-01-dspm.html" style="font-family:var(--mono); font-size:12px; color:var(--muted); text-decoration:none;">&larr; Purview DSPM & AI Observability</a>
-  <a href="case-study-03-priva.html" style="font-family:var(--mono); font-size:12px; color:var(--muted); text-decoration:none; text-align:right;">Microsoft Priva – Privacy management &rarr;</a>
+<div style="max-width:1100px; margin:0 auto; padding:56px 60px 0; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--accent); margin-top:40px; padding-top:40px;">
+  <a href="case-study-01-dspm.html" style="font-family:var(--mono); font-size:12px; color:var(--accent); text-decoration:none;">&larr; Purview DSPM & AI Observability</a>
+  <a href="case-study-03-priva.html" style="font-family:var(--mono); font-size:12px; color:var(--accent); text-decoration:none; text-align:right;">Microsoft Priva – Privacy management &rarr;</a>
 </div>
 
 <!-- FOOTER -->

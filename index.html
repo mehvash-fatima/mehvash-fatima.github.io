@@ -13,14 +13,18 @@
     /* Light palette. Every ink/accent value below clears WCAG AA (4.5:1) on the
        darkest surface it can land on (--tag-bg), not just on --bg. */
     --bg:        #FBFAF8;
+    /* The page itself, nav and footer sit on pure white; --bg stays the
+       off-white for panes and image wells that sit inside the page. */
+    --page:      #FFFFFF;
     --surface:   #F5F1EA;
     --border:    #E3DCCE;
     --card:      #FFFFFF;
     --ink:       #3A3A3A;
     --muted:     #5C554F;
-    --accent:    #7D6428;
-    --highlight: #5E4A1C;
-    --tag-bg:    #F0EAE0;
+    --accent:    #46531A;
+    --highlight: #294905;
+    --tag-bg:    #F3F9E3;
+    --tag-border: #B6C684;
     /* Ghosted numerals. Light enough to stay background texture, dark
        enough to pass: --numeral 4.69:1 for 11px text, --numeral-display
        3.40:1 which clears large-text AA at 72px. Previously both used
@@ -30,10 +34,10 @@
     --final-tag: #A9C9A4;
     /* Angular "torn paper" fills. --wash backs the hero headline; the
        numbered three back the process principles. */
-    --wash:      #E8D5B0;
-    --wash-1:    #C8B89A;
-    --wash-2:    #E8D5B0;
-    --wash-3:    #C8A870;
+    --wash:      #C9D3AA;
+    --wash-1:    #B6C684;
+    --wash-2:    #C9D3AA;
+    --wash-3:    #A9BB74;
     --hand:      'Reenie Beanie', 'Segoe Script', cursive;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
@@ -45,7 +49,7 @@
   }
 
   body {
-    background: var(--bg);
+    background: var(--page);
     color: var(--ink);
     font-family: var(--sans);
     font-weight: 300;
@@ -58,9 +62,8 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(251,250,248,0.92);
+    background: rgba(255,255,255,0.92);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
     padding: 0 60px;
     height: 60px;
     display: flex;
@@ -72,7 +75,7 @@
     font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.12em;
-    color: var(--accent);
+    color: #000;
     text-transform: uppercase;
     text-decoration: none;
   }
@@ -110,7 +113,7 @@
     cursor: pointer;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--muted);
+    color: #000;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transition: color 0.2s;
@@ -119,7 +122,7 @@
 
   .nav-dropdown-trigger:hover,
   .nav-dropdown.open .nav-dropdown-trigger {
-    color: var(--ink);
+    color: var(--accent);
   }
 
   .nav-dropdown-trigger svg {
@@ -228,7 +231,8 @@
     gap: 6px;
     margin-top: 6px;
     padding: 3px 7px;
-    background: rgba(125, 100, 40, 0.09);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
     border-radius: 2px;
     font-family: var(--mono);
     font-size: 10px;
@@ -253,7 +257,7 @@
     /* Held in a variable because the wash below bleeds past the copy column
        and has to know how much gutter is left to bleed into. */
     --hero-pad: 60px;
-    padding: 160px var(--hero-pad) 100px;
+    padding: 160px var(--hero-pad) 50px;
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
@@ -287,6 +291,9 @@
      pseudo-element and never enters the accessibility tree. */
   .hero-body {
     position: relative;
+    /* Keeps the 47px the headline sits below the top of the wash in the design
+       (it was the eyebrow's height; the eyebrow is gone, the offset is not). */
+    padding-top: 47px;
   }
 
   .hero-body::before {
@@ -318,23 +325,11 @@
     z-index: 1;
   }
 
-  /* --highlight rather than --accent: this sits on the tan wash, where
-     --accent falls to 3.91:1. */
-  .hero-eyebrow {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--highlight);
-    text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-
-  /* Capped below the Figma 78px: there the polaroid floats outside the content
-     column so the headline gets all 980px, whereas here the two share a grid.
-     `balance` keeps the break tidy if it does wrap on a narrow screen. */
+  /* 68px is the Figma size; it scales down on narrow screens rather than up on
+     wide ones. `balance` keeps the break tidy if it does wrap. */
   .hero h1 {
     font-family: var(--hand);
-    font-size: clamp(54px, 7.8vw, 98px);
+    font-size: clamp(54px, 7.8vw, 68px);
     font-weight: 400;
     line-height: 0.92;
     letter-spacing: -0.02em;
@@ -357,20 +352,26 @@
     color: var(--muted);
   }
 
+  /* The design sets the tagline in lowercase with a capital first letter, in
+     a near-black olive (10.15:1 on the wash). */
   .hero-tagline {
     max-width: 42ch;
     margin-bottom: 28px;
+    color: #1D2502;
+    text-transform: lowercase;
   }
+
+  .hero-tagline::first-letter { text-transform: uppercase; }
 
   .hero-summary {
     font-size: 17px;
     line-height: 1.75;
-    color: var(--muted);
+    color: #4B4B4B;
     max-width: 640px;
-    margin-bottom: 48px;
+    margin-bottom: 12px;
   }
 
-  .hero-summary strong { color: var(--ink); font-weight: 400; }
+  .hero-summary strong { color: #000; font-weight: 400; }
 
   .hero-meta {
     display: flex;
@@ -408,8 +409,8 @@
   .toc-section {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 72px 60px;
-    border-bottom: 1px solid var(--border);
+    padding: 36px 60px 72px;
+    border-bottom: 1px solid var(--accent);
   }
 
   /* Section eyebrow, shared by "Process" and "Projects". */
@@ -418,9 +419,9 @@
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.12em;
-    color: var(--muted);
+    color: #000;
     text-transform: uppercase;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .process-label { margin-bottom: 24px; }
@@ -435,12 +436,14 @@
     align-items: flex-start;
     gap: 24px;
     padding: 28px 0;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--accent);
     text-decoration: none;
     transition: all 0.2s;
   }
 
-  .toc-item:first-child { border-top: none; }
+  /* The first row sits closer to the "Projects" label than the rest sit to each
+     other, so its own top padding is halved. */
+  .toc-item:first-child { border-top: none; padding-top: 14px; }
 
   .toc-item:hover .toc-item-title { color: var(--highlight); }
   .toc-item:hover .toc-num { color: var(--accent); }
@@ -448,7 +451,7 @@
   .toc-num {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--numeral);
+    color: #000;
     min-width: 28px;
     padding-top: 4px;
     transition: color 0.2s;
@@ -458,8 +461,8 @@
 
   .toc-item-title {
     font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 400;
     color: var(--ink);
     transition: color 0.2s;
     display: block;
@@ -469,7 +472,7 @@
   .toc-item-meta {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--muted);
+    color: var(--accent);
   }
 
   /* The one project with a clickable prototype behind it. Same dot-and-label
@@ -488,7 +491,8 @@
     gap: 7px;
     margin-top: 9px;
     padding: 4px 9px;
-    background: rgba(125, 100, 40, 0.09);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
     border-radius: 2px;
     font-family: var(--mono);
     font-size: 11px;
@@ -802,8 +806,8 @@
 
   .role-pill {
     display: inline-block;
-    background: rgba(125,100,40,0.07);
-    border: 1px solid rgba(125,100,40,0.28);
+    background: rgba(70, 83, 26,0.07);
+    border: 1px solid rgba(70, 83, 26,0.28);
     color: var(--accent);
     font-family: var(--mono);
     font-size: 11px;
@@ -825,13 +829,19 @@
   footer p {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--muted);
+    color: #000;
   }
 
   footer a {
-    color: var(--accent);
-    text-decoration: none;
+    color: #000;
+    /* Links and their surrounding text are both black here, so colour cannot
+       tell them apart; the underline does (WCAG 1.4.1). */
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
   }
+
+  footer a:hover { color: var(--accent); }
 
   /* ── SCROLL ANIMATION ── */
   @keyframes fadeUp {
@@ -988,18 +998,24 @@
   .hero-contact {
     display: flex;
     gap: 16px;
-    margin-top: 40px;
+    margin-bottom: 10px;
+    /* Each icon is a 60px circle with a 25.5px glyph centred in it, and the
+       envelope's path starts ~2px inside its own box, so the first glyph sits
+       19.4px right of the column edge. Pull the row back by that much so the
+       glyph lines up with "Company" above; the circle (and its hover fill and
+       focus ring) extends into the gutter instead. */
+    margin-left: -19.4px;
   }
 
   .hero-contact a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
+    width: 60px;
+    height: 60px;
+    border: 1px solid transparent;
     border-radius: 50%;
-    color: var(--muted);
+    color: var(--accent);
     transition: color 0.2s, border-color 0.2s, background 0.2s;
   }
 
@@ -1010,8 +1026,8 @@
   }
 
   .hero-contact svg {
-    width: 17px;
-    height: 17px;
+    width: 25.5px;
+    height: 25.5px;
   }
 
   /* Polaroid. `position: relative` anchors the tape strip, and the extra
@@ -1194,7 +1210,7 @@
       --hero-pad: 28px;
       padding: 116px var(--hero-pad) 40px;
     }
-    .hero-contact { margin-top: 28px; }
+    .hero-contact { margin-bottom: 7px; }
 
     /* The polaroid is a desktop flourish. On a phone it lands under the hero
        copy and pushes the project list further below the fold, so it goes.
@@ -1203,7 +1219,7 @@
        leaving it in the accessibility tree would just be a mismatch. */
     .about-photo-card { display: none; }
     .toc-section { padding: 32px 28px 56px; }
-    .toc-label { margin-bottom: 24px; }
+    .toc-label { margin-bottom: 12px; }
     .process-section { padding: 0 28px 48px; }
     .process-intro { margin-bottom: 36px; }
     .process-grid {
@@ -1341,18 +1357,11 @@
 <!-- HERO -->
 <div class="hero">
  <div class="hero-body">
-  <p class="hero-eyebrow">Case Studies · 2019 – Present</p>
   <h1>Hey, I’m Mehvash</h1>
   <p class="hero-tagline">Specialist in designing the systems that govern data at scale.</p>
   <p class="hero-summary">
     Over 8 years at Microsoft shaping UX across data governance, privacy compliance, and AI-powered security tooling. These four case studies document the arc — from Azure Purview's earliest governance foundations to designing <strong>AI agent observability for the post-Copilot enterprise</strong>.
   </p>
-  <div class="hero-meta">
-    <div class="meta-item"><span class="meta-label">Company</span><span class="meta-value">Microsoft</span></div>
-    <div class="meta-item"><span class="meta-label">Tenure</span><span class="meta-value">2018 – Present</span></div>
-    <div class="meta-item"><span class="meta-label">Products</span><span class="meta-value">Purview · Priva · Security Copilot</span></div>
-    <div class="meta-item"><span class="meta-label">Reach</span><span class="meta-value">All Microsoft 365 customers</span></div>
-  </div>
   <div class="hero-contact">
       <a href="mailto:f.mehvash@gmail.com" title="Email" aria-label="Email"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
       <a href="https://www.linkedin.com/in/mehvash-fatima/" title="LinkedIn" aria-label="LinkedIn" target="_blank" rel="noopener"><!-- viewBox padded to 32 units so this solid square glyph sits on the same
@@ -1363,6 +1372,12 @@
            three sit on the same optical keyline. -->
       <a href="mehvashfatima-resume.pdf" title="Resume (PDF)" aria-label="Resume (PDF, opens in a new tab)" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm1.6 5.4h8.8V9H7.6V7.4Zm0 4.2h8.8v1.6H7.6v-1.6Zm0 4.2h5.6v1.6H7.6v-1.6Z"/></svg></a>
     </div>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-label">Company</span><span class="meta-value">Microsoft</span></div>
+    <div class="meta-item"><span class="meta-label">Tenure</span><span class="meta-value">2018 – Present</span></div>
+    <div class="meta-item"><span class="meta-label">Products</span><span class="meta-value">Purview · Priva · Security Copilot</span></div>
+    <div class="meta-item"><span class="meta-label">Reach</span><span class="meta-value">All Microsoft 365 customers</span></div>
+  </div>
  </div>
 
  <figure class="about-photo-card">
@@ -1378,7 +1393,7 @@
             alt="Mehvash standing on a boulder on a desert trail in Joshua Tree National Park, wearing a long dark coat and cap, with Joshua trees and scrub behind her.">
      </picture>
    </div>
-   <figcaption class="about-photo-caption">Hiking at Joshua Tree. 100% recommend!</figcaption>
+   <figcaption class="about-photo-caption">My most recent adventure! 🌵</figcaption>
  </figure>
 </div>
 

@@ -28,9 +28,10 @@
     --card:      #FFFFFF;
     --ink:       #3A3A3A;
     --muted:     #5C554F;
-    --accent:    #7D6428;
-    --highlight: #5E4A1C;
-    --tag-bg:    #F0EAE0;
+    --accent:    #46531A;
+    --highlight: #294905;
+    --tag-bg:    #F3F9E3;
+    --tag-border: #B6C684;
     --sans:      'DM Sans', sans-serif;
     --mono:      'DM Mono', monospace;
   }
@@ -54,7 +55,6 @@
     z-index: 100;
     background: rgba(251,250,248,0.92);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
     padding: 0 60px;
     height: 60px;
     display: flex;
@@ -211,7 +211,8 @@
     gap: 6px;
     margin-top: 6px;
     padding: 3px 7px;
-    background: rgba(125, 100, 40, 0.09);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
     border-radius: 2px;
     font-family: var(--mono);
     font-size: 10px;

@@ -82,15 +82,15 @@
 
      The two type faces are loaded by prototype-copilot.html, which is
      the only page that links this stylesheet. */
-  --pp-site-accent:   #7d6428;   /* --accent    */
-  --pp-site-deep:     #5e4a1c;   /* --highlight */
+  --pp-site-accent:   #46531a;   /* --accent    */
+  --pp-site-deep:     #294905;   /* --highlight */
   --pp-site-bg:       #fbfaf8;   /* --bg        */
   --pp-site-surface:  #f5f1ea;   /* --surface   */
   --pp-site-card:     #ffffff;   /* --card      */
   --pp-site-border:   #e3dcce;   /* --border    */
   --pp-site-ink:      #3a3a3a;   /* --ink       */
   --pp-site-muted:    #5c554f;   /* --muted     */
-  --pp-site-tint:     rgba(125, 100, 40, 0.09);  /* .proj-flag's wash */
+  --pp-site-tint:     rgba(70, 83, 26, 0.09);  /* .proj-flag's wash */
   --pp-site-scrim:    rgba(251, 250, 248, 0.6);
   --pp-site-shadow:   0 18px 40px rgba(58, 48, 26, 0.16), 0 2px 6px rgba(58, 48, 26, 0.08);
   --pp-site-radius:   3px;       /* the site's card/skip-link radius */
@@ -101,7 +101,7 @@
      The "click here" ring is the portfolio's accent, so it reads as the
      case study speaking, never as product chrome.                  */
   --pp-spot:          var(--pp-site-accent);
-  --pp-spot-glow:     rgba(125, 100, 40, 0.18);
+  --pp-spot-glow:     rgba(70, 83, 26, 0.18);
   --pp-spot-ink:      #ffffff;
 
   /* --- Washes and overlays --------------------------------------
@@ -502,7 +502,7 @@
   background: linear-gradient(
     100deg,
     transparent 30%,
-    rgba(125, 100, 40, 0.14) 50%,
+    rgba(70, 83, 26, 0.14) 50%,
     transparent 70%);
   background-size: 260% 100%;
   background-position: 130% 0;
